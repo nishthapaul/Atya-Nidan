@@ -1,0 +1,1065 @@
+---
+openapi: 3.0.3
+info:
+  title: Field Worker Application
+  description: APIs for SuperAdmin, Supervisor, Doctor and FieldWorker
+  version: 1.0.0
+servers:
+- url: /
+tags:
+  - name: Authorization
+    description: Authorization APIs common for all
+  - name: SuperAdmin
+    description: APIs for Super Admin 
+  - name: Supervisor
+    description: APIs for supervisor
+  - name: Doctor
+    description: APIs for Doctor
+  - name: FieldWorker
+    description: APIs for Field worker
+    
+paths:
+  /auth/login:
+    post:
+      tags:
+         - Authorization
+      summary: Authenticate User
+      description: Logs in a super admin.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "400":
+          description: Invalid username or OTP
+          
+  /auth/logout:
+    post:
+      tags:
+        - Authorization
+      summary: Logout User
+      description: Logs out user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: You are logged out!
+          
+  /stats:
+    get:
+      tags:
+        - SuperAdmin
+      summary: Get Dashboard Stats
+      description: Retrieves statistics for the super admin's dashboard.
+      responses:
+        "200":
+          description: Successful stats retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+      security:
+      - apiKeyAuth: []
+          
+  /forms:
+    get:
+      tags:
+        - SuperAdmin
+      summary: Fetches names of pre-existing forms
+      description: Retrieves a list of all forms available to the super admin.
+      responses:
+        "200":
+          description: Successful retrieval of forms list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormName'
+        "401":
+          description: Unauthorized (if authentication fails)
+        "500":
+          description: General server error
+      security:
+      - apiKeyAuth: []
+      
+    post:
+      tags:
+        - SuperAdmin
+      summary: Create a New Form
+      description: Allows a super admin to create a new form.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSkeleton'
+        required: true
+      responses:
+        "201":
+          description: Form created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormIdResponse'
+        "400":
+          description: "Bad Request (e.g., invalid form structure)"
+      security:
+      - apiKeyAuth: []
+      
+  /forms/{formId}/default:
+    put:
+      tags:
+        - SuperAdmin
+      summary: Set Form as Default
+      description: Marks an existing form as the default form.
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Form successfully marked as default
+        "400":
+          description: Bad Request (e.g., invalid form ID)
+        "404":
+          description: Form not found
+      security:
+      - apiKeyAuth: []
+      
+  /forms/{formId}:
+    get:
+      tags:
+        - SuperAdmin
+        - FieldWorker
+      summary: Get Form Details
+      description: Fetches the complete details of a specific form.
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful form retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormSkeleton'
+        "404":
+          description: Form not found
+        "500":
+          description: Server error
+      security:
+      - apiKeyAuth: []
+    
+    put:
+      tags:
+        - SuperAdmin
+      summary: Update Existing Form
+      description: Allows a super admin to modify an existing form.
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSkeleton'
+        required: true
+      responses:
+        "200":
+          description: Form updated successfully
+        "400":
+          description: Bad Request (e.g., invalid data, missing fields)
+        "404":
+          description: Form not found
+      security:
+      - apiKeyAuth: []
+      
+  /supervisors/{supervisorId}/talukas:
+    get:
+      tags:
+        - Supervisor
+      summary: Get list of all the talukas
+      description: Retrieve list of all the talukas of the district of the supervisor
+      parameters:
+        - name: supervisorId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retieved talukas
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taluka'
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+      security:
+      - apiKeyAuth: []
+                  
+  /supervisors/{supervisorId}/fieldworkers:
+    get:
+      tags:
+      - Supervisor
+      summary: Get all the field workers
+      description: Retrieve list of all field workers under a supervisor
+      parameters:
+        - name: supervisorId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retieved fieldworker details
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWorker'
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+      security:
+      - apiKeyAuth: []
+    
+  /fieldworkers:  
+    post:
+      tags:
+        - Supervisor
+      summary: Add Field worker
+      description: Add a new field worker
+      requestBody:
+        description: Request body with new field worker details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldWorker'
+      responses:
+        "201":
+          description: Successfully added the field worker
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+  
+  /fieldworkers/{fieldWorkerId}/availability:
+    put:
+      tags:
+        - Supervisor
+      summary: Update availability of Field worker
+      description: Update the isAvailable status of a field worker
+      parameters:
+        - name: fieldWorkerId
+          required: true
+          in: path
+          schema:
+            type: integer
+      requestBody:
+        description: Request body with assignment status
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isAvailable:
+                  type: boolean
+      responses:
+        "200":
+          description: Successfully updated status
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+          
+  /doctors:
+    post:
+      tags:
+        - Supervisor
+      summary: Add a Doctor
+      description: Add a new doctor
+      requestBody:
+        description: Request body with new doctor details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+      responses:
+        "201":
+          description: Successfully added the doctor
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+            
+  /supervisors/{supervisorId}/doctors:
+    get:
+      tags:
+        - Supervisor
+      summary: Retrieve doctors of one district
+      description: Retrieve all doctors of the district belonging to the same district as the supervisor
+      parameters:
+        - name: supervisorId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved doctor details
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+                  
+  /doctors/{specializationId}:
+    get:
+      tags:
+        - FieldWorker
+      summary: Retrieve doctors with given specialization
+      description: Retrieve all doctors with a particular specialization
+      parameters:
+        - name: specializationId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved doctor details
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+  
+  /followups/fieldworkers/{fieldWorkerId}:
+    get:
+      tags:
+        - FieldWorker
+      summary: Retrieve follow up details
+      description: Retrieve all follow ups of a particular field worker
+      parameters: 
+        - name: fieldWorkerId
+          required: true
+          in: path
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved details
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FollowUp'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+          
+  /patients/{patient_id}:
+    get:
+      tags:
+        - FieldWorker
+        - Doctor
+      summary: Retrieve patient details
+      description: Retrieve a patient details by his/her id
+      parameters:
+        - name: patient_id
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved patient details
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientInfo'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+    
+  /fieldworkers/{fieldWorkerId}:
+    get:
+      tags:
+        - FieldWorker
+      summary: Retrieve field worker
+      description: Retrieve all details of field worker
+      parameters: 
+        - name: fieldWorkerId
+          required: true
+          in: path
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved field worker details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldWorker'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+   
+  /forms/default:
+    get:
+      tags:
+        - FieldWorker
+      summary: Retrieve the default form
+      description: Retrive the default form currently active
+      parameters:
+        - name: default
+          required: true
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Successfully retrieved form details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormSkeleton'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+          
+  /patients:
+    post:
+      tags:
+        - FieldWorker
+      summary: Create a new patient
+      description: Add a new patient
+      requestBody:
+        description: Request body with new patient details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        "201":
+          description: Successfully added the patient
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+  
+  /olapforms:
+    post:
+      tags:
+        - FieldWorker
+      summary: Create a form entry
+      description: Add a new form details for a patient in OLAP form
+      requestBody:
+        description: Request body with filled form details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OLAPForms'
+      responses:
+        "201":
+          description: Form details saved succesfully
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+          
+  /diagnoses/{diagnosisId}:
+    get:
+      tags:
+         - FieldWorker
+         - Doctor
+      summary: Get the diagnosis of a patient
+      description: Retrieve previous diagnosis of patient
+      parameters:
+        - name: diagnosisId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved diagnosis details
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Diagnosis'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+      security:
+      - apiKeyAuth: []
+          
+  /diagnoses:
+    post:
+      tags:
+        - Doctor
+      summary: Add a prescription
+      description: Doctor adds a prescription .
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Diagnosis'
+        required: true
+      responses:
+        "201":
+          description: Prescription added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "400":
+          description: Bad Request (e.g., invalid prescription  structure)
+      security:
+      - apiKeyAuth: []
+          
+  /followups:
+    post:
+      tags:
+        - Doctor
+      summary: Schedule followup .
+      description: Doctor schedules a followup .
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowUp'
+        required: true
+      responses:
+        "201":
+          description: Prescription added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "400":
+          description: Bad Request (e.g., invalid follow up structure)
+      security:
+      - apiKeyAuth: []
+  
+  /olapforms/{patientId}:
+    get:
+      tags:
+        - Doctor
+      summary: Fetches previously filled form
+      description: Fetch form of selected patient of respective disease.
+      parameters: 
+      - name: patientId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful retrieval of forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OLAPForms'
+        "401":
+          description: Unauthorized (if authentication fails)
+        "500":
+          description: General server error
+      security:
+      - apiKeyAuth: []
+          
+    
+  /visits/{followUpId}:
+    get:
+      tags:
+        - Doctor
+      summary: Get Past Followup Details
+      description: Fetches the details of past followup of patient.
+      parameters:
+      - name: followUpId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful followup retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowUp'
+        "404":
+          description: Followup not found
+        "500":
+          description: Server error
+      security:
+      - apiKeyAuth: []
+  
+  /visits/{diagnosisId}:
+    get:
+      tags:
+        - Doctor
+      summary: Get Past prescription
+      description: Fetches the past prescription.
+      parameters:
+      - name: diagnosisId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful prescription retrieval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diagnosis'
+        "404":
+          description: Prescription not found
+        "500":
+          description: Server error
+      security:
+      - apiKeyAuth: []
+      
+  /patients/{doctorId}:
+    get:
+      tags:
+        - Doctor
+      summary: Get details of patients under doctor.
+      description: Fetches the details of patient.
+      parameters:
+      - name: doctorId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful details retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+        "404":
+          description: details not found
+        "500":
+          description: Server error
+      security:
+      - apiKeyAuth: []
+  
+  
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        DistrictId:
+          type: integer
+        DistrictStats:
+          type: object
+          
+    inline_response_400:
+      type: object
+      properties:
+        message:
+          type: string
+          
+    LoginRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          example: 9875478934
+        otp:
+          type: string
+          example: 3924
+          
+    LoginResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          
+    FormName:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Diabetes
+        isDefault:
+          type: boolean  
+        
+    FormSkeleton:
+      type: object
+      properties:
+        formSkeletonId:
+          type: integer 
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Diabetes
+        dateOfCreation:
+          type: string
+          format: date
+        isDefault:
+          type: boolean
+        xsdFile:
+          type: string
+        
+    FormIdResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        
+    Taluka:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Mysuru
+          
+    FieldWorker:
+      type: object
+      properties:
+        fieldworkerId:
+          type: integer
+          format: int64
+          example: 10
+        firstName:
+          type: string
+          example: Rajesh
+        lastName:
+          type: string
+          example: Khanna
+        address:
+          type: string
+        talukaId:
+          type: integer
+          format: int64
+          example: 20
+        dob:
+          type: string
+          format: date
+        isAvailable:
+          type: boolean
+        photo: 
+          type: string
+        gender:
+          type: string
+          enum:
+            - Male
+            - Female
+            - Other
+        substituteId:
+          type: integer
+          format: int64
+    
+    Doctor:
+      type: object
+      properties:
+        doctorId:
+          type: integer
+          format: int64
+          example: 1
+        firstName:
+            type: string
+            example: Rajesh
+        lastName:
+          type: string
+          example: Khanna
+        address:
+          type: string
+        talukaId:
+          type: integer
+          format: int64
+          example: 20
+        specialisationId:
+          type: integer
+          format: int64
+        dob:
+          type: string
+          format: date
+        photo: 
+          type: string
+        gender:
+          type: string
+          enum:
+            - Male
+            - Female
+            - Other
+    
+    FollowUp:
+      type: object
+      properties:
+        followUpId:
+          type: integer
+          format: int64
+          example: 4
+        repeatFreq: 
+          type: integer
+          format: int64
+          example: 1
+          default: 1
+        days:
+          type: string
+        duration:
+          type: string
+          enum:
+            - Daily
+            - Alternatievly
+            - Weekly 
+            - Biweekly
+            - Monthly
+        mostRecentFollowUpDate:
+          type: string
+          format: date
+        noOfFolowUpsCompleted:
+          type: integer
+          format: int64
+          default: 0
+          
+    Patient:
+      type: object
+      properties:
+        patientId:
+          type: integer
+          format: int64
+          example: 4
+        firstName:
+          type: string
+          example: Rajesh
+        lastName:
+          type: string
+          example: Khanna
+        address:
+          type: string
+        talukaId:
+          type: integer
+          format: int64
+          example: 20
+        phoneNumber:
+          type: string
+        dob:
+          type: string
+          format: date
+        bloodGroup:
+          type: string
+          
+    OLAPForms:
+      type: object
+      properties:
+        formId:
+          type: integer
+          format: int64
+          example: 7
+        formSkeletonId:
+          type: integer
+          format: int64
+          example: 7
+        patientId:
+          type: integer
+          format: int64
+          example: 7
+        details:
+          type: string
+        score:
+          type: integer
+          format: int64
+          example: 7
+    
+    Medicine:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 14
+        name:
+          type: string
+          example: Paracetamol
+        dosage:
+          type: string
+          example: 600mg
+    
+    Diagnosis:
+      type: object
+      properties:
+        diagnosisId:
+          type: integer
+          format: int64
+          example: 3
+        followUpId:
+          type: integer
+          format: int64
+          example: 4
+        codeId:
+          type: integer
+          format: int64
+          example: 3
+        details:
+          type: object
+          properties:
+            medicine:
+              type: array
+              items:
+                $ref: '#/components/schemas/Medicine'
+    
+    PatientInfo:
+      type: object
+      properties:
+        patient:
+          $ref: '#/components/schemas/Patient'
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              diagnosis:
+                $ref: '#/components/schemas/Diagnosis'
+              olapforms:
+                $ref: '#/components/schemas/OLAPForms'
+    
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+        
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    apiKeyAuth:
+      type: apiKey
+      name: api_key
+      in: header
