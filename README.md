@@ -15,4 +15,5 @@ patients in their local area (e.g district or taluka)
 7. Provides API for state level dashboard that shows data across such programs
 8. Multi-lingual (for field worker)
 
-**UI/UX Design:** https://www.figma.com/file/JQUy4I0SJvftMLQCuwmUQT/AtyaNidan?type=design&node-id=1669%3A162202&mode=design&t=XlSHyEiDvNZ5A831-1
+**UI/UX Design:**
+ https://www.figma.com/file/JQUy4I0SJvftMLQCuwmUQT/AtyaNidan?type=design&node-id=1669%3A162202&mode=design&t=XlSHyEiDvNZ5A831-1
