@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS Admin (
     photo blob,
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
     blood_group varchar(10),
-    aadhar_number varchar(9),
     primary key (admin_id)
 );
 
