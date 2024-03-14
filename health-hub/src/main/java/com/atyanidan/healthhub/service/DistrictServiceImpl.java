@@ -6,6 +6,8 @@ import com.atyanidan.healthhub.entity.Taluka;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -21,6 +23,14 @@ public class DistrictServiceImpl implements DistrictService {
     @Override
     public List<Taluka> getTalukasFromDistrictId(int districtId) {
         District district = districtRepository.findById(districtId).get();
-        return district.getTalukas();
+        List<Taluka> talukas = district.getTalukas();
+        Comparator<Taluka> talukaNameComparator = new Comparator<>() {
+            @Override
+            public int compare(Taluka t1, Taluka t2) {
+                return t1.getName().compareTo(t2.getName());
+            }
+        };
+        talukas.sort(talukaNameComparator);
+        return talukas;
     }
 }
