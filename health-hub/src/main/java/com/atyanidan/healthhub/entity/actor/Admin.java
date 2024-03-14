@@ -35,13 +35,10 @@ public class Admin extends User {
     @Column(name = "dob")
     private Date dob;
 
-    @Column(name = "blood_group")
-    private String bloodGroup;
-
     public Admin() {
     }
 
-    public Admin(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob, String bloodGroup) {
+    public Admin(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -49,7 +46,6 @@ public class Admin extends User {
         this.officeAddress = officeAddress;
         this.gender = gender;
         this.dob = dob;
-        this.bloodGroup = bloodGroup;
     }
 
     public String getFirstName() {
@@ -114,13 +110,5 @@ public class Admin extends User {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getBloodGroup() {
-        return bloodGroup;
-    }
-
-    public void setBloodGroup(String bloodGroup) {
-        this.bloodGroup = bloodGroup;
     }
 }
