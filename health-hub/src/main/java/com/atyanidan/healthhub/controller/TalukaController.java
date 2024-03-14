@@ -1,8 +1,7 @@
 package com.atyanidan.healthhub.controller;
 
 import com.atyanidan.healthhub.entity.Taluka;
-import com.atyanidan.healthhub.entity.actor.User;
-import com.atyanidan.healthhub.service.DistrictService;
+import com.atyanidan.healthhub.service.TalukaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,16 +12,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/atyanidan")
-public class DistrictController {
-    private final DistrictService districtService;
+public class TalukaController {
+    private final TalukaService talukaService;
 
     @Autowired
-    public DistrictController(DistrictService districtService) {
-        this.districtService = districtService;
+    public TalukaController(TalukaService talukaService) {
+        this.talukaService = talukaService;
     }
 
     @GetMapping("/districts/{districtId}/talukas")
     public List<Taluka> getTalukasFromDistrictId(@PathVariable int districtId) {
-        return districtService.getTalukasFromDistrictId(districtId);
+        return talukaService.getTalukasFromDistrictId(districtId);
     }
 }

@@ -4,6 +4,6 @@ import com.atyanidan.healthhub.entity.Taluka;
 
 import java.util.List;
 
-public interface DistrictService {
+public interface TalukaService {
     List<Taluka> getTalukasFromDistrictId(int districtId);
 }

@@ -2,8 +2,6 @@ package com.atyanidan.healthhub.entity;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "District")
 public class District {
@@ -18,9 +16,6 @@ public class District {
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;
-
-    @OneToMany(mappedBy = "district")
-    private List<Taluka> talukas;
 
     public District() {}
 
@@ -42,13 +37,5 @@ public class District {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Taluka> getTalukas() {
-        return talukas;
-    }
-
-    public void setTalukas(List<Taluka> talukas) {
-        this.talukas = talukas;
     }
 }
