@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS Admin (
     dob date,
     photo blob,
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
-    blood_group varchar(10),
     primary key (admin_id)
 );
 
