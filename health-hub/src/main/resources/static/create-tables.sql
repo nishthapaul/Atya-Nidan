@@ -31,8 +31,8 @@ ADD FOREIGN KEY (district_id) REFERENCES District(district_id);
 
 CREATE TABLE IF NOT EXISTS User (
 	user_id int AUTO_INCREMENT,
-    phone_number varchar(10) NOT NULL,
-    email varchar(100) NOT NULL,
+    phone_number varchar(10) NOT NULL UNIQUE,
+    email varchar(100) NOT NULL UNIQUE,
     role ENUM('SuperAdmin', 'Admin', 'Doctor', 'FieldWorker') NOT NULL,
     primary key (user_id)
 );
@@ -58,8 +58,8 @@ ADD FOREIGN KEY (admin_id) REFERENCES User(user_id);
 ALTER TABLE Admin
 ADD FOREIGN KEY (district_id) REFERENCES District(district_id);
 
-CREATE TABLE IF NOT EXISTS FieldWorker (
-	fieldworker_id int,
+CREATE TABLE IF NOT EXISTS Field_Worker (
+	field_worker_id int,
     first_name varchar(100) NOT NULL,
     middle_name varchar(100),
     last_name varchar(100) NOT NULL,
@@ -73,16 +73,16 @@ CREATE TABLE IF NOT EXISTS FieldWorker (
     photo blob,
 	gender ENUM('Male', 'Female', 'Other') NOT NULL,
 	blood_group varchar(10),
-	aadhar_number varchar(9),
+	aadhar_number varchar(12),
     substitute_id int,
-    primary key (fieldworker_id)
+    primary key (field_worker_id)
 );
 
-ALTER TABLE FieldWorker
-ADD FOREIGN KEY (fieldworker_id) REFERENCES User(user_id);
+ALTER TABLE Field_Worker
+ADD FOREIGN KEY (field_worker_id) REFERENCES User(user_id);
 
-ALTER TABLE FieldWorker
+ALTER TABLE Field_Worker
 ADD FOREIGN KEY (taluka_id) REFERENCES Taluka(taluka_id);
 
-ALTER TABLE FieldWorker
-ADD FOREIGN KEY (substitute_id) REFERENCES FieldWorker(fieldworker_id);
+ALTER TABLE Field_Worker
+ADD FOREIGN KEY (substitute_id) REFERENCES Field_Worker(fieldworker_id);
