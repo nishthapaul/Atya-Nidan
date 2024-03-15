@@ -53,7 +53,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
 
     @Override
     public List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId) {
-        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId);
+        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId, Sort.by(Sort.Direction.ASC, "firstName"));
     }
 
     @Override
