@@ -25,8 +25,8 @@ public class FieldWorkerController {
     }
 
     @GetMapping("/districts/{districtId}/fieldworkers")
-    public List<FieldWorker> getFieldWorkersFromDistrictId(@PathVariable int districtId) {
-        return fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId);
+    public List<FieldWorker> getFieldWorkersFromDistrictId(@PathVariable int districtId, @RequestParam("offset") int offset, @RequestParam("pageSize") int pageSize) {
+        return fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId, offset, pageSize);
     }
 
     @PostMapping("/talukas/{talukaId}/fieldworkers")

@@ -9,6 +9,7 @@ import com.atyanidan.healthhub.exception.NotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -52,8 +53,8 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
     }
 
     @Override
-    public List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId) {
-        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId, Sort.by(Sort.Direction.ASC, "firstName"));
+    public List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId, int offset, int pageSize) {
+        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId, PageRequest.of(offset, pageSize, Sort.by("firstName").ascending()));
     }
 
     @Override
