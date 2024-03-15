@@ -9,6 +9,7 @@ import com.atyanidan.healthhub.exception.NotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
     @Override
     public List<FieldWorker> getFieldWorkersFromDistrictId(int districtId) {
         List<FieldWorker> fieldWorkers = new ArrayList<>();
-        List<Taluka> talukasByDistrictId = talukaRepository.getTalukasByDistrictId(districtId);
+        List<Taluka> talukasByDistrictId = talukaRepository.getTalukasByDistrictId(districtId, Sort.by(Sort.Direction.ASC, "name"));
         for (Taluka taluka : talukasByDistrictId) {
             fieldWorkers.addAll(fieldWorkerRepository.getFieldWorkersByTalukaId(taluka.getId()));
         }
