@@ -86,3 +86,38 @@ ADD FOREIGN KEY (taluka_id) REFERENCES Taluka(taluka_id);
 
 ALTER TABLE Field_Worker
 ADD FOREIGN KEY (substitute_id) REFERENCES Field_Worker(fieldworker_id);
+
+CREATE TABLE IF NOT EXISTS Specialisation (
+	specialisation_id int AUTO_INCREMENT,
+    name varchar(100) NOT NULL,
+    description varchar(100),
+    primary key (specialisation_id)
+);
+
+CREATE TABLE IF NOT EXISTS Doctor (
+	doctor_id int,
+    first_name varchar(100) NOT NULL,
+    middle_name varchar(100),
+    last_name varchar(100) NOT NULL,
+    home_address varchar(100) NOT NULL,
+    hospital_address varchar(100) NOT NULL,
+    nearest_railway_station varchar(100),
+    specialisation_id int NOT NULL,
+    languages_known varchar(50) DEFAULT "Hindi",
+    taluka_id int NOT NULL,
+    dob date,
+    photo blob,
+	gender ENUM('Male', 'Female', 'Other') NOT NULL,
+	blood_group varchar(10),
+	aadhar_number varchar(12),
+    primary key (doctor_id)
+);
+
+ALTER TABLE Doctor
+ADD FOREIGN KEY (doctor_id) REFERENCES User(user_id);
+
+ALTER TABLE Doctor
+ADD FOREIGN KEY (taluka_id) REFERENCES Taluka(taluka_id);
+
+ALTER TABLE Doctor
+ADD FOREIGN KEY (specialisation_id) REFERENCES Specialisation(specialisation_id);
