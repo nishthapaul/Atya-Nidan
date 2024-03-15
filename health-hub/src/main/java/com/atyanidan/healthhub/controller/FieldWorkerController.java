@@ -1,6 +1,7 @@
 package com.atyanidan.healthhub.controller;
 
 import com.atyanidan.healthhub.entity.actor.FieldWorker;
+import com.atyanidan.healthhub.model.APIResponse;
 import com.atyanidan.healthhub.service.FieldWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,9 @@ public class FieldWorkerController {
     }
 
     @GetMapping("/districts/{districtId}/fieldworkers")
-    public List<FieldWorker> getFieldWorkersFromDistrictId(@PathVariable int districtId, @RequestParam("offset") int offset, @RequestParam("pageSize") int pageSize) {
-        return fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId, offset, pageSize);
+    public APIResponse<List<FieldWorker>> getFieldWorkersFromDistrictId(@PathVariable int districtId, @RequestParam("offset") int offset, @RequestParam("pageSize") int pageSize) {
+        List<FieldWorker> fieldWorkersList = fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId, offset, pageSize);
+        return new APIResponse<>(fieldWorkersList.size(), fieldWorkersList);
     }
 
     @PostMapping("/talukas/{talukaId}/fieldworkers")
