@@ -8,5 +8,7 @@ public interface FieldWorkerService {
     List<FieldWorker> getFieldWorkersFromTalukaId(int talukaId);
     List<FieldWorker> getFieldWorkersFromDistrictId(int districtId);
 
+    List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId);
+
     FieldWorker addFieldWorker(int talukaId, FieldWorker fieldWorker) throws Exception;
 }

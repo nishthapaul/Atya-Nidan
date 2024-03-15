@@ -52,6 +52,11 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
     }
 
     @Override
+    public List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId) {
+        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId);
+    }
+
+    @Override
     public FieldWorker addFieldWorker(int talukaId, FieldWorker fieldWorker) throws Exception {
         Optional<Taluka> optionalEntity = talukaRepository.findById(talukaId);
         if (optionalEntity.isPresent()) {
