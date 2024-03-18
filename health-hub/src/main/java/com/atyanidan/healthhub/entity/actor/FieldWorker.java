@@ -44,10 +44,13 @@ public class FieldWorker extends User {
     @Column(name = "aadhar_number")
     private String aadharNumber;
 
+    @Column(name = "is_available")
+    private Boolean isAvailable;
+
     public FieldWorker() {
     }
 
-    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation) {
+    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean isAvailable) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -58,6 +61,7 @@ public class FieldWorker extends User {
         this.bloodGroup = bloodGroup;
         this.aadharNumber = aadharNumber;
         this.nearestRailwayStation = nearestRailwayStation;
+        this.isAvailable = isAvailable;
     }
 
     public String getFirstName() {
@@ -146,5 +150,13 @@ public class FieldWorker extends User {
 
     public void setNearestRailwayStation(String nearestRailwayStation) {
         this.nearestRailwayStation = nearestRailwayStation;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
     }
 }
