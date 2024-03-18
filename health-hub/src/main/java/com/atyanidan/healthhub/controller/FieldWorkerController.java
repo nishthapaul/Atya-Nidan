@@ -2,6 +2,7 @@ package com.atyanidan.healthhub.controller;
 
 import com.atyanidan.healthhub.entity.actor.FieldWorker;
 import com.atyanidan.healthhub.model.APIResponse;
+import com.atyanidan.healthhub.model.requestbody.FieldWorkerAvailabilityRequest;
 import com.atyanidan.healthhub.service.FieldWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,12 @@ public class FieldWorkerController {
         System.out.println(fieldWorker);
         FieldWorker dbFieldWorker = fieldWorkerService.addFieldWorker(talukaId, fieldWorker);
         return ResponseEntity.status(HttpStatus.CREATED).body(dbFieldWorker);
+    }
+
+    @PutMapping("/fieldworkers/{fieldWorkerId}")
+    public ResponseEntity<FieldWorker> updateFieldWorkerAvailability(@PathVariable int fieldWorkerId, @RequestBody FieldWorkerAvailabilityRequest requestBody) {
+        System.out.println(requestBody);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new FieldWorker());
     }
 
 }
