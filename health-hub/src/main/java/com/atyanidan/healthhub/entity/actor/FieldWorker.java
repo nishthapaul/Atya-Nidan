@@ -47,6 +47,10 @@ public class FieldWorker extends User {
     @Column(name = "is_available")
     private Boolean isAvailable;
 
+    @OneToOne
+    @JoinColumn(name = "substitute_id")
+    private FieldWorker substitute;
+
     public FieldWorker() {
     }
 
@@ -158,5 +162,16 @@ public class FieldWorker extends User {
 
     public void setAvailable(Boolean available) {
         isAvailable = available;
+    }
+
+    public Integer getSubstitute() {
+        if (substitute != null)
+            return substitute.getId();
+        else
+            return null;
+    }
+
+    public void setSubstitute(FieldWorker substitute) {
+        this.substitute = substitute;
     }
 }
