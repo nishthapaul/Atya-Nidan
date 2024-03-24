@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS Field_Worker (
     languages_known varchar(50) DEFAULT "Hindi",
     taluka_id int NOT NULL,
     dob date,
-    is_available bit DEFAULT 0,
+    available bit DEFAULT 0,
     photo blob,
 	gender ENUM('Male', 'Female', 'Other') NOT NULL,
 	blood_group varchar(10),

@@ -32,7 +32,7 @@ VALUES
 ('9650644186', 'nehalsharma@gmail.com', 'FieldWorker');
 
 -- Inserting details for field workers into Field_Worker table
-INSERT INTO `atya_nidan`.`Field_Worker` (`field_worker_id`, `first_name`, `middle_name`, `last_name`, `home_address`, `office_address`, `nearest_railway_station`, `taluka_id`, `dob`, `is_available`, `gender`, `blood_group`, `aadhar_number`)
+INSERT INTO `atya_nidan`.`Field_Worker` (`field_worker_id`, `first_name`, `middle_name`, `last_name`, `home_address`, `office_address`, `nearest_railway_station`, `taluka_id`, `dob`, `available`, `gender`, `blood_group`, `aadhar_number`)
 VALUES
 (33, 'Vikram', 'Singh', 'Sharma', 'House no 29, Sikanderpur', 'Office No 301, MG Road', 'Gurgaon Railway Station', 1, '1992-04-20', 1, 'Male', 'A-', '123456789100'),
 (34, 'Anita', 'Kumari', 'Gupta', 'House no 21, Pataudi', 'Office No 404, New Colony', 'Pataudi Railway Station', 2, '1993-08-15', 0, 'Female', 'B+', '123456789101'),

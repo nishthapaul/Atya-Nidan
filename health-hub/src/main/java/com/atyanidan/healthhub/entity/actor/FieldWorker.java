@@ -44,8 +44,8 @@ public class FieldWorker extends User {
     @Column(name = "aadhar_number")
     private String aadharNumber;
 
-    @Column(name = "is_available")
-    private Boolean isAvailable;
+    @Column(name = "available")
+    private Boolean available;
 
     @OneToOne
     @JoinColumn(name = "substitute_id")
@@ -54,7 +54,7 @@ public class FieldWorker extends User {
     public FieldWorker() {
     }
 
-    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean isAvailable) {
+    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean available) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -65,7 +65,7 @@ public class FieldWorker extends User {
         this.bloodGroup = bloodGroup;
         this.aadharNumber = aadharNumber;
         this.nearestRailwayStation = nearestRailwayStation;
-        this.isAvailable = isAvailable;
+        this.available = available;
     }
 
     public String getFirstName() {
@@ -157,11 +157,11 @@ public class FieldWorker extends User {
     }
 
     public Boolean getAvailable() {
-        return isAvailable;
+        return available;
     }
 
     public void setAvailable(Boolean available) {
-        isAvailable = available;
+        this.available = available;
     }
 
     public Integer getSubstitute() {
