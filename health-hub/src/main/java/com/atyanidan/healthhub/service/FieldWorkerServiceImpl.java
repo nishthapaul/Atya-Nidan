@@ -32,7 +32,12 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
     }
 
     @Override
-    public List<FieldWorker> getFieldWorkersFromTalukaId(int talukaId) {
+    public List<FieldWorker> getFieldWorkersByTalukaIdAndAvailable(int talukaId, Boolean available) {
+        return fieldWorkerRepository.findByTalukaIdAndAvailable(talukaId, available);
+    }
+
+    @Override
+    public List<FieldWorker> getFieldWorkersByTalukaId(int talukaId) {
         return fieldWorkerRepository.getFieldWorkersByTalukaId(talukaId);
     }
 

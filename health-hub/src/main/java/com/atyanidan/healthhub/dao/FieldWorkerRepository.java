@@ -14,6 +14,8 @@ public interface FieldWorkerRepository extends JpaRepository<FieldWorker, Intege
     List<FieldWorker> getFieldWorkersByTalukaId(int talukaId);
     // getByTalukaId(int) will also work
 
+    List<FieldWorker> findByTalukaIdAndAvailable(int talukaId, boolean available);
+
     @Query("SELECT fw FROM FieldWorker fw JOIN fw.taluka t JOIN t.district d WHERE d.id = :districtId")
     List<FieldWorker> getFieldWorkersByDistrictId(int districtId, Pageable pageable);
 }

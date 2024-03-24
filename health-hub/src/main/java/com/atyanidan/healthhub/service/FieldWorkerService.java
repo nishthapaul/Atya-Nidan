@@ -6,7 +6,8 @@ import com.atyanidan.healthhub.model.requestbody.FieldWorkerAvailabilityRequest;
 import java.util.List;
 
 public interface FieldWorkerService {
-    List<FieldWorker> getFieldWorkersFromTalukaId(int talukaId);
+    List<FieldWorker> getFieldWorkersByTalukaId(int talukaId);
+    List<FieldWorker> getFieldWorkersByTalukaIdAndAvailable(int talukaId, Boolean available);
     List<FieldWorker> getFieldWorkersFromDistrictId(int districtId);
 
     List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId, int offset, int pageSize);

@@ -22,8 +22,11 @@ public class FieldWorkerController {
     }
 
     @GetMapping("/talukas/{talukaId}/fieldworkers")
-    public List<FieldWorker> getFieldWorkersFromTalukaId(@PathVariable int talukaId) {
-        return fieldWorkerService.getFieldWorkersFromTalukaId(talukaId);
+    public List<FieldWorker> getFieldWorkersFromTalukaId(@PathVariable int talukaId, @RequestParam(required = false) Boolean available) {
+        if ( available != null )
+            return fieldWorkerService.getFieldWorkersByTalukaIdAndAvailable(talukaId, available);
+        else
+            return fieldWorkerService.getFieldWorkersByTalukaId(talukaId);
     }
 
     @GetMapping("/districts/{districtId}/fieldworkers")
