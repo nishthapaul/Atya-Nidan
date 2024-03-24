@@ -41,8 +41,8 @@ public class FieldWorkerController {
 
     @PutMapping("/fieldworkers/{fieldWorkerId}")
     public ResponseEntity<FieldWorker> updateFieldWorkerAvailability(@PathVariable int fieldWorkerId, @RequestBody FieldWorkerAvailabilityRequest requestBody) {
-        System.out.println(requestBody);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new FieldWorker());
+        FieldWorker dbFieldWorker = fieldWorkerService.updateAvailability(fieldWorkerId, requestBody);
+        return ResponseEntity.status(HttpStatus.OK).body(dbFieldWorker);
     }
 
 }

@@ -6,6 +6,7 @@ import com.atyanidan.healthhub.entity.Taluka;
 import com.atyanidan.healthhub.entity.actor.FieldWorker;
 import com.atyanidan.healthhub.exception.ConflictException;
 import com.atyanidan.healthhub.exception.NotFoundException;
+import com.atyanidan.healthhub.model.requestbody.FieldWorkerAvailabilityRequest;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -78,5 +79,26 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
         } else {
             throw new NotFoundException("Taluka id not found: " + talukaId);
         }
+    }
+
+    @Override
+    public FieldWorker updateAvailability(int fieldWorkerId, FieldWorkerAvailabilityRequest requestBody) {
+        FieldWorker fieldWorker = getFieldWorkerById(fieldWorkerId);
+        fieldWorker.setAvailable(requestBody.getAvailable());
+        if ( requestBody.getAvailable() ) {
+            fieldWorker.setSubstitute(null);
+        } else {
+            FieldWorker substituteFieldWorker = getFieldWorkerById(requestBody.getSubstituteFieldWorkerId());
+            fieldWorker.setSubstitute(substituteFieldWorker);
+        }
+        return fieldWorkerRepository.save(fieldWorker);
+    }
+
+    private FieldWorker getFieldWorkerById(int fieldWorkerId) throws NotFoundException {
+        Optional<FieldWorker> optionalFieldWorkerId = fieldWorkerRepository.findById(fieldWorkerId);
+        if ( optionalFieldWorkerId.isEmpty() ) {
+            throw new NotFoundException("Field Worker id not found: " + fieldWorkerId);
+        }
+        return optionalFieldWorkerId.get();
     }
 }
