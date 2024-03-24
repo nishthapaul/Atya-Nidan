@@ -11,8 +11,9 @@ import java.util.List;
 
 @Repository
 public interface FieldWorkerRepository extends JpaRepository<FieldWorker, Integer> {
-    List<FieldWorker> getFieldWorkersByTalukaId(int talukaId);
+    List<FieldWorker> findByTalukaId(int talukaId);
     // getByTalukaId(int) will also work
+    // getFieldWorkersByTalukaId(int) will also work
 
     List<FieldWorker> findByTalukaIdAndAvailable(int talukaId, boolean available);
 

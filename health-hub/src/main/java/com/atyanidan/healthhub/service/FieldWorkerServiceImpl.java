@@ -38,7 +38,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
 
     @Override
     public List<FieldWorker> getFieldWorkersByTalukaId(int talukaId) {
-        return fieldWorkerRepository.getFieldWorkersByTalukaId(talukaId);
+        return fieldWorkerRepository.findByTalukaId(talukaId);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
         List<FieldWorker> fieldWorkers = new ArrayList<>();
         List<Taluka> talukasByDistrictId = talukaRepository.getTalukasByDistrictId(districtId, Sort.by(Sort.Direction.ASC, "name"));
         for (Taluka taluka : talukasByDistrictId) {
-            fieldWorkers.addAll(fieldWorkerRepository.getFieldWorkersByTalukaId(taluka.getId()));
+            fieldWorkers.addAll(fieldWorkerRepository.findByTalukaId(taluka.getId()));
         }
         Comparator<FieldWorker> fieldWorkerFirstNameComparator = new Comparator<>() {
             @Override
