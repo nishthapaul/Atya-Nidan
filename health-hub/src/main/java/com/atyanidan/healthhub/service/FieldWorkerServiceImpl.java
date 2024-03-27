@@ -59,8 +59,8 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
     }
 
     @Override
-    public List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId, int offset, int pageSize) {
-        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId, PageRequest.of(offset, pageSize, Sort.by("firstName").ascending()));
+    public List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId) {
+        return fieldWorkerRepository.getFieldWorkersByDistrictId(districtId);
     }
 
     @Override

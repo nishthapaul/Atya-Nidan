@@ -30,9 +30,8 @@ public class FieldWorkerController {
     }
 
     @GetMapping("/districts/{districtId}/fieldworkers")
-    public APIResponse<List<FieldWorker>> getFieldWorkersFromDistrictId(@PathVariable int districtId, @RequestParam("offset") int offset, @RequestParam("pageSize") int pageSize) {
-        List<FieldWorker> fieldWorkersList = fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId, offset, pageSize);
-        return new APIResponse<>(fieldWorkersList.size(), fieldWorkersList);
+    public List<FieldWorker> getFieldWorkersFromDistrictId(@PathVariable int districtId) {
+        return fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId);
     }
 
     @PostMapping("/talukas/{talukaId}/fieldworkers")

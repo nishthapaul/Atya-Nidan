@@ -10,7 +10,7 @@ public interface FieldWorkerService {
     List<FieldWorker> getFieldWorkersByTalukaIdAndAvailable(int talukaId, Boolean available);
     List<FieldWorker> getFieldWorkersFromDistrictId(int districtId);
 
-    List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId, int offset, int pageSize);
+    List<FieldWorker> getFieldWorkersFromDistrictIdV2(int districtId);
 
     FieldWorker addFieldWorker(int talukaId, FieldWorker fieldWorker) throws Exception;
 
