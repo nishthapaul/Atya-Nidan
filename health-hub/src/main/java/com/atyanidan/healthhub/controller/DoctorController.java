@@ -21,9 +21,8 @@ public class DoctorController {
     }
 
     @GetMapping("/districts/{districtId}/doctors")
-    public APIResponse<List<Doctor>> getDoctorsFromDistrictId(@PathVariable int districtId, @RequestParam("offset") int offset, @RequestParam("pageSize") int pageSize) {
-        List<Doctor> doctorsList = doctorService.getDoctorsFromDistrictId(districtId, offset, pageSize);
-        return new APIResponse<>(doctorsList.size(), doctorsList);
+    public List<Doctor> getDoctorsFromDistrictId(@PathVariable int districtId) {
+        return doctorService.getDoctorsFromDistrictId(districtId);
     }
 
     @PostMapping("/talukas/{talukaId}/doctors")

@@ -29,8 +29,8 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<Doctor> getDoctorsFromDistrictId(int districtId, int offset, int pageSize) {
-        return doctorRepository.getDoctorsFromDistrictId(districtId, PageRequest.of(offset, pageSize, Sort.by("firstName").ascending()));
+    public List<Doctor> getDoctorsFromDistrictId(int districtId) {
+        return doctorRepository.getDoctorsFromDistrictId(districtId);
     }
 
     @Override
