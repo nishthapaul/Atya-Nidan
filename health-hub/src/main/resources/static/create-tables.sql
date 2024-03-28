@@ -85,7 +85,7 @@ ALTER TABLE Field_Worker
 ADD FOREIGN KEY (taluka_id) REFERENCES Taluka(taluka_id);
 
 ALTER TABLE Field_Worker
-ADD FOREIGN KEY (substitute_id) REFERENCES Field_Worker(fieldworker_id);
+ADD FOREIGN KEY (substitute_id) REFERENCES Field_Worker(field_worker_id);
 
 CREATE TABLE IF NOT EXISTS Specialisation (
 	specialisation_id int AUTO_INCREMENT,
