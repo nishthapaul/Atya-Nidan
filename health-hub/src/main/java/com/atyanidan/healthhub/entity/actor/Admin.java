@@ -2,6 +2,7 @@ package com.atyanidan.healthhub.entity.actor;
 
 import com.atyanidan.healthhub.entity.District;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.sql.Date;
 
@@ -11,25 +12,30 @@ import java.sql.Date;
 public class Admin extends User {
 
     @Column(name = "first_name")
+    @NotNull
     private String firstName;
 
     @Column(name = "middle_name")
     private String middleName;
 
     @Column(name = "last_name")
+    @NotNull
     private String lastName;
 
     @Column(name = "home_address")
+    @NotNull
     private String homeAddress;
 
     @Column(name = "office_address")
+    @NotNull
     private String officeAddress;
 
     @Column(name = "gender")
     private String gender;
 
     @OneToOne
-    @JoinColumn(name = "district_id")
+    @JoinColumn(name = "district_id", unique = true)
+    @NotNull
     private District district;
 
     @Column(name = "dob")

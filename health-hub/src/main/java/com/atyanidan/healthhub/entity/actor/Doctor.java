@@ -3,6 +3,7 @@ package com.atyanidan.healthhub.entity.actor;
 import com.atyanidan.healthhub.entity.Specialisation;
 import com.atyanidan.healthhub.entity.Taluka;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.sql.Date;
 
@@ -12,18 +13,22 @@ import java.sql.Date;
 public class Doctor extends User {
 
     @Column(name = "first_name")
+    @NotNull
     private String firstName;
 
     @Column(name = "middle_name")
     private String middleName;
 
     @Column(name = "last_name")
+    @NotNull
     private String lastName;
 
     @Column(name = "home_address")
+    @NotNull
     private String homeAddress;
 
     @Column(name = "hospital_address")
+    @NotNull
     private String hospitalAddress;
 
     @Column(name = "nearest_railway_station")
@@ -34,10 +39,12 @@ public class Doctor extends User {
 
     @ManyToOne
     @JoinColumn(name = "specialisation_id")
+    @NotNull
     private Specialisation specialisation;
 
     @ManyToOne
     @JoinColumn(name = "taluka_id")
+    @NotNull
     private Taluka taluka;
 
     @Column(name = "dob")

@@ -1,6 +1,7 @@
 package com.atyanidan.healthhub.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Taluka")
@@ -11,10 +12,12 @@ public class Taluka {
     private int id;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "district_id")
+    @NotNull
     private District district;
 
     public Taluka() {}

@@ -2,6 +2,8 @@ package com.atyanidan.healthhub.entity.actor;
 
 import com.atyanidan.healthhub.entity.Taluka;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.sql.Date;
 
@@ -11,21 +13,26 @@ import java.sql.Date;
 public class FieldWorker extends User {
 
     @Column(name = "first_name")
+    @NotNull
     private String firstName;
 
     @Column(name = "middle_name")
     private String middleName;
 
     @Column(name = "last_name")
+    @NotNull
     private String lastName;
 
     @Column(name = "home_address")
+    @NotNull
     private String homeAddress;
 
     @Column(name = "office_address")
+    @NotNull
     private String officeAddress;
 
     @Column(name = "nearest_railway_station")
+    @NotNull
     private String nearestRailwayStation;
 
     @Column(name = "gender")
@@ -33,6 +40,7 @@ public class FieldWorker extends User {
 
     @ManyToOne
     @JoinColumn(name = "taluka_id")
+    @NotNull
     private Taluka taluka;
 
     @Column(name = "dob")
@@ -44,7 +52,8 @@ public class FieldWorker extends User {
     @Column(name = "aadhar_number")
     private String aadharNumber;
 
-    @Column(name = "available")
+    @Column(name = "available", columnDefinition = "DEFAULT 0")
+
     private Boolean available;
 
     @OneToOne
