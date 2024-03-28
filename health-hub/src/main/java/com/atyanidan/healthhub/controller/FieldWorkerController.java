@@ -36,7 +36,6 @@ public class FieldWorkerController {
 
     @PostMapping("/talukas/{talukaId}/fieldworkers")
     public ResponseEntity<FieldWorker> addFieldWorker(@PathVariable int talukaId, @RequestBody FieldWorker fieldWorker) throws Exception {
-        System.out.println(fieldWorker);
         FieldWorker dbFieldWorker = fieldWorkerService.addFieldWorker(talukaId, fieldWorker);
         return ResponseEntity.status(HttpStatus.CREATED).body(dbFieldWorker);
     }
