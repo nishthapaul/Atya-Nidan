@@ -2,6 +2,7 @@ package com.atyanidan.healthhub.entity.actor;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "User")
@@ -14,6 +15,7 @@ public class User {
 
     @Column(name = "phone_number", unique = true)
     @NotNull
+    @Size(max=10, min=10)
     private String phoneNumber;
 
     @Column(name = "email", unique = true)
