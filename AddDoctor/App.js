@@ -1,51 +1,29 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Alert, ScrollView, View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity, SafeAreaView, Modal } from 'react-native';
-import AppHeader from './components/ProfilePage/AppHeader.js';
-import AppFooter from './components/ProfilePage/AppFooter.js';
-import Sidebar from './components/ProfilePage/sidebar.js';
-import ProfileContent from './components/ProfilePage/ProfileContent';
-import ProfilePhotoModal from './components/ProfilePage/ProfilePhotoModal';
+import AppHeader from './components/AppHeader.js';
+import AppFooter from './components/AppFooter.js'; 
+import UserInformation from './components/UserInformation.js'; 
+import ModalContent from './components/ModalContent';
 
-const App = () => {
-
-  const [district, setDistrict] = useState('Thane');
+const MyProfilePage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [taluka, setTaluka] = useState('Kurla');
-  const [firstName, setFirstName] = useState('Rajesh');
-  const [middleName, setMiddleName] = useState('Suresh');
-  const [lastName, setLastName] = useState('Khanna');
+  const [firstName, setfirstName] = useState('Rajesh');
+  const [middleName, setmiddleName] = useState('Suresh');
+  const [lastName, setlastName] = useState('Khanna');
   const [selectedMenuItem, setSelectedMenuItem] = useState('Basics');
   const [address, setAddress] = useState('House No. 1891, Sector 16, Faridabad, Haryana');
-  const [age, setAge] = useState('49');
   const [contactNumber, setContactNumber] = useState('+919876543219');
-  const [gender, setGender] = useState('M');
-  const [dateOfBirth, setDateOfBirth] = useState('2001/03/02');
-  const [officeAddress, setOfficeAddress] = useState('Office Address');
-  const [bloodGroup, setBloodGroup] = useState('AB+');
   const [emailId, setEmailId] = useState('example@example.com');
-  const [nearestRailwayStation, setNearestRailwayStation] = useState('Nearest Railway Station');
-  const [languagesKnown, setLanguagesKnown] = useState('English, Spanish, Mandarin');
+  
 
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const scrollViewRef = useRef();
-  const [tableData, setTableData] = useState([]);
-    const [selectedUser, setSelectedUser] = useState({});
-  useEffect(() => {
-    console.log("inside useeffect")
-    fetch("https://1736-103-156-19-229.ngrok-free.app/atyanidan/users/9650644204")
-        .then((response) => {
-            console.log("response", response);
-            return response.json()
-        })
-        .then((data) => {
-            console.log("fetch_data", data);
-            setTableData(data);
-            setSelectedUser(data[0]);
-        })
-        .catch((error) => console.error("Error fetching data:", error));
-}, []);
+  const openModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
   const handleMenuItemClick = (menuItem) => {
     setSelectedMenuItem(menuItem);
@@ -95,41 +73,46 @@ const App = () => {
     }
   };
 
+  const getMenuItemStyle = (menuItem) => {
+    return menuItem === selectedMenuItem ? styles.selectedMenuItem : styles.menuItem;
+  };
+  const handleImageUpload = () => {
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppHeader />
 
-      <View style={styles.container}>
-        {/* Sidebar */}
-        <View style={{ flex: 0, flexDirection: 'row' }}>
-        <Sidebar
-          handleMenuItemClick={handleMenuItemClick}
-          selectedMenuItem={selectedMenuItem}
-        />
-      </View>
-        
+      <View style={styles.container}>        
         {/* Main Content */}
         <ScrollView ref={scrollViewRef} style={styles.mainContent} alwaysBounceVertical={false}> 
-        <ProfileContent
+        <UserInformation
           firstName={firstName}
-          setFirstName={setFirstName}
           middleName={middleName}
-          setMiddleName={setMiddleName}
           lastName={lastName}
-          setLastName={setLastName}
           address={address}
-          setAddress={setAddress}
           contactNumber={contactNumber}
-          setContactNumber={setContactNumber}
           emailId={emailId}
+          setfirstName={setfirstName}
+          setmiddleName={setmiddleName}
+          setlastName={setlastName}
+          setAddress={setAddress}
+          setContactNumber={setContactNumber}
           setEmailId={setEmailId}
-          languagesKnown={languagesKnown}
-          setLanguagesKnown={setLanguagesKnown}
-        />
+          handleImageUpload={handleImageUpload} // Pass handleImageUpload as a prop
+      />
         </ScrollView>
       </View>
-      <ProfilePhotoModal isVisible={isModalVisible} onClose={toggleModal} />
-
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <ModalContent closeModal={closeModal} />
+        </View>
+      </Modal>
       <AppFooter/>
     </SafeAreaView>
   );
@@ -149,7 +132,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-
 });
 
-export default App;
+export default MyProfilePage;
