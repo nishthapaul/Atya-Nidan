@@ -27,8 +27,8 @@ const DoctorScreen = ({ navigation }) => {
     console.log(valueFromRadio);
     const filteredSearchData = data.filter((item) => {
       return valueFromRadio === 1 ?
-        (item.name.toLowerCase().includes(text.toLowerCase())) :
-        (item.taluka.toLowerCase().includes(text.toLowerCase()))
+        (item.firstName.toLowerCase().includes(text.toLowerCase())) :
+        (item.taluka.name.toLowerCase().includes(text.toLowerCase()))
     }
     );
     setSearchQuery(text);
@@ -59,16 +59,16 @@ const DoctorScreen = ({ navigation }) => {
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
-          <Text style={[styles.tableCell, { flex: 3 }]}>{item.name}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialization}</Text>
+          <Text style={[styles.tableCell, { flex: 3 }]}>{item.firstName + " " + item.lastName}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
         </View>
       </Pressable>
     )
   };
   useEffect(() => {
     // Make API call on component mount
-    axios.get('http://10.0.2.2:3001/doctor')
+    axios.get('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/districts/1/doctors')
       .then(response => {
         // Update state with API data
         console.log("response", response);

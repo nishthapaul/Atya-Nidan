@@ -23,13 +23,14 @@ const FieldWorkerScreen = ({ navigation }) => {
   const [valueFromRadio, setValueFromRadio] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [admin, setAdmin] = useState([]);
 
   const handleSearch = (text) => {
     console.log(valueFromRadio);
     const filteredSearchData = data.filter((item) => {
       return valueFromRadio === 1 ?
-        (item.name.toLowerCase().includes(text.toLowerCase())) :
-        (item.taluka.toLowerCase().includes(text.toLowerCase()))
+        (item.firstName.toLowerCase().includes(text.toLowerCase())) :
+        (item.taluka.nametoLowerCase().includes(text.toLowerCase()))
     }
     );
     setSearchQuery(text);
@@ -60,8 +61,8 @@ const FieldWorkerScreen = ({ navigation }) => {
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.name}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.firstName + " " + item.lastName}</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>True</Text>
         </View>
       </Pressable>
@@ -69,17 +70,33 @@ const FieldWorkerScreen = ({ navigation }) => {
   };
   useEffect(() => {
     // Make API call on component mount
-    axios.get('http://10.0.2.2:3000/fieldWorker')
+    axios.get('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/districts/3/fieldworkers')
       .then(response => {
         // Update state with API data
         console.log("response", response);
+        console.log("response.data", response.data);
+
         setData(response.data);
-        setSelectedUser(response.data[0]);
+        setSelectedUser(response.data[0]);      
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, []);
+  // useEffect(() => {
+  //   // https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/users/9650644166
+  //   // Make API call on component mount
+  //   axios.get('http://10.0.2.2:3000/fieldWorker')
+  //     .then(response => {
+  //       // Update state with API data
+  //       console.log("response", response);
+  //       setData(response.data);
+  //       setSelectedUser(response.data[0]);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
   return (
     <View style={styles.container}>
       <View style={styles.list}>

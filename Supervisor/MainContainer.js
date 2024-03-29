@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
+import axios from 'axios';
 
 // Screens
 import FieldWorkerScreen from './screens/FieldWorkerScreen';
@@ -12,6 +13,28 @@ import ProfileScreen from './screens/ProfileScreen';
 const Tab = createBottomTabNavigator();
 
 function MainContainer() {
+  const [admin, setAdmin] = React.useState([]);
+
+         React.useEffect(() => {
+    // Make API call on component mount
+    axios.get('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/users/9650644165')
+      .then(response => {
+        // Update state with API data
+        console.log("response", response);
+        console.log("response.data", response.data);
+
+        setAdmin(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+   // Render the Tab.Navigator only when adminData is available
+   if (admin.length === 0) {
+    return null; // Render nothing while waiting for data
+    } 
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -33,9 +56,11 @@ function MainContainer() {
             name="Stats" 
             component={ StatsScreen } 
           />
-           <Tab.Screen
+          {console.log("maincontainer admin: ", admin)}
+          <Tab.Screen
             name="Profile" 
-            component={ ProfileScreen } 
+            component={() => <ProfileScreen
+            data = {admin}/>} 
           />
 
       </Tab.Navigator>

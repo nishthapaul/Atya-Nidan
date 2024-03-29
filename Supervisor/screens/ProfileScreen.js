@@ -4,22 +4,24 @@ import Sidebar from '../ProfilePage/sidebar';
 import ProfileContent from '../ProfilePage/ProfileContent';
 import ProfilePhotoModal from '../ProfilePage/ProfilePhotoModal';
 
-export default function ProfileScreen({ navigation }) {
-    const [district, setDistrict] = useState('Thane');
+export default function ProfileScreen({ navigation , data}) {
+    console.log("data" , data);
+    //const { adminData } = route.params
+   // console.log("profile_adminData" , adminData);
+    const [district, setDistrict] = useState(data.district.name);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [taluka, setTaluka] = useState('Kurla');
-    const [firstName, setFirstName] = useState('Rajesh');
-    const [middleName, setMiddleName] = useState('Suresh');
-    const [lastName, setLastName] = useState('Khanna');
+    const [firstName, setFirstName] = useState(data.firstName);
+    const [middleName, setMiddleName] = useState(data.middleName);
+    const [lastName, setLastName] = useState(data.lastName);
     const [selectedMenuItem, setSelectedMenuItem] = useState('Basics');
-    const [address, setAddress] = useState('House No. 1891, Sector 16, Faridabad, Haryana');
+    const [address, setAddress] = useState(data.homeAddress);
     const [age, setAge] = useState('49');
-    const [contactNumber, setContactNumber] = useState('+919876543219');
-    const [gender, setGender] = useState('M');
-    const [dateOfBirth, setDateOfBirth] = useState('2001/03/02');
-    const [officeAddress, setOfficeAddress] = useState('Office Address');
+    const [contactNumber, setContactNumber] = useState(data.phoneNumber);
+    const [gender, setGender] = useState(data.gender);
+    const [dateOfBirth, setDateOfBirth] = useState(data.dob);
+    const [officeAddress, setOfficeAddress] = useState(data.officeAddress);
     const [bloodGroup, setBloodGroup] = useState('AB+');
-    const [emailId, setEmailId] = useState('example@example.com');
+    const [emailId, setEmailId] = useState(data.email);
     const [nearestRailwayStation, setNearestRailwayStation] = useState('Nearest Railway Station');
     const [languagesKnown, setLanguagesKnown] = useState('English, Spanish, Mandarin');
 
@@ -29,20 +31,20 @@ export default function ProfileScreen({ navigation }) {
     const scrollViewRef = useRef();
     const [tableData, setTableData] = useState([]);
     const [selectedUser, setSelectedUser] = useState({});
-    useEffect(() => {
-        console.log("inside useeffect")
-        fetch("https://1736-103-156-19-229.ngrok-free.app/atyanidan/users/9650644204")
-            .then((response) => {
-                console.log("response", response);
-                return response.json()
-            })
-            .then((data) => {
-                console.log("fetch_data", data);
-                setTableData(data);
-                setSelectedUser(data[0]);
-            })
-            .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+    // useEffect(() => {
+    //     console.log("inside useeffect")
+    //     fetch("https://1736-103-156-19-229.ngrok-free.app/atyanidan/users/9650644204")
+    //         .then((response) => {
+    //             console.log("response", response);
+    //             return response.json()
+    //         })
+    //         .then((data) => {
+    //             console.log("fetch_data", data);
+    //             setTableData(data);
+    //             setSelectedUser(data[0]);
+    //         })
+    //         .catch((error) => console.error("Error fetching data:", error));
+    // }, []);
 
     const handleMenuItemClick = (menuItem) => {
         setSelectedMenuItem(menuItem);
@@ -119,6 +121,14 @@ export default function ProfileScreen({ navigation }) {
                         setEmailId={setEmailId}
                         languagesKnown={languagesKnown}
                         setLanguagesKnown={setLanguagesKnown}
+                        dateOfBirth={dateOfBirth}
+                        setDateOfBirth={setDateOfBirth}
+                        gender={gender}
+                        setGender={setGender}
+                        district={district}
+                        setDistrict={setDistrict}
+                        officeAddress={officeAddress}
+                        setOfficeAddress={setOfficeAddress}
                     />
                 </ScrollView>
             </View>

@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const UserInformation = ({ firstName, middleName, lastName, address, contactNumber, emailId, setfirstName, setmiddleName, setlastName, setAddress, setContactNumber, setEmailId, handleImageUpload, saveModal}) => {
+const UserInformation = ({ firstName, middleName, lastName, address, contactNumber, emailId, setfirstName, setmiddleName, setlastName, setAddress, setContactNumber, setEmailId, handleImageUpload, saveModal, handleSubmit, setClinicAddress, clinicAddress, setGender, gender, setDateOfBirth, dateofbirth, setSpecialization, specialization}) => {
   console.log("UserInfo Savemodal", saveModal)  
   return (
         <View>
@@ -10,24 +10,24 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
             {/* <Text style={styles.sectionTitle}>Registration Number: A3982 </Text> */}
             <Text style={styles.sectionTitle}>Name</Text>
             <View style={styles.nameContainer}>
-                <TextInput
+            <TextInput
                 style={[styles.input, styles.inputSpacing]}
                 value={firstName}
-                onChangeText={setfirstName}
+                onChangeText={(fname) => setfirstName(fname)}
                 placeholder="First Name"
                 // editable={false}
                 />
                 <TextInput
                 style={[styles.input, styles.inputSpacing]}
                 value={middleName}
-                onChangeText={setmiddleName}
+                onChangeText={(mname) => setmiddleName(mname)}
                 placeholder="Middle Name"
                 // editable={false}
                 />
                 <TextInput
                 style={[styles.input, styles.inputSpacing]}
                 value={lastName}
-                onChangeText={setlastName}
+                onChangeText={(lname) => setlastName(lname)}
                 placeholder="Last Name"
                 // editable={false}
                 />
@@ -36,14 +36,14 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
             <TextInput
                 style={styles.input}
                 value={address}
-                onChangeText={setAddress}
+                onChangeText={(addr) => setAddress(addr)}
                 // editable={false}
             />
             <Text style={styles.sectionTitle}>Specialization</Text>
             <TextInput
                 style={styles.input}
-                value="Cardiac Surgeon"
-                onChangeText={setAddress}
+                value={specialization}
+                onChangeText={setSpecialization}
                 // editable={false}
             />
             <View style={styles.formContainer}>
@@ -52,7 +52,9 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
                 <Text style={styles.label}>Date of Birth:</Text>
                 <TextInput 
                     style={[styles.input, styles.inputSpacing]} 
-                    value="20"
+                    value={dateofbirth}
+                    onChangeText={(dob) => setDateOfBirth(dob)}
+
                     // editable={false}
                 />
                 </View>
@@ -60,7 +62,8 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
               <Text style={styles.label}>Gender:</Text>
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
-                value="Male"
+                value={gender}
+                onChangeText={(gen) => setGender(gen)}
                 // editable={false}
               />
             </View>
@@ -96,21 +99,25 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
             <TextInput
             style={[styles.input, styles.inputSpacing]}
             value={contactNumber}
-            onChangeText={setContactNumber}
+            onChangeText={(cno) => setContactNumber(cno)}
             // editable={false}
             />
             <Text style={styles.contacttitle}>Email ID</Text>
             <TextInput
             style={[styles.input, styles.inputSpacing]}
             value={emailId}
+            onChangeText={(email) => setEmailId(email)}
+
             // editable={false}
             />
             <Text style={styles.sectionHeading}>Clinic Information</Text>
             <Text style={styles.contacttitle}>Clinic Address:</Text>
             <TextInput
-            style={[styles.input, styles.inputSpacing]}
-            value=""
-            // editable={false}
+              style={[styles.input, styles.inputSpacing]}
+              value={clinicAddress}
+              onChangeText={(caddr) => setClinicAddress(caddr)}
+
+              // editable={false}
             />
             <Text style={styles.contacttitle}>Add / Change Image</Text>
             <View style={styles.imageUploadContainer}>
@@ -121,7 +128,7 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
                 <Text style={styles.uploadButtonText}>Upload Image</Text>
             </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={saveModal} style={styles.saveButton}>
+            <TouchableOpacity onPress={handleSubmit} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
             </View>

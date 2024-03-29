@@ -2,7 +2,19 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const FieldWorkerInformation = ({ firstName, middleName, lastName, address, contactNumber, emailId, setfirstName, setmiddleName, setlastName, setAddress, setContactNumber, setEmailId, handleImageUpload, saveModal}) => {
+const FieldWorkerInformation = ({ firstName, middleName, lastName, address, contactNumber, emailId, setfirstName, setmiddleName, setlastName, setAddress, setContactNumber, setEmailId, handleImageUpload, saveModal, handleSubmit, setAadhar, aadhar, setGender, gender, setDateOfBirth, dateofbirth }) => {
+  // // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [firstName, setfirstName] = useState('');
+  // const [middleName, setmiddleName] = useState('');
+  // const [lastName, setlastName] = useState('');
+  // // const [selectedMenuItem, setSelectedMenuItem] = useState('Basics');
+  // const [address, setAddress] = useState('');
+  // const [contactNumber, setContactNumber] = useState('');
+  // const [emailId, setEmailId] = useState('');
+  // const [dateofbirth, setDateOfBirth] = useState('');
+  // const [gender, setGender] = useState('');
+  // const [aadhar, setAadhar] = useState('');
+
   console.log("UserInfo Savemodal", saveModal)  
   return (
         <View>
@@ -13,21 +25,21 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
                 <TextInput
                 style={[styles.input, styles.inputSpacing]}
                 value={firstName}
-                onChangeText={setfirstName}
+                onChangeText={(fname) => setfirstName(fname)}
                 placeholder="First Name"
                 // editable={false}
                 />
                 <TextInput
                 style={[styles.input, styles.inputSpacing]}
                 value={middleName}
-                onChangeText={setmiddleName}
+                onChangeText={(mname) => setmiddleName(mname)}
                 placeholder="Middle Name"
                 // editable={false}
                 />
                 <TextInput
                 style={[styles.input, styles.inputSpacing]}
                 value={lastName}
-                onChangeText={setlastName}
+                onChangeText={(lname) => setlastName(lname)}
                 placeholder="Last Name"
                 // editable={false}
                 />
@@ -36,7 +48,7 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
             <TextInput
                 style={styles.input}
                 value={address}
-                onChangeText={setAddress}
+                onChangeText={(addr) => setAddress(addr)}
                 // editable={false}
             />
             {/* <Text style={styles.sectionTitle}>Specialization</Text>
@@ -52,7 +64,9 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
                 <Text style={styles.label}>Date of Birth:</Text>
                 <TextInput 
                     style={[styles.input, styles.inputSpacing]} 
-                    value="20"
+                    value={dateofbirth}
+                    onChangeText={(dob) => setDateOfBirth(dob)}
+
                     // editable={false}
                 />
                 </View>
@@ -60,7 +74,8 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
               <Text style={styles.label}>Gender:</Text>
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
-                value="Male"
+                value={gender}
+                onChangeText={(gen) => setGender(gen)}
                 // editable={false}
               />
             </View>
@@ -96,20 +111,24 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
             <TextInput
             style={[styles.input, styles.inputSpacing]}
             value={contactNumber}
-            onChangeText={setContactNumber}
+            onChangeText={(cno) => setContactNumber(cno)}
             // editable={false}
             />
             <Text style={styles.contacttitle}>Email ID</Text>
             <TextInput
             style={[styles.input, styles.inputSpacing]}
             value={emailId}
+            onChangeText={(email) => setEmailId(email)}
+
             // editable={false}
             />
             <Text style={styles.sectionHeading}>Employee ID Proof</Text>
             <Text style={styles.contacttitle}>Aadhar Number:</Text>
             <TextInput
               style={[styles.input, styles.inputSpacing]}
-              value=""
+              value={aadhar}
+              onChangeText={(addhno) => setAadhar(addhno)}
+
               // editable={false}
             />
             <Text style={styles.contacttitle}>Add / Change Image</Text>
@@ -121,7 +140,7 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
                 <Text style={styles.uploadButtonText}>Upload Image</Text>
             </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={saveModal} style={styles.saveButton}>
+            <TouchableOpacity onPress={handleSubmit} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
             </View>

@@ -17,6 +17,14 @@ const ProfileContent = ({
   setEmailId,
   languagesKnown,
   setLanguagesKnown,
+  dateOfBirth,
+  setDateOfBirth,
+  gender,
+  setGender,
+  district,
+  setDistrict,
+  officeAddress,
+  setOfficeAddress
 }) => {
   return (
       <View style={styles.container}>
@@ -60,7 +68,8 @@ const ProfileContent = ({
               <Text style={styles.label}>Date of Birth:</Text>
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
-                value="20"
+                value={dateOfBirth}
+                onChangeText={setDateOfBirth}
                 editable={false}
               />
             </View>
@@ -68,7 +77,8 @@ const ProfileContent = ({
               <Text style={styles.label}>Gender:</Text>
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
-                value="Male"
+                value={gender}
+                onChangeText={setGender}
                 editable={false}
               />
             </View>
@@ -93,6 +103,7 @@ const ProfileContent = ({
         <TextInput
           style={[styles.input, styles.inputSpacing]}
           value={emailId}
+          onChangeText={setEmailId}
           editable={false}
         />
         <Text style={styles.sectionHeading}>Employee Office Details</Text>
@@ -102,7 +113,8 @@ const ProfileContent = ({
               <Text style={styles.label}>District:</Text>
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
-                value='Kurla'
+                value={district}
+                onChangeText={setDistrict}
                 editable={false}
               />
             </View>
@@ -118,7 +130,8 @@ const ProfileContent = ({
           <Text style={styles.contacttitle}>Office Address:</Text>
         <TextInput
           style={[styles.input, styles.inputSpacing]}
-          value="Neelkanth Interprises, Sector 62, Maharashtra, Mumbai-86"
+          value={officeAddress}
+          onChangeText={setOfficeAddress}
           editable={false}
         />
         </View>
