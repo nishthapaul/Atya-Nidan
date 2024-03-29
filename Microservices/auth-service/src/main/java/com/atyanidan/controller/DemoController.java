@@ -10,7 +10,7 @@ public class DemoController {
 
     @GetMapping("/demo")
     public String demoMethod() {
-        return "Demo-String-Form";
+        return "Demo-String-Auth";
     }
 
 }
