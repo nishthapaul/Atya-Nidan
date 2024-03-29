@@ -22,6 +22,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new NotFoundException("Invalid Phone Number: " + (request.getPhoneNumber()));
         } else {
             User user = optionalEntity.get();
+
+            SmsMessenger smsMessenger = new SmsMessenger();
+            smsMessenger.sendSms(user.getPhoneNumber(), request.getOtp());
+
             var jwtToken = jwtService.generateToken(user);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
