@@ -34,6 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             var jwtToken = jwtService.generateToken(Map.of("role", userRole), user);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
+                    .role(userRole)
                     .build();
         }
     }
