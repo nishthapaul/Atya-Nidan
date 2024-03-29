@@ -3,11 +3,14 @@ package com.atyanidan.service;
 import com.atyanidan.dao.UserRepository;
 import com.atyanidan.dto.AuthenticationRequest;
 import com.atyanidan.dto.AuthenticationResponse;
+import com.atyanidan.entity.Role;
 import com.atyanidan.entity.User;
 import com.atyanidan.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,7 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             SmsMessenger smsMessenger = new SmsMessenger();
             smsMessenger.sendSms(user.getPhoneNumber(), request.getOtp());
 
-            var jwtToken = jwtService.generateToken(user);
+            String userRole = user.getRole().toString();
+
+            var jwtToken = jwtService.generateToken(Map.of("role", userRole), user);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();
