@@ -1,6 +1,6 @@
 // ProfileInformationSection.js
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native';
 
 const UserInformation = ({ firstName, middleName, lastName, address, contactNumber, emailId, setfirstName, setmiddleName, setlastName, setAddress, setContactNumber, setEmailId, handleImageUpload, saveModal, handleSubmit, setClinicAddress, clinicAddress, setGender, gender, setDateOfBirth, dateofbirth, setSpecialization, specialization}) => {
   console.log("UserInfo Savemodal", saveModal)  
@@ -60,6 +60,7 @@ const UserInformation = ({ firstName, middleName, lastName, address, contactNumb
                 </View>
                 <View style={styles.inputContainer}>
               <Text style={styles.label}>Gender:</Text>
+              
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
                 value={gender}

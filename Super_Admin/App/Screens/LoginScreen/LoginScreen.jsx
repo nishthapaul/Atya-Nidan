@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { Alert, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import Colors from '../../Utils/Colors';
 import React, { useState , useEffect} from 'react';
 import { useOAuth } from "@clerk/clerk-expo";
@@ -6,6 +6,7 @@ import { useWarmUpBrowser } from "../../../hooks/useWarmUpBrowser.tsx";
 import * as WebBrowser from "expo-web-browser";
 import Header from '../../Components/Header/header.jsx';
 import Footer from '../../Components/Footer/Footer.jsx';
+import axios from 'axios';
 
 export default function LoginScreen() {
     WebBrowser.maybeCompleteAuthSession();
@@ -28,18 +29,68 @@ export default function LoginScreen() {
         }
     }
     const[otp, setOtp] = React.useState('');
+    const[phoneNumber, setphonenumber] = React.useState('');
+    const[enteredotp, setenteredOtp] = React.useState('');
+    const[role, setRole] = React.useState('');
+
+
     let random_otp = '';
     const handleOTPRequest = () => {
       for (let i = 0; i < 4; i++) {
         random_otp += Math.floor(Math.random() * 10); // Generate a random digit between 0 and 9
       }
       setOtp(random_otp);
+      const data = {
+        "phoneNumber": phoneNumber,
+        "otp": random_otp,
+      };
+
+      // Make POST request to your backend endpoint
+      axios.post('https://62c2-119-161-98-68.ngrok-free.app/atyanidan/auth/api/authenticate', data)
+          .then(response => {
+              setRole(response.data)
+              // Handle success response
+              console.log('Response:', response.data);
+              // Show success message or perform any other actions
+              Alert.alert('Success', 'Otp sent!');
+              // Close the modal or perform any other actions
+              // saveModal();
+          })
+          .catch(error => {
+              // Handle error
+              console.error('Error:', error);
+              // Show error message or perform any other actions
+              Alert.alert('Error', 'Failed to send otp. Please try again later.');
+              // saveModal();
+
+          });
     }
     useEffect(
       () => {
-          console.log("otp" + otp);
+          console.log(otp);
       },[otp]);
+      const matchOtp = () => {
+        
   
+        // Make POST request to your backend endpoint
+        if(enteredotp===otp)
+             {
+                // Handle success response
+               console.log("role", role);
+                // Show success message or perform any other actions
+                Alert.alert('Success', 'User verified!');
+                // Close the modal or perform any other actions
+                // saveModal();
+            }
+            else {
+                // Handle error
+                console.error('otp doent match');
+                // Show error message or perform any other actions
+                Alert.alert('Error', 'Unauthorized User');
+                // saveModal();
+  
+            }
+    };
     return (
       <View style={styles.container}>
           <Header />
@@ -53,14 +104,15 @@ export default function LoginScreen() {
                 <Text style={styles.loginwithopttext}>Login with OTP</Text>
                 <TextInput
                   style={[styles.input]}
-                  value=""
-                  onChangeText=""
+                  value={phoneNumber}
+                  onChangeText={(phno) => setphonenumber(phno)}
                   placeholder="Enter phone number"
                   editable={true}
                 />    
                 <TouchableOpacity
                       style={styles.output}
-                      onPress = {handleOTPRequest}
+                      onPress = {
+                          handleOTPRequest} // Call the first function             
                   >
                       <Text style={styles.buttonText}>
                           Generate OTP
@@ -68,13 +120,14 @@ export default function LoginScreen() {
                   </TouchableOpacity>  
                 <TextInput
                   style={[styles.input]}
-                  value=""
-                  onChangeText=""
+                  value={enteredotp}
+                  onChangeText={(eotp) => setenteredOtp(eotp)}
                   placeholder="Enter OTP"
                   editable={true}
                 /> 
                 <TouchableOpacity
                       style={styles.output}
+                      onPress={matchOtp}
                   >
                       <Text style={styles.buttonText}>
                           Verify OTP
