@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import Colors from '../../Utils/Colors';
-import React from 'react';
+import React, { useState , useEffect} from 'react';
 import { useOAuth } from "@clerk/clerk-expo";
 import { useWarmUpBrowser } from "../../../hooks/useWarmUpBrowser.tsx";
 import * as WebBrowser from "expo-web-browser";
@@ -27,6 +27,18 @@ export default function LoginScreen() {
           console.error("OAuth error", err);
         }
     }
+    const[otp, setOtp] = React.useState('');
+    let random_otp = '';
+    const handleOTPRequest = () => {
+      for (let i = 0; i < 4; i++) {
+        random_otp += Math.floor(Math.random() * 10); // Generate a random digit between 0 and 9
+      }
+      setOtp(random_otp);
+    }
+    useEffect(
+      () => {
+          console.log("otp" + otp);
+      },[otp]);
   
     return (
       <View style={styles.container}>
@@ -47,6 +59,7 @@ export default function LoginScreen() {
                 />    
                 <TouchableOpacity
                       style={styles.output}
+                      onPress = {handleOTPRequest}
                   >
                       <Text style={styles.buttonText}>
                           Generate OTP
