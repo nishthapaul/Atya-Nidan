@@ -36,8 +36,11 @@ const AddUser = ({ saveModal }) => {
         "nearestRailwayStation": "Pataudi Railway Station",
         "gender": gender,
         "specialisation": {
-            "id": 3
+            "id": 1
         },
+        "taluka": {
+          "id": 1
+         },
         "dob": dateofbirth,
         "bloodGroup": "A-",
         "aadharNumber": "123456789876"
@@ -49,7 +52,7 @@ const AddUser = ({ saveModal }) => {
               // Handle success response
               console.log('Response:', response.data);
               // Show success message or perform any other actions
-              Alert.alert('Success', 'Field worker added successfully!');
+              Alert.alert('Success', 'Doctor added successfully!');
               // Close the modal or perform any other actions
               saveModal();
           })
@@ -57,7 +60,7 @@ const AddUser = ({ saveModal }) => {
               // Handle error
               console.error('Error:', error);
               // Show error message or perform any other actions
-              Alert.alert('Error', 'Failed to add field worker. Please try again later.');
+              Alert.alert('Error', 'Failed to add doctor. Please try again later.');
               saveModal();
 
           });

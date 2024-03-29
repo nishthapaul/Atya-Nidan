@@ -57,7 +57,7 @@ const AddFieldWorker = ({ saveModal }) => {
               console.error('Error:', error);
               // Show error message or perform any other actions
               Alert.alert('Error', 'Failed to add field worker. Please try again later.');
-              saveModal();
+                            saveModal();
 
           });
   };

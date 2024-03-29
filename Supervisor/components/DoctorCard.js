@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 
 export default DoctorCard = ({ user }) => {
     
-    console.log("name", user.name);
+    // console.log("name", user.name);
     return(
         <View style={styles.card}>
         <View style={styles.container}>
