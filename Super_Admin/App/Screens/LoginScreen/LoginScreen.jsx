@@ -48,7 +48,8 @@ export default function LoginScreen() {
                   source={require('../../../assets/Images/Background.jpg')}
                   style={styles.backgroundImage}
               />
-              <View style={styles.transparentSquare}>
+              <View style={styles.transparentSquare}></View>
+              <View style={styles.mainstuff}>
                 <Text style={styles.loginwithopttext}>Login with OTP</Text>
                 <TextInput
                   style={[styles.input]}
@@ -191,6 +192,14 @@ export default function LoginScreen() {
       padding: 10,
       flex: 1, 
       alignItems: 'left',
-      width: 150,
+      width: 200,
     },
+    mainstuff: {
+      position: 'absolute',
+      top: '5%', 
+      left: '20%',
+      width: '60%', 
+      height: '90%',
+      aspectRatio: 1,
+    }
   });

@@ -44,7 +44,7 @@ const AddUser = ({ saveModal }) => {
       };
 
       // Make POST request to your backend endpoint
-      axios.post('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/talukas/3/doctors', data)
+      axios.post('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/talukas/1/doctors', data)
           .then(response => {
               // Handle success response
               console.log('Response:', response.data);
