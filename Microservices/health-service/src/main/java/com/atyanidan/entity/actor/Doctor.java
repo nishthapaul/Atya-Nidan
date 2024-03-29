@@ -1,5 +1,6 @@
 package com.atyanidan.entity.actor;
 
+import com.atyanidan.entity.Gender;
 import com.atyanidan.entity.Specialisation;
 import com.atyanidan.entity.Taluka;
 import jakarta.persistence.*;
@@ -34,8 +35,9 @@ public class Doctor extends User {
     @Column(name = "nearest_railway_station")
     private String nearestRailwayStation;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private String gender;
+    private Gender gender;
 
     @ManyToOne
     @JoinColumn(name = "specialisation_id")
@@ -59,7 +61,7 @@ public class Doctor extends User {
     public Doctor() {
     }
 
-    public Doctor(String firstName, String middleName, String lastName, String homeAddress, String hospitalAddress, String gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Specialisation specialisation) {
+    public Doctor(String firstName, String middleName, String lastName, String homeAddress, String hospitalAddress, Gender gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Specialisation specialisation) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -113,11 +115,11 @@ public class Doctor extends User {
         this.middleName = middleName;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

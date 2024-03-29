@@ -1,6 +1,7 @@
 package com.atyanidan.entity.actor;
 
 import com.atyanidan.entity.District;
+import com.atyanidan.entity.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -30,8 +31,9 @@ public class Admin extends User {
     @NotNull
     private String officeAddress;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private String gender;
+    private Gender gender;
 
     @OneToOne
     @JoinColumn(name = "district_id", unique = true)
@@ -44,7 +46,7 @@ public class Admin extends User {
     public Admin() {
     }
 
-    public Admin(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob) {
+    public Admin(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, Gender gender, Date dob) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -110,11 +112,11 @@ public class Admin extends User {
         this.officeAddress = officeAddress;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 }

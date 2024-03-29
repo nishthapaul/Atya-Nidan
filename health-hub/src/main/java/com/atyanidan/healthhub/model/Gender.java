@@ -1,4 +1,4 @@
-package com.atyanidan.model;
+package com.atyanidan.healthhub.model;
 
 public enum Gender {
     MALE("Male"), FEMALE("Female"), OTHER("Other");

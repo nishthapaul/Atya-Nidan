@@ -1,5 +1,6 @@
 package com.atyanidan.entity.actor;
 
+import com.atyanidan.entity.Gender;
 import com.atyanidan.entity.Taluka;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -34,8 +35,9 @@ public class FieldWorker extends User {
     @NotNull
     private String nearestRailwayStation;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private String gender;
+    private Gender gender;
 
     @ManyToOne
     @JoinColumn(name = "taluka_id")
@@ -62,7 +64,7 @@ public class FieldWorker extends User {
     public FieldWorker() {
     }
 
-    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, String gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean available) {
+    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, Gender gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean available) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -124,11 +126,11 @@ public class FieldWorker extends User {
         this.officeAddress = officeAddress;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
