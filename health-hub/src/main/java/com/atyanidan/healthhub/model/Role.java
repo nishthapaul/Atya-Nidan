@@ -1,4 +1,4 @@
-package com.atyanidan.model;
+package com.atyanidan.healthhub.model;
 
 public enum Role {
     FIELD_WORKER("FieldWorker"), DOCTOR("Doctor"), ADMIN("Admin"), SUPER_ADMIN("SuperAdmin");

@@ -1,5 +1,6 @@
 package com.atyanidan.entity.actor;
 
+import com.atyanidan.entity.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,13 +23,15 @@ public class User {
     @NotNull
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
+    @NotNull
+    private Role role;
 
     public User() {
     }
 
-    public User(String phoneNumber, String email, String role) {
+    public User(String phoneNumber, String email, Role role) {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.role = role;
@@ -58,11 +61,11 @@ public class User {
         this.email = email;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
