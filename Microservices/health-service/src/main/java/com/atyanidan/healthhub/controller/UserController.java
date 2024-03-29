@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/atyanidan")
+@RequestMapping("/api")
 @Tag(name = "User", description = "API for handling functionalities of all types of users")
 public class UserController {
     private final UserService userService;

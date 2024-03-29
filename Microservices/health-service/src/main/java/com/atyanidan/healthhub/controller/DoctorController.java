@@ -1,9 +1,6 @@
 package com.atyanidan.healthhub.controller;
 
 import com.atyanidan.healthhub.entity.actor.Doctor;
-import com.atyanidan.healthhub.entity.actor.FieldWorker;
-import com.atyanidan.healthhub.entity.actor.User;
-import com.atyanidan.healthhub.model.APIResponse;
 import com.atyanidan.healthhub.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/atyanidan")
+@RequestMapping("/api")
 @Tag(name = "Doctor", description = "APIs for implementing functionalities of Doctor")
 public class DoctorController {
     private final DoctorService doctorService;

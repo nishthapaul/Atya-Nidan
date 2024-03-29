@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/atyanidan")
+@RequestMapping("/api")
 @Tag(name = "Field Worker", description = "APIs for implementing functionalities of Field workers")
 public class FieldWorkerController {
     private final FieldWorkerService fieldWorkerService;

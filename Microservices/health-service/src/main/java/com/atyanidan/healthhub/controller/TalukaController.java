@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/atyanidan")
+@RequestMapping("/api")
 @Tag(name = "Taluka", description = "API for handling functionalities of talukas")
 public class TalukaController {
     private final TalukaService talukaService;

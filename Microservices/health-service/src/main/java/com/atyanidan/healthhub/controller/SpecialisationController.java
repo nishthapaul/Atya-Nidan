@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/atyanidan")
+@RequestMapping("/api")
 @Tag(name = "Specialization", description = "API for handling functionalities of doctor specialization")
 public class SpecialisationController {
     private final SpecialisationRepository specialisationRepository;
