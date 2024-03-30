@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -15,11 +14,15 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/atyanidan")
 public class ApiGatewayController {
 
+    private final RestTemplate restTemplate;
+
     @Autowired
-    private RestTemplate restTemplate;
+    public ApiGatewayController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @GetMapping("/health/**")
-    public ResponseEntity<Object> forwardGetHealthRequest(HttpServletRequest request) {
+    public ResponseEntity<Object> forwardHealthGetRequest(HttpServletRequest request) {
         String fullUrl = request.getRequestURL().toString();
         System.out.println(fullUrl);
         String healthServiceUrl = replacePortBasedOnPath(fullUrl);
@@ -30,7 +33,7 @@ public class ApiGatewayController {
     }
 
     @PostMapping(path = "/health/**", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<Object> forwardPostHealthRequest(HttpServletRequest request, @RequestBody Object requestBody) throws JsonProcessingException {
+    public ResponseEntity<Object> forwardHealthPostRequest(HttpServletRequest request, @RequestBody Object requestBody) throws JsonProcessingException {
         String fullUrl = request.getRequestURL().toString();
         System.out.println(fullUrl);
         String healthServiceUrl = replacePortBasedOnPath(fullUrl);
