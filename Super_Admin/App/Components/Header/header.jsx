@@ -5,7 +5,7 @@ const AppHeader = () => {
   return (
     <View style={styles.header}>
       <Image source={require('../../../assets/Images/appandname.png')} style={styles.appLogo} />
-      <Image source={require('../../../assets/Images/unnamed.png')} style={styles.homeIcon} />
+      <Image source={require('../../../assets/Images/HomeIcon.png')} style={styles.homeIcon} />
     </View>
   );
 };
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   homeIcon: {
-    height: 50, 
-    width: 50, 
+    height: 30, 
+    width: 30, 
     resizeMode: 'contain',
   },
 });
