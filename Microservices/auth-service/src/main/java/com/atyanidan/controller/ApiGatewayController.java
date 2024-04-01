@@ -1,13 +1,12 @@
 package com.atyanidan.controller;
 
-import com.atyanidan.exception.ErrorResponse;
+import com.atyanidan.service.ApiGatewayService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -15,21 +14,21 @@ import org.springframework.web.client.RestTemplate;
 public class ApiGatewayController {
 
     private final RestTemplate restTemplate;
+    private final ApiGatewayService apiGatewayService;
 
     @Autowired
-    public ApiGatewayController(RestTemplate restTemplate) {
+    public ApiGatewayController(RestTemplate restTemplate, ApiGatewayService apiGatewayService) {
         this.restTemplate = restTemplate;
+        this.apiGatewayService = apiGatewayService;
     }
 
     @GetMapping("/health/**")
-    public ResponseEntity<Object> forwardHealthGetRequest(HttpServletRequest request) {
+    public ResponseEntity<Object> forwardHealthGetRequest(HttpServletRequest request) throws JsonProcessingException {
         String fullUrl = request.getRequestURL().toString();
         System.out.println(fullUrl);
         String healthServiceUrl = replacePortBasedOnPath(fullUrl);
         System.out.println(healthServiceUrl);
-        ResponseEntity<Object> exchange = restTemplate.exchange(healthServiceUrl, HttpMethod.GET, null, Object.class);
-        System.out.println(exchange);
-        return exchange;
+        return apiGatewayService.forwardRequest(healthServiceUrl, HttpMethod.GET, null);
     }
 
     @PostMapping(path = "/health/**", produces = "application/json", consumes = "application/json")
@@ -38,19 +37,16 @@ public class ApiGatewayController {
         System.out.println(fullUrl);
         String healthServiceUrl = replacePortBasedOnPath(fullUrl);
         System.out.println(healthServiceUrl);
+        return apiGatewayService.forwardRequest(healthServiceUrl, HttpMethod.POST, requestBody);
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Object> requestEntity = new HttpEntity<>(requestBody, headers);
-
-        try {
-            return restTemplate.exchange(healthServiceUrl, HttpMethod.POST, requestEntity, Object.class);
-        } catch (HttpStatusCodeException e) {
-            String errorResponse = e.getResponseBodyAsString();
-            ErrorResponse errorObject = new ObjectMapper().readValue(errorResponse, ErrorResponse.class);
-            return ResponseEntity.status(errorObject.getStatus())
-                    .body(errorObject);
-        }
+    @PutMapping(path = "/health/**", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<Object> forwardHealthPutRequest(HttpServletRequest request, @RequestBody Object requestBody) throws JsonProcessingException {
+        String fullUrl = request.getRequestURL().toString();
+        System.out.println(fullUrl);
+        String healthServiceUrl = replacePortBasedOnPath(fullUrl);
+        System.out.println(healthServiceUrl);
+        return apiGatewayService.forwardRequest(healthServiceUrl, HttpMethod.PUT, requestBody);
     }
 
     @GetMapping("/form/**")
@@ -60,21 +56,18 @@ public class ApiGatewayController {
     }
 
     private String replacePortBasedOnPath(String fullUrl) {
-        if (fullUrl == null || fullUrl.isEmpty()) {
+        if ( fullUrl == null || fullUrl.isEmpty() ) {
             return fullUrl;
         }
-
         String baseUrl = "http://localhost:";
         int portReplacement = 9001;
-
-        if (fullUrl.contains("/atyanidan/health/")) {
+        if ( fullUrl.contains("/atyanidan/health/") ) {
             portReplacement = 9003;
-        } else if (fullUrl.contains("/atyanidan/form/")) {
+        } else if ( fullUrl.contains("/atyanidan/form/") ) {
             portReplacement = 9002;
         }
 
-        String replacedUrl = fullUrl.replaceFirst(baseUrl + "9001", baseUrl + portReplacement);
-        return replacedUrl;
+        return fullUrl.replaceFirst(baseUrl + "9001", baseUrl + portReplacement);
     }
 
 }
