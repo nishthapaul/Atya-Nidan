@@ -61,10 +61,19 @@ public class FieldWorker extends User {
     @JoinColumn(name = "substitute_id")
     private FieldWorker substitute;
 
+    @Column(name = "language_known_1")
+    private String languageKnown1;
+
+    @Column(name = "language_known_2")
+    private String languageKnown2;
+
+    @Column(name = "language_known_3")
+    private String languageKnown3;
+
     public FieldWorker() {
     }
 
-    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, Gender gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean available) {
+    public FieldWorker(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, Gender gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Boolean available, String languageKnown1, String languageKnown2, String languageKnown3) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -76,6 +85,9 @@ public class FieldWorker extends User {
         this.aadharNumber = aadharNumber;
         this.nearestRailwayStation = nearestRailwayStation;
         this.available = available;
+        this.languageKnown1 = languageKnown1;
+        this.languageKnown2 = languageKnown2;
+        this.languageKnown3 = languageKnown3;
     }
 
     public String getFirstName() {
@@ -183,5 +195,29 @@ public class FieldWorker extends User {
 
     public void setSubstitute(FieldWorker substitute) {
         this.substitute = substitute;
+    }
+
+    public String getLanguageKnown1() {
+        return languageKnown1;
+    }
+
+    public void setLanguageKnown1(String languageKnown1) {
+        this.languageKnown1 = languageKnown1;
+    }
+
+    public String getLanguageKnown2() {
+        return languageKnown2;
+    }
+
+    public void setLanguageKnown2(String languageKnown2) {
+        this.languageKnown2 = languageKnown2;
+    }
+
+    public String getLanguageKnown3() {
+        return languageKnown3;
+    }
+
+    public void setLanguageKnown3(String languageKnown3) {
+        this.languageKnown3 = languageKnown3;
     }
 }

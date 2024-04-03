@@ -58,10 +58,19 @@ public class Doctor extends User {
     @Column(name = "aadhar_number")
     private String aadharNumber;
 
+    @Column(name = "language_known_1")
+    private String languageKnown1;
+
+    @Column(name = "language_known_2")
+    private String languageKnown2;
+
+    @Column(name = "language_known_3")
+    private String languageKnown3;
+
     public Doctor() {
     }
 
-    public Doctor(String firstName, String middleName, String lastName, String homeAddress, String hospitalAddress, Gender gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Specialisation specialisation) {
+    public Doctor(String firstName, String middleName, String lastName, String homeAddress, String hospitalAddress, Gender gender, Date dob, String bloodGroup, String aadharNumber, String nearestRailwayStation, Specialisation specialisation, String languageKnown1, String languageKnown2, String languageKnown3) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -73,6 +82,9 @@ public class Doctor extends User {
         this.aadharNumber = aadharNumber;
         this.nearestRailwayStation = nearestRailwayStation;
         this.specialisation = specialisation;
+        this.languageKnown1 = languageKnown1;
+        this.languageKnown2 = languageKnown2;
+        this.languageKnown3 = languageKnown3;
     }
 
     public String getFirstName() {
@@ -169,5 +181,29 @@ public class Doctor extends User {
 
     public void setSpecialisation(Specialisation specialisation) {
         this.specialisation = specialisation;
+    }
+
+    public String getLanguageKnown1() {
+        return languageKnown1;
+    }
+
+    public void setLanguageKnown1(String languageKnown1) {
+        this.languageKnown1 = languageKnown1;
+    }
+
+    public String getLanguageKnown2() {
+        return languageKnown2;
+    }
+
+    public void setLanguageKnown2(String languageKnown2) {
+        this.languageKnown2 = languageKnown2;
+    }
+
+    public String getLanguageKnown3() {
+        return languageKnown3;
+    }
+
+    public void setLanguageKnown3(String languageKnown3) {
+        this.languageKnown3 = languageKnown3;
     }
 }
