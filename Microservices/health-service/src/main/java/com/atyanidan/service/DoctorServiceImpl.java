@@ -2,6 +2,7 @@ package com.atyanidan.service;
 
 import com.atyanidan.dao.DoctorRepository;
 import com.atyanidan.dao.TalukaRepository;
+import com.atyanidan.entity.Role;
 import com.atyanidan.exception.ConflictException;
 import com.atyanidan.exception.NotFoundException;
 import com.atyanidan.entity.Taluka;
@@ -33,6 +34,9 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor addDoctor(int talukaId, Doctor doctor) throws Exception {
+        if (doctor.getRole() != Role.Doctor) {
+            throw new BadRequestException("Role should be Doctor");
+        }
         Optional<Taluka> optionalEntity = talukaRepository.findById(talukaId);
         if ( optionalEntity.isEmpty() ) {
             throw new NotFoundException("Taluka id not found: " + talukaId);
