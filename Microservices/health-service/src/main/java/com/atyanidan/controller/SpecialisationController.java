@@ -27,8 +27,7 @@ public class SpecialisationController {
         this.specialisationRepository = specialisationRepository;
     }
 
-    @Operation(summary = "Retrieve Specialisations",
-            description = "Retrieve all the specialisations")
+    @Operation(summary = "Retrieve Specialisations", description = "Retrieve all the specialisations")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = Specialisation.class))) }),

@@ -29,8 +29,7 @@ public class TalukaController {
         this.talukaService = talukaService;
     }
 
-    @Operation(summary = "Get talukas",
-            description = "Retrieve all the talukas of a given district")
+    @Operation(summary = "Get talukas", description = "Retrieve all the talukas of a given district")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = Taluka.class))) }),

@@ -26,8 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Retrieve user",
-            description = "Retrieve a user given the user's phone number")
+    @Operation(summary = "Retrieve user", description = "Retrieve a user given the user's phone number")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = User.class)) }),
