@@ -22,25 +22,25 @@
   <summary>🗂️ Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">🐚 About AtyaNidan</a>
+      <a href="#about-the-project">About AtyaNidan</a>
       <ul>
-        <li><a href="#project-status">🚧 Project Status</a></li>
+        <li><a href="#project-status">Project Status</a></li>
       </ul>
     </li>
     <li>
-      <a href="#get-started">🚀 Get Started</a>
+      <a href="#get-started">Get Started</a>
       <ul>
         <li><a href="#1-build-and-setup">1. Build and Setup</a></li>
         <li><a href="#2-run-the-application">2. Run the Application</a></li>
         <li><a href="#3-individual-server-startup">3. Individual Server Startup</a></li>
       </ul>
     </li>
-    <li><a href="#Figma">👾 Figma</a></li> 
-    <li><a href="#ScreenShots">📜 ScreenShots</a></li> 
+    <li><a href="#Figma">Figma</a></li> 
+    <li><a href="#ScreenShots">ScreenShots</a></li> 
   </ol>
 </details>
 
-## 🎯 Mission
+## Mission
 
 Welcome to AtyaNidan, a project aiming improve healthcare delivery by empowering field health workers with a tablet-based application designed to extend care directly to homes. This project aspires to enhance the care process, the app assists health workers by managing their schedules and sending alerts for follow-up visits, ensuring no patient is overlooked.
 
@@ -50,7 +50,7 @@ Welcome to AtyaNidan, a project aiming improve healthcare delivery by empowering
     </a>
 </p>
 
-## 🤔 What is AtyaNidan?
+## What is AtyaNidan?
 AtyaNidan is an innovative project designed to bring healthcare services closer to communities by enabling field health workers through technology. It is a tablet-based application that supports health workers as they visit homes, conducting screenings for all family members with a standardized questionnaire. This approach aims to identify individuals with mental health conditions early and ensure they are promptly referred to local doctors for evaluation and treatment.
 
 The application simplifies the process of recording diagnoses using ICD10 codes, making it easier for doctors to prescribe the appropriate treatment and follow-ups. It's equipped with features to help health workers manage their schedules, receive alerts for upcoming follow-ups, and ensure no patient is left behind, even in areas with unreliable internet thanks to its offline capabilities.
@@ -61,7 +61,7 @@ The application simplifies the process of recording diagnoses using ICD10 codes,
     </a>
 </p>
 
-## 🐚 Why AtyaNidan?
+## Why AtyaNidan?
 AtyaNidan is born out of the necessity to extend healthcare services beyond the confines of traditional facilities and directly into homes, particularly in underserved areas. By leveraging technology, AtyaNidan empowers health workers with tools to efficiently screen, diagnose, and ensure the follow-up of patients, fundamentally transforming how health conditions are identified and treated at the community level. This initiative not only aims to make healthcare more accessible but also ensures that it is proactive, personalized, and responsive to the needs of the community, ultimately contributing to better health outcomes and a healthier society.
 
 <p align="right" style="font-size: 14px; color: #555; margin-top: 20px;">
@@ -70,7 +70,7 @@ AtyaNidan is born out of the necessity to extend healthcare services beyond the 
     </a>
 </p>
 
-## 🚧 Project Status
+## Project Status
 
 AtyaNidan is currently a work in progress, but you can already run the alpha version to see the end-to-end system in action. The project team is actively working on the following key milestones:
 
@@ -84,7 +84,7 @@ AtyaNidan is currently a work in progress, but you can already run the alpha ver
     </a>
 </p>
 
-## 🚀 Get Started
+## Get Started
 
 Getting started with the AtyaNidan project is incredibly easy. Follow these simple steps to set up and run AtyaNidan on your system:
 
@@ -150,11 +150,11 @@ Otherwise to run backend and frontend in different laptops, we need to expose th
     </a>
 </p>
 
-## 👾 Figma
+## Figma
 
  https://www.figma.com/file/JQUy4I0SJvftMLQCuwmUQT/AtyaNidan?type=design&node-id=1669%3A162202&mode=design&t=XlSHyEiDvNZ5A831-1
 
-## 📜 ScreenShots
+## ScreenShots
 
 #### Login Page
 
