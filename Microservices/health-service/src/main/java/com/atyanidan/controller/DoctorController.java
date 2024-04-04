@@ -29,39 +29,34 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    @Operation(summary = "Retrieve doctors",
-            description = "Retrieve the list of doctors given the district ID")
+    @Operation(summary = "Retrieve doctors", description = "Retrieve the list of doctors given the district ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = Doctor.class))) }),
+            @ApiResponse(responseCode = "200",
+                    content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Doctor.class)))}),
             @ApiResponse(responseCode = "404", description = "No doctors found",
                     content = @Content)
     })
     @GetMapping("/districts/{districtId}/doctors")
-    public List<Doctor> getDoctorsFromDistrictId(@Parameter(
-            name = "districtId",
-            description = "District ID",
-            required = true) @PathVariable int districtId) {
+    public List<Doctor> getDoctorsFromDistrictId(
+            @Parameter(name = "districtId", description = "District ID", required = true)
+            @PathVariable int districtId) {
         return doctorService.getDoctorsFromDistrictId(districtId);
     }
 
-    @Operation(summary = "Add a doctor",
-            description = "Add a new doctor")
-    @PostMapping(path = "/talukas/{talukaId}/doctors", produces = "application/json", consumes = "application/json")
+    @Operation(summary = "Add a doctor", description = "Add a new doctor")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Doctor.class)) }),
+            @ApiResponse(responseCode = "200",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Doctor.class))}),
             @ApiResponse(responseCode = "500", description = "Could not add doctor",
                     content = @Content)
     })
-    public ResponseEntity<Doctor> addDoctor(@Parameter(
-            name = "talukaId",
-            description = "Taluka ID",
-            required = true)@PathVariable int talukaId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Doctor to add", required = true,
-            content = @Content(
-                    schema=@Schema(implementation = Doctor.class))) @Valid @RequestBody Doctor doctor) throws Exception {
-        System.out.println(doctor);
+    @PostMapping(path = "/talukas/{talukaId}/doctors", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<Doctor> addDoctor(
+            @Parameter(name = "talukaId", description = "Taluka ID", required = true)
+            @PathVariable int talukaId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Doctor to add", required = true, content = @Content(schema = @Schema(implementation = Doctor.class)))
+            @Valid @RequestBody Doctor doctor) throws Exception {
         Doctor dbDoctor = doctorService.addDoctor(talukaId, doctor);
         return ResponseEntity.status(HttpStatus.CREATED).body(dbDoctor);
     }

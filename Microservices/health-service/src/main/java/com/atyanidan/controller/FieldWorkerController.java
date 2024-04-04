@@ -30,8 +30,7 @@ public class FieldWorkerController {
         this.fieldWorkerService = fieldWorkerService;
     }
 
-    @Operation(summary = "Retrieve list of fieldworkers",
-            description = "Retrieve the list of all the fieldworkers of a given taluka")
+    @Operation(summary = "Retrieve list of fieldworkers", description = "Retrieve the list of all the fieldworkers of a given taluka")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = FieldWorker.class))) }),
@@ -39,21 +38,18 @@ public class FieldWorkerController {
                     content = @Content)
     })
     @GetMapping("/talukas/{talukaId}/fieldworkers")
-    public List<FieldWorker> getFieldWorkersFromTalukaId(@Parameter(
-            name = "talukaId",
-            description = "Taluka ID",
-            required = true) @PathVariable int talukaId,
-            @Parameter(
-            name = "available",
-            description = "Availability status of fieldworker") @RequestParam(required = false) Boolean available) {
+    public List<FieldWorker> getFieldWorkersFromTalukaId(
+            @Parameter(name = "talukaId", description = "Taluka ID", required = true)
+            @PathVariable int talukaId,
+            @Parameter(name = "available", description = "Availability status of fieldworker")
+            @RequestParam(required = false) Boolean available) {
         if ( available != null )
             return fieldWorkerService.getFieldWorkersByTalukaIdAndAvailable(talukaId, available);
         else
             return fieldWorkerService.getFieldWorkersByTalukaId(talukaId);
     }
 
-    @Operation(summary = "Retrieve list of fieldworkers",
-            description = "Retrieve the list of all the fieldworkers of a given district")
+    @Operation(summary = "Retrieve list of fieldworkers", description = "Retrieve the list of all the fieldworkers of a given district")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = FieldWorker.class))) }),
@@ -61,49 +57,43 @@ public class FieldWorkerController {
                     content = @Content)
     })
     @GetMapping("/districts/{districtId}/fieldworkers")
-    public List<FieldWorker> getFieldWorkersFromDistrictId(@Parameter(
-            name = "districtId",
-            description = "District ID",
-            required = true)@PathVariable int districtId) {
+    public List<FieldWorker> getFieldWorkersFromDistrictId(
+            @Parameter(name = "districtId", description = "District ID", required = true)
+            @PathVariable int districtId) {
         return fieldWorkerService.getFieldWorkersFromDistrictIdV2(districtId);
     }
 
-
-    @PostMapping(path = "/talukas/{talukaId}/fieldworkers", produces = "application/json", consumes = "application/json")
+    @Operation(summary = "Add a fieldworker", description = "Add a fieldworker in a given taluka")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FieldWorker.class)) }),
             @ApiResponse(responseCode = "500", description = "Could not add field worker",
                     content = @Content)
     })
-    public ResponseEntity<FieldWorker> addFieldWorker(@Parameter(
-            name = "talukaId",
-            description = "Taluka ID",
-            required = true)@PathVariable int talukaId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Fieldworker to add", required = true,
-            content = @Content(
-                    schema=@Schema(implementation = FieldWorker.class))) @Valid @RequestBody FieldWorker fieldWorker) throws Exception {
+    @PostMapping(path = "/talukas/{talukaId}/fieldworkers", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<FieldWorker> addFieldWorker(
+            @Parameter(name = "talukaId", description = "Taluka ID", required = true)
+            @PathVariable int talukaId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Fieldworker to add", required = true, content = @Content(schema=@Schema(implementation = FieldWorker.class)))
+            @Valid @RequestBody FieldWorker fieldWorker) throws Exception {
         FieldWorker dbFieldWorker = fieldWorkerService.addFieldWorker(talukaId, fieldWorker);
         return ResponseEntity.status(HttpStatus.CREATED).body(dbFieldWorker);
     }
 
-
-    @PutMapping(path = "/fieldworkers/{fieldWorkerId}", produces = "application/json", consumes = "application/json")
-    @Operation(summary = "Update Availability of Fieldworker",
-            description = "Update the availability status of a fieldworker and assign a substitute")
+    @Operation(summary = "Update Availability of Fieldworker", description = "Update the availability status of a fieldworker and assign a substitute")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FieldWorker.class)) }),
             @ApiResponse(responseCode = "500", description = "Could not update field worker availability",
                     content = @Content)
     })
-    public ResponseEntity<FieldWorker> updateFieldWorkerAvailability(@Parameter(
-            name = "fieldWorkerId",
-            description = "Fieldworker ID",
-            required = true)@PathVariable int fieldWorkerId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Fieldworker availability status and substitute", required = true,
-            content = @Content(
-                    schema=@Schema(implementation = FieldWorkerAvailabilityRequest.class))) @Valid @RequestBody FieldWorkerAvailabilityRequest requestBody) {
+    @PutMapping(path = "/fieldworkers/{fieldWorkerId}", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<FieldWorker> updateFieldWorkerAvailability(
+            @Parameter(name = "fieldWorkerId", description = "Fieldworker ID", required = true)@PathVariable int fieldWorkerId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Fieldworker availability status and substitute", required = true, content = @Content(schema=@Schema(implementation = FieldWorkerAvailabilityRequest.class)))
+            @Valid @RequestBody FieldWorkerAvailabilityRequest requestBody) {
         FieldWorker dbFieldWorker = fieldWorkerService.updateAvailability(fieldWorkerId, requestBody);
         return ResponseEntity.status(HttpStatus.OK).body(dbFieldWorker);
     }

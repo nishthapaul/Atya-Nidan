@@ -6,17 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/atyanidan/auth/api")
+@RequestMapping("/atyanidan/auth-service")
 public class DemoController {
 
     @GetMapping("/doctor/demo")
-    @PreAuthorize("hasAuthority('Doctor')")
     public String demoMethod() {
         return "Demo-String-Auth doctor";
     }
 
     @GetMapping("/fw/demo")
-    @PreAuthorize("hasAuthority('FieldWorker')")
     public String demoMetnkhod() {
         return "Demo-String-Auth fw";
     }

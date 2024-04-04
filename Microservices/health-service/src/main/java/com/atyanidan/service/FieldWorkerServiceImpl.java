@@ -71,8 +71,12 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
             try {
                 return fieldWorkerRepository.save(fieldWorker);
             } catch (DataIntegrityViolationException e) {
-                if (e.getMessage().contains("Duplicate entry")) {
-                    String errorMessage = "Phone number or email already exists.";
+                String exceptionRootCause = e.getRootCause().getMessage();
+                if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("phone_number") ) {
+                    String errorMessage = "Phone number already exists.";
+                    throw new ConflictException(errorMessage, e);
+                } else if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("email") ) {
+                    String errorMessage = "Email ID already exists.";
                     throw new ConflictException(errorMessage, e);
                 } else {
                     throw new BadRequestException("Some fields are required and not provided.", e);
