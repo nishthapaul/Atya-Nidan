@@ -6,7 +6,7 @@ import Card from '../components/Card';
 import RadioButton from '../components/RadioButton';
 import AddFieldWorker from '../Addfieldworker/AddFieldWorker';
 import { API_PATHS } from '../constants/apiConstants';
-
+import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 // Sample data
 
 
@@ -19,6 +19,7 @@ const TableHeader = () => (
   </View>
 );
 const FieldWorkerScreen = ({ navigation }) => {
+  const { authToken } = useAuth(); // Accessing the authToken
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
@@ -71,20 +72,40 @@ const FieldWorkerScreen = ({ navigation }) => {
     )
   };
   
+  // useEffect(() => {
+  //   const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
+  //   axios.get(getfwlist)
+  //     .then(response => {
+  //       console.log("response", response);
+  //       console.log("response.data", response.data);
+
+  //       setData(response.data);
+  //       setSelectedUser(response.data[0]);      
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
+
   useEffect(() => {
     const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
-    axios.get(getfwlist)
-      .then(response => {
-        console.log("response", response);
-        console.log("response.data", response.data);
-
-        setData(response.data);
-        setSelectedUser(response.data[0]);      
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+    axios.get(getfwlist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      console.log("response", response);
+      console.log("response.data", response.data);
+  
+      setData(response.data);
+      setSelectedUser(response.data[0]);      
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }, [authToken]); // Add authToken as a dependency to re-run the effect if it changes
+  
 
   return (
     <View style={styles.container}>

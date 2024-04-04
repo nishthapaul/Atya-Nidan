@@ -3,10 +3,12 @@ import { Alert, ScrollView, View, StyleSheet } from 'react-native';
 import FieldWorkerInformation from './FieldWorkerInformation'; 
 import axios from 'axios';
 import { API_PATHS } from '../constants/apiConstants';
+import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 
 
 const AddFieldWorker = ({ saveModal }) => {
   console.log("saveModalFw", saveModal)
+  const { authToken } = useAuth();
   const [firstName, setfirstName] = useState('');
   const [middleName, setmiddleName] = useState('');
   const [lastName, setlastName] = useState('');
@@ -32,15 +34,19 @@ const AddFieldWorker = ({ saveModal }) => {
     useEffect(() => {
       const fetchTalukaList = async () => {
         try {
-          const response = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'));
-          setTalukaList(response.data);
-          console.log("Fetched Taluka List: ", response.data); 
+          const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'), {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // Using authToken for authentication
+            }
+          });
+          // const response = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'));
+          setTalukaList(talukasResponse.data);
+          console.log("Fetched Taluka List: ", talukasResponse.data); 
         } catch (error) {
           console.log('Error fetching taluka list:', error);
           // Handle error here
         }
       };
-  
       fetchTalukaList();
     }, []);
 
@@ -165,10 +171,14 @@ const AddFieldWorker = ({ saveModal }) => {
         "languageKnown3": lagknown3
       };
       
-      const fieldworkersByDoctors = API_PATHS.FIELD_WORKERS_BY_TALUKAS.replace(':talukaId', 4)
-
-      // Make POST request to your backend endpoint
-      axios.post(fieldworkersByDoctors, data)
+      const fieldworkersByDoctors = API_PATHS.FIELD_WORKERS_BY_TALUKAS.replace(':talukaId', taluka);
+      // Include Authorization header with the authToken
+      axios.post(fieldworkersByDoctors, data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Include the token here
+          'Content-Type': 'application/json'
+        }
+      })
           .then(response => {
               // Handle success response
               console.log('Response:', response.data);
@@ -178,21 +188,6 @@ const AddFieldWorker = ({ saveModal }) => {
               saveModal();
           })
           .catch(error => {
-            // if (error.response && error.response.status === 409) {
-            //   // Here you can extract more details if your API sends specific messages for email vs phone
-            //   Alert.alert('Error', 'Phone number or email already exists.');
-            //   // Alert.alert(error.response)
-            // }
-            // else if (error.response && error.response.status === 500){
-            //   Alert.alert('Server Error', 'Our Server is down. Please try again later');
-            // }
-            // else{
-            //   // Handle error
-            //   console.error('Error:', error);
-            //   // Show error message or perform any other actions
-            //   Alert.alert('Error', 'Failed to add field worker. Please try again later.');
-            //                 saveModal();
-            // }
             if (error.response) {
               // Extracting the message sent from the backend
               const message = error.response.data.message || "Our Server is down. Please try again later";
