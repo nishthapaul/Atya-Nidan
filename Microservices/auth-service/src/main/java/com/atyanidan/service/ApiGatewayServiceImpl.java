@@ -19,7 +19,7 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
     }
 
     @Override
-    public ResponseEntity<Object> forwardRequest(String serviceUrl, HttpMethod method, Object requestBody) throws JsonProcessingException {
+    public Object forwardRequest(String serviceUrl, HttpMethod method, Object requestBody) throws JsonProcessingException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -27,7 +27,7 @@ public class ApiGatewayServiceImpl implements ApiGatewayService {
             if (requestBody != null) {
                 requestEntity = new HttpEntity<>(requestBody, headers);
             }
-            return restTemplate.exchange(serviceUrl, method, requestEntity, Object.class);
+            return restTemplate.exchange(serviceUrl, method, requestEntity, Object.class).getBody();
         } catch (HttpStatusCodeException e) {
             String errorResponse = e.getResponseBodyAsString();
             ErrorResponse errorObject = new ObjectMapper().readValue(errorResponse, ErrorResponse.class);
