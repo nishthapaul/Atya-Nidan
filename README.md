@@ -10,12 +10,6 @@
 <!--   <a href="https://github.com/OpenDevin/OpenDevin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/opendevin/opendevin?style=for-the-badge" alt="MIT License"></a> -->
 </div>
 
-<!-- PROJECT LOGO -->
-<div align="center">
- <img width="237" alt="Screenshot 2024-04-04 at 5 19 44 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/038281f7-0b52-4d4b-9c60-3e4b26926bca">
-</div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -35,8 +29,9 @@
         <li><a href="#3-individual-server-startup">3. Individual Server Startup</a></li>
       </ul>
     </li>
-    <li><a href="#Figma">Figma</a></li> 
-    <li><a href="#ScreenShots">ScreenShots</a></li> 
+    <li><a href="#logo">App Logo</a></li> 
+    <li><a href="#Figma">Figma</a></li>
+    <li><a href="#ScreenShots">Screenshots</a></li> 
   </ol>
 </details>
 
@@ -101,8 +96,8 @@ Getting started with the AtyaNidan project is incredibly easy. Follow these simp
 
 IDE Requirements:
 * [Android Studio](https://ngrok.com/download)
-* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=mac))
-* [VS Code](https://code.visualstudio.com/download))
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=mac)
+* [VS Code](https://code.visualstudio.com/download)
 
 ### 2. Build and Setup
 
@@ -150,11 +145,18 @@ Otherwise to run backend and frontend in different laptops, we need to expose th
     </a>
 </p>
 
+## App Logo
+
+<!-- PROJECT LOGO -->
+<div align="center">
+ <img width="237" alt="Screenshot 2024-04-04 at 5 19 44 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/038281f7-0b52-4d4b-9c60-3e4b26926bca">
+</div>
+
 ## Figma
 
  https://www.figma.com/file/JQUy4I0SJvftMLQCuwmUQT/AtyaNidan?type=design&node-id=1669%3A162202&mode=design&t=XlSHyEiDvNZ5A831-1
 
-## ScreenShots
+## Screenshots
 
 #### Login Page
 
