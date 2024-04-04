@@ -11,9 +11,8 @@
 </div>
 
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>🗂️ Table of Contents</summary>
-  <ol>
+  ↪ 🗂️ Table of Contents
+<!--   <ol>
     <li>
       <a href="#about-the-project">About AtyaNidan</a>
       <ul>
@@ -31,8 +30,19 @@
     <li><a href="#logo">App Logo</a></li> 
     <li><a href="#Figma">Figma</a></li>
     <li><a href="#ScreenShots">Screenshots</a></li> 
-  </ol>
-</details>
+  </ol> -->
+<!-- </details> -->
+
+|     | Topic                                                               |
+| --- | :------------------------------------------------------------------ |
+| ⛳️  | <b>[Mission](#-Mission)</b>                               |
+| 🧶  | <b>[Project Status](#-demo)</b>                                               |
+| 🏁  | <b>[Get Started](#-tutorials)</b>                                     |
+| 💎  | <b>[Design Principles](#-design-principles)</b>                     |
+| 🔧  | <b>[Build and Setup](#-data-model)</b>                                   |
+| 🔮  | <b>[App Logo](#-roles)</b>                                             |
+| 🧩  | <b>[Figma](#-bytebase-vs-alternatives)</b>       |
+| 📸  | <b>[Screenshots](#-developing-and-contributing)</b> |
 
 ## ⛳️ Mission
 
