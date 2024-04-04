@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Field_Worker (
     photo blob,
 	gender ENUM('Male', 'Female', 'Other') NOT NULL,
 	blood_group varchar(10),
-	aadhar_number varchar(12),
+	aadhar_number varchar(12) UNIQUE NOT NULL,
     substitute_id int,
     primary key (field_worker_id)
 );
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS Doctor (
     photo blob,
 	gender ENUM('Male', 'Female', 'Other') NOT NULL,
 	blood_group varchar(10),
-	aadhar_number varchar(12),
+	aadhar_number varchar(12) UNIQUE NOT NULL,
     primary key (doctor_id)
 );
 
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS Patient(
     dob date,
     blood_group varchar(10),
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
-    abha_id int NOT NULL,
+    abha_id int NOT NULL, -- What will this refer to?
     primary key (patient_id)
 );
 
@@ -166,8 +166,8 @@ CREATE TABLE IF NOT EXISTS Form_Skeleton(
     form_skeleton_id int AUTO_INCREMENT,
     title varchar(100) NOT NULL UNIQUE,
     date_of_creation date NOT NULL,
-    is_default bit default 0,
-    xsd_file blob NOT NULL,
+    default_form bit default 0,
+    file blob NOT NULL,
     specialisation_id int NOT NULL,
     primary key (form_skeleton_id)
 );
@@ -192,7 +192,7 @@ ALTER TABLE Form_Skeleton_Normal_Values
 
 CREATE TABLE IF NOT EXISTS ICD10_Code (
     code_id int AUTO_INCREMENT,
-    code varchar(100),
+    code varchar(100) NOT NULL,
     description varchar(100),
     primary key (code_id)
 );
@@ -207,5 +207,15 @@ CREATE TABLE IF NOT EXISTS Languages_Known (
 
 ALTER TABLE Languages_Known
 ADD FOREIGN KEY (field_worker_id) REFERENCES Field_Worker(field_worker_id);
+
+CREATE TABLE IF NOT EXISTS Follow_Up ( -- is a part of diagnosis
+    follow_up_id int AUTO_INCREMENT,
+    repeat_freq int DEFAULT 1,
+    days varchar(100), -- datatype
+    duration ENUM('Daily', 'Alternatievly', 'Weekly', 'Biweekly', 'Monthly'),
+    most_recent_follow_up_date date,
+    no_of_follow_ups_completed int default 0,
+    primary key (follow_up_id)
+);
 
 
