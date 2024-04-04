@@ -3,10 +3,10 @@
 <a name="readme-top"></a>
 
 <div align="center">
-  <a href="https://github.com/nishthapaul/Atya-Nidan/graphs/contributors"><img src="https://img.shields.io/github/contributors/opendevin/opendevin?style=for-the-badge" alt="Contributors"></a>
-  <a href="https://github.com/OpenDevin/OpenDevin/network/members"><img src="https://img.shields.io/github/forks/opendevin/opendevin?style=for-the-badge" alt="Forks"></a>
+  <a href="https://github.com/nishthapaul/Atya-Nidan/graphs/contributors"><img src="https://img.shields.io/github/contributors/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Contributors"></a>
+  <a href="https://github.com/nishthapaul/Atya-Nidan/network/members"><img src="https://img.shields.io/github/forks/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Forks"></a>
 <!--   <a href="https://github.com/OpenDevin/OpenDevin/stargazers"><img src="https://img.shields.io/github/stars/opendevin/opendevin?style=for-the-badge" alt="Stargazers"></a> -->
-  <a href="https://github.com/OpenDevin/OpenDevin/issues"><img src="https://img.shields.io/github/issues/opendevin/opendevin?style=for-the-badge" alt="Issues"></a>
+  <a href="https://github.com/nishthapaul/Atya-Nidan/issues"><img src="https://img.shields.io/github/issues/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Issues"></a>
 <!--   <a href="https://github.com/OpenDevin/OpenDevin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/opendevin/opendevin?style=for-the-badge" alt="MIT License"></a> -->
 </div>
 
