@@ -2,6 +2,8 @@ package com.atyanidan.entity.actor;
 
 import com.atyanidan.entity.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -15,12 +17,12 @@ public class User {
     private int id;
 
     @Column(name = "phone_number", unique = true)
-    @NotNull
+    @NotEmpty
     @Size(max=10, min=10)
     private String phoneNumber;
 
     @Column(name = "email", unique = true)
-    @NotNull
+    @NotEmpty
     private String email;
 
     @Enumerated(EnumType.STRING)
