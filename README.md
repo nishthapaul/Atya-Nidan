@@ -35,14 +35,14 @@
 
 |     | Topic                                                               |
 | --- | :------------------------------------------------------------------ |
-| ⛳️  | <b>[Mission](#-Mission)</b>                               |
-| 🧶  | <b>[Project Status](#-demo)</b>                                               |
-| 🏁  | <b>[Get Started](#-tutorials)</b>                                     |
-| 💎  | <b>[Design Principles](#-design-principles)</b>                     |
-| 🔧  | <b>[Build and Setup](#-data-model)</b>                                   |
-| 🔮  | <b>[App Logo](#-roles)</b>                                             |
-| 🧩  | <b>[Figma](#-bytebase-vs-alternatives)</b>       |
-| 📸  | <b>[Screenshots](#-developing-and-contributing)</b> |
+| ⛳️  | <b>Mission</b>                               |
+| 🧶  | <b>Project Status</b>                                               |
+| 🏁  | <b>Get Started</b>                                     |
+| 💎  | <b>Design Principles</b>                     |
+| 🔧  | <b>Build and Setup</b>                                   |
+| 🔮  | <b>App Logo</b>                                             |
+| 🧩  | <b>Figma</b>       |
+| 📸  | <b>Screenshots</b> |
 
 ## ⛳️ Mission
 
