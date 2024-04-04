@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../Screens/HomeScreen/HomeScreen'
 import FormScreen  from '../Screens/FormScreen/FormScreen'
 import StatsScreen from '../Screens/StatsScreen/StatsScreen'
-import ProfileScreen from '../Screens/ProfileScreen/ProfileScreen'
 import { NavigationContainer } from '@react-navigation/native'
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -39,14 +38,6 @@ export default function TabNavigation() {
 
       />
       <Tab.Screen name="stats" component={StatsScreen} 
-      options={{
-        tabBarActiveBackgroundColor:'#003366',
-        tabBarIcon:({color,size})=>(
-            <Ionicons name="stats-chart" size={24} color="black" />
-        )
-      }}
-      />
-      <Tab.Screen name="profile" component={ProfileScreen} 
       options={{
         tabBarActiveBackgroundColor:'#003366',
         tabBarIcon:({color,size})=>(
