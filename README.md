@@ -90,19 +90,19 @@ Getting started with the AtyaNidan project is incredibly easy. Follow these simp
 
 ### 1. Requirements
 * Linux, Mac OS, or [Windows](https://learn.microsoft.com/en-us/windows/wsl/install)
-* [React native]([https://docs.docker.com/engine/install/](https://reactnative.dev))
-* [Expo Go]([https://www.python.org/downloads/](https://docs.expo.dev/get-started/installation/)) >= 1.0.0
+* [React native](https://reactnative.dev)
+* [Expo Go](https://docs.expo.dev/get-started/installation/) >= 1.0.0
 * [Spring Boot](https://spring.io/projects/spring-boot)
-* [My SQL]([https://spring.io/projects/spring-boot](https://dev.mysql.com/downloads/installer/))
-* [Kibana]([https://spring.io/projects/spring-](https://www.elastic.co/downloads/kibana))
-* [Elastic Search]([https://spring.io/projects/spring-boot](https://www.elastic.co/downloads/elasticsearch))
+* [My SQL](https://dev.mysql.com/downloads/installer/)
+* [Kibana](https://www.elastic.co/downloads/kibana)
+* [Elastic Search](https://www.elastic.co/downloads/elasticsearch)
 * [Ngrok](https://ngrok.com/download)
 * [Postman](https://ngrok.com/download)
 
 IDE Requirements:
 * [Android Studio](https://ngrok.com/download)
-* [IntelliJ IDEA]([https://ngrok.com/download](https://www.jetbrains.com/idea/download/?section=mac))
-* [VS Code]([https://ngrok.com/download](https://code.visualstudio.com/download))
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=mac))
+* [VS Code](https://code.visualstudio.com/download))
 
 ### 2. Build and Setup
 
