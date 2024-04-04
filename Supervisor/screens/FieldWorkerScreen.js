@@ -7,6 +7,7 @@ import RadioButton from '../components/RadioButton';
 import AddFieldWorker from '../Addfieldworker/AddFieldWorker';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
+import CustomSwitch from '../components/FWAssign'
 // Sample data
 
 
@@ -60,13 +61,15 @@ const FieldWorkerScreen = ({ navigation }) => {
 
   const TableRow = ({ item }) => {
     console.log("item", item);
+    const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
+    const newDataObject = { available: item.available, id: item.id, name: name, talukaName: item.taluka.name};
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}>True</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data}/></Text>
         </View>
       </Pressable>
     )
