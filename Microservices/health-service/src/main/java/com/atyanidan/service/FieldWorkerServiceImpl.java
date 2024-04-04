@@ -104,6 +104,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
             fieldWorker.setSubstitute(null);
         } else {
             FieldWorker substituteFieldWorker = getFieldWorkerById(requestBody.getSubstituteFieldWorkerId());
+            substituteFieldWorker.setAvailable(true);
             fieldWorker.setSubstitute(substituteFieldWorker);
         }
         return fieldWorkerRepository.save(fieldWorker);
