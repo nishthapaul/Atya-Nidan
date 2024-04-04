@@ -50,7 +50,8 @@ public class FieldWorker extends User {
     @Column(name = "blood_group")
     private String bloodGroup;
 
-    @Column(name = "aadhar_number")
+    @Column(name = "aadhar_number", unique = true)
+    @NotNull
     private String aadharNumber;
 
     @Column(name = "available", columnDefinition = "DEFAULT 0")
