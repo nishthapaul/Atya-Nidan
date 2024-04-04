@@ -101,7 +101,7 @@ IDE Requirements:
 
 ### 2. Build and Setup
 
-- **Build the Project:** Begin by building the project, which includes setting up the environment and installing dependencies. This step ensures that AtyaNidan is ready to run smoothly on your system.
+- **Tablet API:** Begin by building the project, which includes setting up the environment and installing dependencies. This step ensures that AtyaNidan is ready to run smoothly on your system.
   Start by launching Android Studio > Device Manager > Pixel tablet API 34. Please verifying your configurations from below screenshot.
   
   <img width="492" alt="Screenshot 2024-04-04 at 4 43 23 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/2cd357df-4b48-4a62-8cc2-d9bc6f21eabb">
