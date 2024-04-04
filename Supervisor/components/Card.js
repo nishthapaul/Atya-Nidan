@@ -3,25 +3,27 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 
 const Card = ({ user }) => {
   const name = `${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
+  const knownLanguages = `${user.languageKnown1}${user.languageKnown2 ? ' ' + user.languageKnown2 : ''}${user.languageKnown3 ? ' ' + user.languageKnown3 : ''}`;
+
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.leftColumn}>
           <Text style={styles.userName}>{name}</Text>
           <View style={styles.userDetailRow}>
-            <Text style={styles.userDetail}>DOB: {'xyz'}</Text>
-            <Text style={styles.userDetail}>Sex: Male</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>DOB: </Text>{user.dob}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Sex: </Text>{user.gender}</Text>
           </View>
-          <Text style={styles.userDetail}>Contact No.: {'905537844'} </Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Contact No.: </Text>{user.phoneNumber} </Text>
           <Text style={styles.userDetail}>
-            Email Id.: {'email@email.com'}
+          <Text style={{fontWeight: 'bold'}}>Email Id.: </Text>{user.email}
           </Text>
           <Text style={styles.userDetail}>
-            Address: {'ftrfgcvvcvcc'}
+          <Text style={{fontWeight: 'bold'}}>Address: </Text>{user.officeAddress}
           </Text>
-          <Text style={styles.userDetail}>Taluka Assigned: {'taluka assigned'}</Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka Assigned: </Text>{user.taluka.name}</Text>
           <Text style={styles.userDetail}>
-            Language known: Hindi, English, Punjabi
+          <Text style={{fontWeight: 'bold'}}>Language known: </Text>{knownLanguages}
           </Text>
         </View>
         <View style={styles.rightColumn}>
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     },
     userDetailRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      gap:100,
       marginBottom: 5,
     },
     userDetail: {

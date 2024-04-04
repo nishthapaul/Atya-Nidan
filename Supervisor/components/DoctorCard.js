@@ -3,29 +3,30 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 
 export default DoctorCard = ({ user }) => {
     
-    // console.log("name", user.name);
+  const name = `${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
+  const knownLanguages = `${user.languageKnown1}${user.languageKnown2 ? ' ' + user.languageKnown2 : ''}${user.languageKnown3 ? ' ' + user.languageKnown3 : ''}`;
     return(
         <View style={styles.card}>
         <View style={styles.container}>
           <View style={styles.leftColumn}>
-            <Text style={styles.userName}>{user.name}</Text>
+            <Text style={styles.userName}>{name}</Text>
             <View style={styles.userDetailRow}>
-              <Text style={styles.userDetail}>Age: 34</Text>
-              <Text style={styles.userDetail}>Sex: Male</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>DOB: </Text>{user.dob}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Sex: </Text>{user.gender}</Text>
             </View>
-            <Text style={styles.userDetail}>Contact No.: {' +91905537844'} </Text> 
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Contact No.: </Text>{user.phoneNumber} </Text> 
             <Text style={styles.userDetail}>
-              Email Id : {'email@email.com'}
+            <Text style={{fontWeight: 'bold'}}> Email Id : </Text>{user.email}
             </Text>
             <Text style={styles.userDetail}>
-              Clinic Address : {'House No. 1891, Faridabad, Haryana'}
+            <Text style={{fontWeight: 'bold'}}>Clinic Address : </Text>{user.hospitalAddress}
             </Text>
             <View style = {styles.abc}>
-            <Text style={styles.userDetail}>Taluka :  {'Thankle'}</Text>
-            <Text style={styles.userDetail}>Specialization :  {'Internits'}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka :  </Text>{user.taluka.name}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Specialization :  </Text>{user.specialisation.name}</Text>
             </View>
             <Text style={styles.userDetail}>
-              Language known: Hindi, English, Punjabi
+            <Text style={{fontWeight: 'bold'}}>Language known: </Text>{knownLanguages}
             </Text>
           </View>
           <View style={styles.rightColumn}>
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     },
     userPic: {
       width: 160,
-      height: 160,
+      height: 140,
       backgroundColor: 'grey',
     },
     adharCardImage: {

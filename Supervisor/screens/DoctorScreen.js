@@ -61,7 +61,7 @@ const DoctorScreen = ({ navigation }) => {
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
-          <Text style={[styles.tableCell, { flex: 3 }]}>{item.firstName + " " + item.lastName}</Text>
+          <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
         </View>
