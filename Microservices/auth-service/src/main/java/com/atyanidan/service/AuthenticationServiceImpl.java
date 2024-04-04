@@ -3,13 +3,11 @@ package com.atyanidan.service;
 import com.atyanidan.dao.UserRepository;
 import com.atyanidan.dto.AuthenticationRequest;
 import com.atyanidan.dto.AuthenticationResponse;
-import com.atyanidan.entity.Role;
 import com.atyanidan.entity.User;
 import com.atyanidan.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +30,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String userRole = user.getRole().toString();
 
             var jwtToken = jwtService.generateToken(Map.of("role", userRole), user);
+            System.out.println("token: " + jwtToken);
+
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .role(userRole)
