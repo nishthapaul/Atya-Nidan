@@ -34,7 +34,7 @@
   </ol>
 </details>
 
-## Mission
+## ⛳️ Mission
 
 Welcome to AtyaNidan, a project aiming improve healthcare delivery by empowering field health workers with a tablet-based application designed to extend care directly to homes. This project aspires to enhance the care process, the app assists health workers by managing their schedules and sending alerts for follow-up visits, ensuring no patient is overlooked.
 
@@ -44,7 +44,7 @@ Welcome to AtyaNidan, a project aiming improve healthcare delivery by empowering
     </a>
 </p>
 
-## What is AtyaNidan?
+## 🤔 What is AtyaNidan?
 AtyaNidan is an innovative project designed to bring healthcare services closer to communities by enabling field health workers through technology. It is a tablet-based application that supports health workers as they visit homes, conducting screenings for all family members with a standardized questionnaire. This approach aims to identify individuals with mental health conditions early and ensure they are promptly referred to local doctors for evaluation and treatment.
 
 The application simplifies the process of recording diagnoses using ICD10 codes, making it easier for doctors to prescribe the appropriate treatment and follow-ups. It's equipped with features to help health workers manage their schedules, receive alerts for upcoming follow-ups, and ensure no patient is left behind, even in areas with unreliable internet thanks to its offline capabilities.
@@ -55,7 +55,7 @@ The application simplifies the process of recording diagnoses using ICD10 codes,
     </a>
 </p>
 
-## Why AtyaNidan?
+## ⁉ Why AtyaNidan?
 AtyaNidan is born out of the necessity to extend healthcare services beyond the confines of traditional facilities and directly into homes, particularly in underserved areas. By leveraging technology, AtyaNidan empowers health workers with tools to efficiently screen, diagnose, and ensure the follow-up of patients, fundamentally transforming how health conditions are identified and treated at the community level. This initiative not only aims to make healthcare more accessible but also ensures that it is proactive, personalized, and responsive to the needs of the community, ultimately contributing to better health outcomes and a healthier society.
 
 <p align="right" style="font-size: 14px; color: #555; margin-top: 20px;">
@@ -64,7 +64,7 @@ AtyaNidan is born out of the necessity to extend healthcare services beyond the 
     </a>
 </p>
 
-## Project Status
+## 🧶 Project Status
 
 AtyaNidan is currently a work in progress, but you can already run the alpha version to see the end-to-end system in action. The project team is actively working on the following key milestones:
 
@@ -78,7 +78,7 @@ AtyaNidan is currently a work in progress, but you can already run the alpha ver
     </a>
 </p>
 
-## Get Started
+## 🏁 Get Started
 
 Getting started with the AtyaNidan project is incredibly easy. Follow these simple steps to set up and run AtyaNidan on your system:
 
@@ -98,7 +98,7 @@ IDE Requirements:
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=mac)
 * [VS Code](https://code.visualstudio.com/download)
 
-### 2. Build and Setup
+### 2. 🔧 Build and Setup
 
 - **Tablet API:** Begin by building the project, which includes setting up the environment and installing dependencies. This step ensures that AtyaNidan is ready to run smoothly on your system.
   Start by launching Android Studio > Device Manager > Pixel tablet API 34. Please verify your configurations from below screenshot.
@@ -106,7 +106,7 @@ IDE Requirements:
   <img width="492" alt="Screenshot 2024-04-04 at 4 43 23 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/2cd357df-4b48-4a62-8cc2-d9bc6f21eabb">
 
 
-### 3. Run the Application
+### 3. ⏯️ Run the Application
 
 - **Setup the API's:** Run all the 3 microservices (AuthServiceApplication, FormServiceApplication and HealthServiceApplication). The entry point is 9001 port of AuthServiceApp.
 If frontend will run on the same laptop as backend, then it can directly use localhost:9001 as the base url.
@@ -130,7 +130,7 @@ Otherwise to run backend and frontend in different laptops, we need to expose th
     npm i
     ```
 
-### 4. Individual Server Startup
+### 4. 🪶 Individual Server Startup
 
 - **Start the Backend Server:** If you prefer, you can start the backend server independently to focus on backend-related tasks or configurations.
     Refer: Setup the API's
@@ -145,18 +145,18 @@ Otherwise to run backend and frontend in different laptops, we need to expose th
     </a>
 </p>
 
-## App Logo
+## 🔮 App Logo
 
 <!-- PROJECT LOGO -->
 <div align="center">
  <img width="237" alt="Screenshot 2024-04-04 at 5 19 44 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/038281f7-0b52-4d4b-9c60-3e4b26926bca">
 </div>
 
-## Figma
+## 🧩 Figma
 
  https://www.figma.com/file/JQUy4I0SJvftMLQCuwmUQT/AtyaNidan?type=design&node-id=1669%3A162202&mode=design&t=XlSHyEiDvNZ5A831-1
 
-## Screenshots
+## 📸 Screenshots
 
 #### Login Page
 
