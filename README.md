@@ -106,6 +106,9 @@ IDE Requirements:
   
   <img width="492" alt="Screenshot 2024-04-04 at 4 43 23 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/2cd357df-4b48-4a62-8cc2-d9bc6f21eabb">
 
+
+### 3. Run the Application
+
 - **Setup the API's:** Run all the 3 microservices (AuthServiceApplication, FormServiceApplication and HealthServiceApplication). The entry point is 9001 port of AuthServiceApp.
 If frontend will run on the same laptop as backend, then it can directly use localhost:9001 as the base url.
 Otherwise to run backend and frontend in different laptops, we need to expose the localhost to a public API with the help of Ngrok. It creates a tunnel between frontend and backend such that all the APIs hitting localhost:9001 will be forwarded to the exposed public URl.
@@ -116,9 +119,7 @@ Otherwise to run backend and frontend in different laptops, we need to expose th
     <img width="686" alt="Screenshot_2024-04-04_at_5 06 39_PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/0791d38d-7007-4c80-9649-376072435587">
 
 
-### 3. Run the Application
-
-- **Run the Application:** Once the setup is complete, launching AtyaNidan is as simple as running a single command. This command starts both the backend and frontend servers seamlessly, allowing you to interact with AtyaNidan without any hassle.
+- **Launch the App:** Once the setup is complete, launching AtyaNidan is as simple as running a single command. This command starts both the backend and frontend servers seamlessly, allowing you to interact with AtyaNidan without any hassle.
     ```bash
     npm start
     ```
