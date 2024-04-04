@@ -68,6 +68,9 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
         if (fieldWorker.getRole() != Role.FieldWorker) {
             throw new BadRequestException("Role should be FieldWorker");
         }
+        if (fieldWorker.getTaluka().getId() != talukaId) {
+            throw new BadRequestException("Taluka Id in API and Response Body don't match");
+        }
         Optional<Taluka> optionalEntity = talukaRepository.findById(talukaId);
         if (optionalEntity.isPresent()) {
             Taluka taluka = optionalEntity.get();
