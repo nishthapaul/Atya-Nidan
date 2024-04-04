@@ -5,11 +5,10 @@
 <div align="center">
   <a href="https://github.com/nishthapaul/Atya-Nidan/graphs/contributors"><img src="https://img.shields.io/github/contributors/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Contributors"></a>
   <a href="https://github.com/nishthapaul/Atya-Nidan/network/members"><img src="https://img.shields.io/github/forks/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Forks"></a>
-<!--   <a href="https://github.com/OpenDevin/OpenDevin/stargazers"><img src="https://img.shields.io/github/stars/opendevin/opendevin?style=for-the-badge" alt="Stargazers"></a> -->
-  <a href="https://github.com/nishthapaul/Atya-Nidan/issues"><img src="https://img.shields.io/github/issues/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Issues"></a>
+<!--   <a href="https://github.com/nishthapaul/Atya-Nidan/commits"><img src="https://img.shields.io/github/commits/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Stargazers"></a>
+  <a href="https://github.com/nishthapaul/Atya-Nidan/issues"><img src="https://img.shields.io/github/issues/nishthapaul/Atya-Nidan?style=for-the-badge" alt="Issues"></a> -->
 <!--   <a href="https://github.com/OpenDevin/OpenDevin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/opendevin/opendevin?style=for-the-badge" alt="MIT License"></a> -->
 </div>
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -102,7 +101,7 @@ IDE Requirements:
 ### 2. Build and Setup
 
 - **Tablet API:** Begin by building the project, which includes setting up the environment and installing dependencies. This step ensures that AtyaNidan is ready to run smoothly on your system.
-  Start by launching Android Studio > Device Manager > Pixel tablet API 34. Please verifying your configurations from below screenshot.
+  Start by launching Android Studio > Device Manager > Pixel tablet API 34. Please verify your configurations from below screenshot.
   
   <img width="492" alt="Screenshot 2024-04-04 at 4 43 23 PM" src="https://github.com/nishthapaul/Atya-Nidan/assets/163638504/2cd357df-4b48-4a62-8cc2-d9bc6f21eabb">
 
