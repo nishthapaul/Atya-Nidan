@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import axios from 'axios';
+import { API_PATHS } from './constants/apiConstants';
 
 // Screens
 import FieldWorkerScreen from './screens/FieldWorkerScreen';
@@ -17,7 +18,9 @@ function MainContainer() {
 
          React.useEffect(() => {
     // Make API call on component mount
-    axios.get('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/users/9650644165')
+    const getuserinfo = API_PATHS.GET_USER_INFO.replace(':phoneNumber', 9650644165)
+
+    axios.get(getuserinfo)
       .then(response => {
         // Update state with API data
         console.log("response", response);

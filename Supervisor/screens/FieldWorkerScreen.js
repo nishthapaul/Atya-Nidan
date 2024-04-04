@@ -5,6 +5,8 @@ import { SearchBar, Icon } from 'react-native-elements';
 import Card from '../components/Card';
 import RadioButton from '../components/RadioButton';
 import AddFieldWorker from '../Addfieldworker/AddFieldWorker';
+import { API_PATHS } from '../constants/apiConstants';
+
 // Sample data
 
 
@@ -30,7 +32,7 @@ const FieldWorkerScreen = ({ navigation }) => {
     const filteredSearchData = data.filter((item) => {
       return valueFromRadio === 1 ?
         (item.firstName.toLowerCase().includes(text.toLowerCase())) :
-        (item.taluka.nametoLowerCase().includes(text.toLowerCase()))
+        (item.taluka.name.toLowerCase().includes(text.toLowerCase()))
     }
     );
     setSearchQuery(text);
@@ -61,18 +63,18 @@ const FieldWorkerScreen = ({ navigation }) => {
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.firstName + " " + item.lastName}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>True</Text>
         </View>
       </Pressable>
     )
   };
+  
   useEffect(() => {
-    // Make API call on component mount
-    axios.get('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/districts/3/fieldworkers')
+    const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
+    axios.get(getfwlist)
       .then(response => {
-        // Update state with API data
         console.log("response", response);
         console.log("response.data", response.data);
 
@@ -83,20 +85,7 @@ const FieldWorkerScreen = ({ navigation }) => {
         console.error('Error fetching data:', error);
       });
   }, []);
-  // useEffect(() => {
-  //   // https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/users/9650644166
-  //   // Make API call on component mount
-  //   axios.get('http://10.0.2.2:3000/fieldWorker')
-  //     .then(response => {
-  //       // Update state with API data
-  //       console.log("response", response);
-  //       setData(response.data);
-  //       setSelectedUser(response.data[0]);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  // }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.list}>

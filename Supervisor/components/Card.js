@@ -2,13 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
 const Card = ({ user }) => {
-   // const name = "Anamika Mishra"
-  //  console.log("name", user.name);
+  const name = `${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
   return (
     <View style={styles.card}>
       <View style={styles.container}>
         <View style={styles.leftColumn}>
-          <Text style={styles.userName}>{user.name}</Text>
+          <Text style={styles.userName}>{name}</Text>
           <View style={styles.userDetailRow}>
             <Text style={styles.userDetail}>DOB: {'xyz'}</Text>
             <Text style={styles.userDetail}>Sex: Male</Text>
@@ -27,14 +26,14 @@ const Card = ({ user }) => {
         </View>
         <View style={styles.rightColumn}>
           <Image
-            source={{ uri: 'https://i.postimg.cc/JDP5Gd1W/userpic.png' }}
-            style={styles.userPic}
+          source={require('../assets/fwpic.png')}
+          style={styles.userPic}
           />
         </View>
       </View>
       <View>
         <Image
-          source={{ uri: 'https://i.postimg.cc/5jSmryvR/adharcard.png' }}
+          source={require('../assets/FW_ID.png')}
           style={styles.adharCardImage}
         />
       </View>
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
     },
     userPic: {
       width: 160,
-      height: 180,
+      height: 160,
       backgroundColor: 'grey',
     },
     adharCardImage: {

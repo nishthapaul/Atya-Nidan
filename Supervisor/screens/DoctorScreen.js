@@ -5,6 +5,8 @@ import { SearchBar, Icon } from 'react-native-elements';
 import DoctorCard from '../components/DoctorCard';
 import RadioButton from '../components/RadioButton';
 import AddUser from '../AddUser/AddUser';
+import { API_PATHS } from '../constants/apiConstants';
+
 // Sample data
 
 const TableHeader = () => (
@@ -68,7 +70,9 @@ const DoctorScreen = ({ navigation }) => {
   };
   useEffect(() => {
     // Make API call on component mount
-    axios.get('https://36e1-103-156-19-229.ngrok-free.app/atyanidan/health/api/districts/1/doctors')
+    // axios.get('https://459e-119-161-98-68.ngrok-free.app/atyanidan/health/api/districts/1/doctors')
+    const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', 1)
+    axios.get(getdoclist)
       .then(response => {
         // Update state with API data
         console.log("response", response);

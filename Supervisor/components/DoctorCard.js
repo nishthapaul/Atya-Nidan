@@ -30,15 +30,15 @@ export default DoctorCard = ({ user }) => {
           </View>
           <View style={styles.rightColumn}>
             <Image
-              source={{ uri: 'https://i.postimg.cc/JDP5Gd1W/userpic.png' }}
-              style={styles.userPic}
+          source={require('../assets/doctorpic.png')}
+          style={styles.userPic}
             />
           </View>
         </View>
         <View>
           <Image
-            source={{ uri: 'https://i.postimg.cc/5jSmryvR/adharcard.png' }}
-            style={styles.adharCardImage}
+          source={require('../assets/doctor_ID.png')}
+          style={styles.adharCardImage}
           />
         </View>
       </View>
