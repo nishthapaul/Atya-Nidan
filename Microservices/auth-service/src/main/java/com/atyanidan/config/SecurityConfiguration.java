@@ -11,6 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.atyanidan.util.ApiConstants.*;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -28,12 +30,15 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/atyanidan/auth-service/doctor/demo").hasAuthority("Doctor")
                     .requestMatchers(HttpMethod.GET, "/atyanidan/auth-service/fw/demo").hasAuthority("FieldWorker")
+                    .requestMatchers(HttpMethod.GET, DOCTORS_BY_DISTRICTS_API).hasAuthority("Doctor")
+                    .requestMatchers(HttpMethod.GET, FIELDWORKERS_BY_TALUKAS_API).hasAuthority("FieldWorker")
+                    .requestMatchers(HttpMethod.GET, FIELDWORKERS_BY_DISTRICTS_API).hasAuthority("FieldWorker")
                         .anyRequest() // all the other requests must be authenticated
                         .authenticated()
             )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // will create a new session for each request
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
+        System.out.println(DOCTORS_BY_DISTRICTS_API);
         return http.build();
     }
 }
