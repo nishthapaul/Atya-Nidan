@@ -2,6 +2,7 @@ package com.atyanidan.service;
 
 import com.atyanidan.dao.FieldWorkerRepository;
 import com.atyanidan.dao.TalukaRepository;
+import com.atyanidan.entity.Role;
 import com.atyanidan.exception.ConflictException;
 import com.atyanidan.exception.NotFoundException;
 import com.atyanidan.entity.Taluka;
@@ -64,6 +65,12 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
 
     @Override
     public FieldWorker addFieldWorker(int talukaId, FieldWorker fieldWorker) throws Exception {
+        if (fieldWorker.getRole() != Role.FieldWorker) {
+            throw new BadRequestException("Role should be FieldWorker");
+        }
+        if (fieldWorker.getTaluka().getId() != talukaId) {
+            throw new BadRequestException("Taluka Id in API and Response Body don't match");
+        }
         Optional<Taluka> optionalEntity = talukaRepository.findById(talukaId);
         if (optionalEntity.isPresent()) {
             Taluka taluka = optionalEntity.get();
@@ -97,6 +104,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
             fieldWorker.setSubstitute(null);
         } else {
             FieldWorker substituteFieldWorker = getFieldWorkerById(requestBody.getSubstituteFieldWorkerId());
+            substituteFieldWorker.setAvailable(true);
             fieldWorker.setSubstitute(substituteFieldWorker);
         }
         return fieldWorkerRepository.save(fieldWorker);

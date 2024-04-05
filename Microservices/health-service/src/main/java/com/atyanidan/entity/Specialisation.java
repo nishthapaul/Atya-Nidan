@@ -1,7 +1,7 @@
 package com.atyanidan.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "Specialisation")
@@ -12,7 +12,7 @@ public class Specialisation {
     private int id;
 
     @Column(name = "name")
-    @NotNull
+    @NotEmpty
     private String name;
 
     @Column(name = "description")
