@@ -1,13 +1,36 @@
 import { StyleSheet, View } from 'react-native';
 import AppHeader from './components/AppHeader';
 import MainContainer from './MainContainer';
+import LoginScreen from './screens/LoginScreen';
+import React, { useState , useEffect} from 'react';
+import { AuthProvider } from './Context/AuthContext';
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState('');
+  const [authToken, setAuthToken] = useState('');
+  const handleLoginSuccess = (role, token) => {
+    setIsLoggedIn(true);
+    setUserRole(role);
+    setAuthToken(token);
+
+  };
+
   return (
+    <AuthProvider>
     <View style={styles.container}>
-     <View style = {styles.header}><AppHeader/></View>
-     <MainContainer/>
+     {/* <View style = {styles.header}><AppHeader/></View>
+     <MainContainer/> */}
+     {!isLoggedIn ? (
+        <LoginScreen onLoginSuccess={handleLoginSuccess} />
+      ) : userRole === 'Admin' ? (
+        <MainContainer authToken={authToken}/>
+      ) : (
+        // Optionally handle different roles here
+        <View style={styles.header}><AppHeader/></View>
+      )}
     </View>
+    </AuthProvider>
   );
 }
 

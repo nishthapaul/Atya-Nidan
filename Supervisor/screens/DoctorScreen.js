@@ -6,8 +6,7 @@ import DoctorCard from '../components/DoctorCard';
 import RadioButton from '../components/RadioButton';
 import AddUser from '../AddUser/AddUser';
 import { API_PATHS } from '../constants/apiConstants';
-
-// Sample data
+import { useAuth } from '../Context/AuthContext'; 
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -18,6 +17,7 @@ const TableHeader = () => (
   </View>
 );
 const DoctorScreen = ({ navigation }) => {
+  const { authToken } = useAuth(); // Accessing the authToken
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
@@ -68,21 +68,41 @@ const DoctorScreen = ({ navigation }) => {
       </Pressable>
     )
   };
+  // useEffect(() => {
+  //   // Make API call on component mount
+  //   // axios.get('https://459e-119-161-98-68.ngrok-free.app/atyanidan/health/api/districts/1/doctors')
+  //   const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', 1)
+  //   axios.get(getdoclist)
+  //     .then(response => {
+  //       // Update state with API data
+  //       console.log("response", response);
+  //       setData(response.data);
+  //       setSelectedUser(response.data[0]);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
+
   useEffect(() => {
-    // Make API call on component mount
-    // axios.get('https://459e-119-161-98-68.ngrok-free.app/atyanidan/health/api/districts/1/doctors')
     const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', 1)
-    axios.get(getdoclist)
-      .then(response => {
-        // Update state with API data
-        console.log("response", response);
-        setData(response.data);
-        setSelectedUser(response.data[0]);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+    axios.get(getdoclist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      console.log("response", response);
+      console.log("response.data", response.data);
+  
+      setData(response.data);
+      setSelectedUser(response.data[0]);      
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }, [authToken]);
+
   return (
     <View style={styles.container}>
       <View style={styles.list}>

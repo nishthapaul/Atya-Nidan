@@ -13,16 +13,22 @@ import ProfileScreen from './screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
-function MainContainer() {
+function MainContainer(props) {
   const [admin, setAdmin] = React.useState([]);
 
          React.useEffect(() => {
     // Make API call on component mount
-    const getuserinfo = API_PATHS.GET_USER_INFO.replace(':phoneNumber', 9650644165)
+    const getuserinfo = API_PATHS.GET_USER_INFO.replace(':phoneNumber', 9083422799)
 
-    axios.get(getuserinfo)
+    axios.get(getuserinfo, {
+      headers: {
+        Authorization: `Bearer ${props.authToken}`, 
+        'Content-Type': 'application/json'// Use authToken for authentication
+      },
+    })
       .then(response => {
         // Update state with API data
+        console.log('Response headers:', response.headers);
         console.log("response", response);
         console.log("response.data", response.data);
 
@@ -30,8 +36,10 @@ function MainContainer() {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        console.error('Backend error message:', error.response.data.message);
+
       });
-  }, []);
+  }, [props.authToken]);
 
    // Render the Tab.Navigator only when adminData is available
    if (admin.length === 0) {

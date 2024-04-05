@@ -1,38 +1,40 @@
 import { Alert, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import Colors from '../../Utils/Colors';
+import Colors from '../Utils/Colors';
 import React, { useState , useEffect} from 'react';
-import { useOAuth } from "@clerk/clerk-expo";
-import { useWarmUpBrowser } from "../../../hooks/useWarmUpBrowser.tsx";
-import * as WebBrowser from "expo-web-browser";
-import Header from '../../Components/Header/header.jsx';
-import Footer from '../../Components/Footer/Footer.jsx';
+// import { useOAuth } from "@clerk/clerk-expo";
+// import { useWarmUpBrowser } from "../hooks/useWarmUpBrowser";
+// import * as WebBrowser from "expo-web-browser";
+import Header from '../components/AppHeader';
+import Footer from '../components/AppFooter';
 import axios from 'axios';
+import { useAuth } from '../Context/AuthContext';
+import { API_PATHS } from '../constants/apiConstants';
 
-export default function LoginScreen() {
-    WebBrowser.maybeCompleteAuthSession();
-    useWarmUpBrowser();
+export default function LoginScreen({ onLoginSuccess }) {
+    // WebBrowser.maybeCompleteAuthSession();
+    // useWarmUpBrowser();
   
-    const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+    // const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
   
-    const onPress = async () => {
-      try {
-          const { createdSessionId, signIn, signUp, setActive } =
-            await startOAuthFlow();
+    // const onPress = async () => {
+    //   try {
+    //       const { createdSessionId, signIn, signUp, setActive } =
+    //         await startOAuthFlow();
     
-          if (createdSessionId) {
-            setActive({ session: createdSessionId });
-          } else {
+    //       if (createdSessionId) {
+    //         setActive({ session: createdSessionId });
+    //       } else {
             
-          }
-        } catch (err) {
-          console.error("OAuth error", err);
-        }
-    }
+    //       }
+    //     } catch (err) {
+    //       console.error("OAuth error", err);
+    //     }
+    // }
     const[otp, setOtp] = React.useState('');
     const[phoneNumber, setphonenumber] = React.useState('');
     const[enteredotp, setenteredOtp] = React.useState('');
-    const[role, setRole] = React.useState('');
-
+    const[otpresponse, setOtpResponse] = React.useState(null);
+    const { setAuthToken, setUserRole, setIsLoggedIn } = useAuth();
 
     let random_otp = '';
     const handleOTPRequest = () => {
@@ -44,11 +46,11 @@ export default function LoginScreen() {
         "phoneNumber": phoneNumber,
         "otp": random_otp,
       };
-
-      // Make POST request to your backend endpoint
-      axios.post('https://1735-103-156-19-229.ngrok-free.app/atyanidan/auth/api/authenticate', data)
+      const loginauthorizationtoken = API_PATHS.POST_AUTH_TOKEN_IN_LOGIN
+      axios.post(loginauthorizationtoken, data)
           .then(response => {
-              setRole(response.data)
+            setOtpResponse(response.data)
+              console.log(random_otp);
               console.log('Response:', response.data);
               Alert.alert('Success', 'Otp sent!');
               // saveModal();
@@ -67,33 +69,44 @@ export default function LoginScreen() {
           console.log(otp);
       },[otp]);
       const matchOtp = () => {
-        
+        if (enteredotp === otp) {
+          const { role, token } = otpresponse;
+          setAuthToken(token);
+          setUserRole(role);
+          setIsLoggedIn(true);
+          Alert.alert('Success', 'User verified!');
+          onLoginSuccess(role, token); 
+        } else {
+          Alert.alert('Error', 'Unauthorized User');
+        }
   
         // Make POST request to your backend endpoint
-        if(enteredotp===otp)
-             {
-                // Handle success response
-               console.log("role", role);
-                // Show success message or perform any other actions
-                Alert.alert('Success', 'User verified!');
-                // Close the modal or perform any other actions
-                // saveModal();
-            }
-            else {
-                // Handle error
-                console.error('otp doent match');
-                // Show error message or perform any other actions
-                Alert.alert('Error', 'Unauthorized User');
-                // saveModal();
+        // if(enteredotp===otp)
+        //      {
+        //         // Handle success response
+        //        const { role, token } = otpresponse;
+        //        console.log("role:", role);
+        //        console.log("token", token);
+        //         // Show success message or perform any other actions
+        //         Alert.alert('Success', 'User verified!');
+        //         // Close the modal or perform any other actions
+        //         // saveModal();
+        //     }
+        //     else {
+        //         // Handle error
+        //         console.error('otp doent match');
+        //         // Show error message or perform any other actions
+        //         Alert.alert('Error', 'Unauthorized User');
+        //         // saveModal();
   
-            }
+        //     }
     };
     return (
       <View style={styles.container}>
           <Header />
           <ScrollView contentContainerStyle={styles.contentContainer}>
               <Image
-                  source={require('../../../assets/Images/Background.jpg')}
+                  source={require('../assets/Images/Background.jpg')}
                   style={styles.backgroundImage}
               />
               <View style={styles.transparentSquare}></View>
@@ -134,7 +147,7 @@ export default function LoginScreen() {
                   <Text style={styles.Ortext}>OR</Text>
                   <TouchableOpacity
                       style={styles.button}
-                      onPress={onPress}
+                      // onPress={onPress}
                   >
                       <Text style={styles.buttonText}>
                           Login with Google
