@@ -42,7 +42,9 @@ const handleDeassign = () => {
       setShowModal(true);
   }
   const handleAssign = () => {
+    console.log("API PAth" , API_PATHS.PUT_FIELDWORKER_ASSIGN);
     const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', id);
+    console.log("url" , url);
     axios.put(url, {
       "available": true
     }, {
@@ -60,7 +62,10 @@ const handleDeassign = () => {
     .then(response => {
       // Update state with API data
       console.log("response", response);
-      console.log("response", response.status);
+      console.log("response status", response.status);
+      if(response.status === 200) {
+        setValue(true);
+      }
       
     })
     .catch(error => {

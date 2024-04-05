@@ -19,8 +19,7 @@ export default function App() {
   return (
     <AuthProvider>
     <View style={styles.container}>
-     {/* <View style = {styles.header}><AppHeader/></View>
-     <MainContainer/> */}
+    {isLoggedIn && <View style={styles.header}><AppHeader /></View>}
      {!isLoggedIn ? (
         <LoginScreen onLoginSuccess={handleLoginSuccess} />
       ) : userRole === 'Admin' ? (

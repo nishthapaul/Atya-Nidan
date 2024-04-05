@@ -1,9 +1,6 @@
-import { Alert, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { Alert, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView } from 'react-native';
 import Colors from '../Utils/Colors';
 import React, { useState , useEffect} from 'react';
-// import { useOAuth } from "@clerk/clerk-expo";
-// import { useWarmUpBrowser } from "../hooks/useWarmUpBrowser";
-// import * as WebBrowser from "expo-web-browser";
 import Header from '../components/AppHeader';
 import Footer from '../components/AppFooter';
 import axios from 'axios';
@@ -11,66 +8,43 @@ import { useAuth } from '../Context/AuthContext';
 import { API_PATHS } from '../constants/apiConstants';
 
 export default function LoginScreen({ onLoginSuccess }) {
-    // WebBrowser.maybeCompleteAuthSession();
-    // useWarmUpBrowser();
-  
-    // const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
-  
-    // const onPress = async () => {
-    //   try {
-    //       const { createdSessionId, signIn, signUp, setActive } =
-    //         await startOAuthFlow();
-    
-    //       if (createdSessionId) {
-    //         setActive({ session: createdSessionId });
-    //       } else {
-            
-    //       }
-    //     } catch (err) {
-    //       console.error("OAuth error", err);
-    //     }
-    // }
-    const[otp, setOtp] = React.useState('');
-    const[phoneNumber, setphonenumber] = React.useState('');
-    const[enteredotp, setenteredOtp] = React.useState('');
-    const[otpresponse, setOtpResponse] = React.useState(null);
+    const [otp, setOtp] = React.useState('');
+    const [phoneNumber, setPhoneNumber] = React.useState('');
+    const [enteredOtp, setEnteredOtp] = React.useState('');
+    const [otpResponse, setOtpResponse] = React.useState(null);
     const { setAuthToken, setUserRole, setIsLoggedIn } = useAuth();
 
     let random_otp = '';
+
     const handleOTPRequest = () => {
+      // Generate a random OTP
       for (let i = 0; i < 4; i++) {
-        random_otp += Math.floor(Math.random() * 10); // Generate a random digit between 0 and 9
+        random_otp += Math.floor(Math.random() * 10);
       }
       setOtp(random_otp);
+
+      // Send OTP request to server
       const data = {
         "phoneNumber": phoneNumber,
         "otp": random_otp,
       };
-      const loginauthorizationtoken = API_PATHS.POST_AUTH_TOKEN_IN_LOGIN
+      const loginauthorizationtoken = API_PATHS.POST_AUTH_TOKEN_IN_LOGIN;
       axios.post(loginauthorizationtoken, data)
           .then(response => {
-            setOtpResponse(response.data)
-              console.log(random_otp);
-              console.log('Response:', response.data);
-              Alert.alert('Success', 'Otp sent!');
-              // saveModal();
+            setOtpResponse(response.data);
+            console.log(random_otp);
+            console.log('Response:', response.data);
+            Alert.alert('Success', 'OTP sent!');
           })
           .catch(error => {
-              // Handle error
               console.error('Error:', error);
-              // Show error message or perform any other actions
-              Alert.alert('Error', 'Failed to send otp. Please try again later.');
-              // saveModal();
-
+              Alert.alert('Error', 'Failed to send OTP. Please try again later.');
           });
-    }
-    useEffect(
-      () => {
-          console.log(otp);
-      },[otp]);
-      const matchOtp = () => {
-        if (enteredotp === otp) {
-          const { role, token } = otpresponse;
+    };
+
+    const matchOtp = () => {
+        if (enteredOtp === otp) {
+          const { role, token } = otpResponse;
           setAuthToken(token);
           setUserRole(role);
           setIsLoggedIn(true);
@@ -79,93 +53,81 @@ export default function LoginScreen({ onLoginSuccess }) {
         } else {
           Alert.alert('Error', 'Unauthorized User');
         }
-  
-        // Make POST request to your backend endpoint
-        // if(enteredotp===otp)
-        //      {
-        //         // Handle success response
-        //        const { role, token } = otpresponse;
-        //        console.log("role:", role);
-        //        console.log("token", token);
-        //         // Show success message or perform any other actions
-        //         Alert.alert('Success', 'User verified!');
-        //         // Close the modal or perform any other actions
-        //         // saveModal();
-        //     }
-        //     else {
-        //         // Handle error
-        //         console.error('otp doent match');
-        //         // Show error message or perform any other actions
-        //         Alert.alert('Error', 'Unauthorized User');
-        //         // saveModal();
-  
-        //     }
     };
     return (
       <View style={styles.container}>
-          <Header />
+        <Header />
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust behavior for iOS and Android
+        >
           <ScrollView contentContainerStyle={styles.contentContainer}>
-              <Image
-                  source={require('../assets/Images/Background.jpg')}
-                  style={styles.backgroundImage}
-              />
-              <View style={styles.transparentSquare}></View>
-              <View style={styles.mainstuff}>
-                <Text style={styles.loginwithopttext}>Login with OTP</Text>
+            <Image
+              source={require('../assets/Images/Background.jpg')}
+              style={styles.backgroundImage}
+            />
+            <View style={styles.transparentSquare}></View>
+            <View style={styles.mainstuff}>
+              <Text style={styles.loginwithopttext}>Login with OTP</Text>
+              <ScrollView style={styles.scrollContainer}>
                 <TextInput
-                  style={[styles.input]}
+                  style={styles.input}
                   value={phoneNumber}
-                  onChangeText={(phno) => setphonenumber(phno)}
+                  onChangeText={(phno) => setPhoneNumber(phno)}
                   placeholder="Enter phone number"
-                  editable={true}
+                  keyboardType="phone-pad" // Show numeric keyboard
                 />    
                 <TouchableOpacity
-                      style={styles.output}
-                      onPress = {
-                          handleOTPRequest} // Call the first function             
-                  >
-                      <Text style={styles.buttonText}>
-                          Generate OTP
-                      </Text>
-                  </TouchableOpacity>  
+                  style={styles.output}
+                  onPress={handleOTPRequest}
+                >
+                  <Text style={styles.buttonText}>
+                    Generate OTP
+                  </Text>
+                </TouchableOpacity>  
                 <TextInput
-                  style={[styles.input]}
-                  value={enteredotp}
-                  onChangeText={(eotp) => setenteredOtp(eotp)}
+                  style={styles.input}
+                  value={enteredOtp}
+                  onChangeText={(eotp) => setEnteredOtp(eotp)}
                   placeholder="Enter OTP"
-                  editable={true}
+                  keyboardType="numeric" // Show numeric keyboard
                 /> 
                 <TouchableOpacity
-                      style={styles.output}
-                      onPress={matchOtp}
-                  >
-                      <Text style={styles.buttonText}>
-                          Verify OTP
-                      </Text>
-                  </TouchableOpacity>           
-                <View style={styles.dashedLine}></View>
-                  <Text style={styles.Ortext}>OR</Text>
-                  <TouchableOpacity
-                      style={styles.button}
-                      // onPress={onPress}
-                  >
-                      <Text style={styles.buttonText}>
-                          Login with Google
-                      </Text>
-                  </TouchableOpacity>
-              </View>
+                  style={styles.output}
+                  onPress={matchOtp}
+                >
+                  <Text style={styles.buttonText}>
+                    Verify OTP
+                  </Text>
+                </TouchableOpacity>           
+  
+              <View style={styles.dashedLine}></View>
+              <Text style={styles.Ortext}>OR</Text>
+
+              <TouchableOpacity
+                style={styles.button}
+                // onPress={onPress}
+              >
+                <Text style={styles.buttonText}>
+                  Login with Google
+                </Text>
+              </TouchableOpacity>
+              </ScrollView>
+            </View>
           </ScrollView>
-          <Footer />
+        </KeyboardAvoidingView>
+        <Footer />
       </View>
     );
-  }
-  
-  const styles = StyleSheet.create({
+}
+
+const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
     contentContainer: {
       flexGrow: 1,
+      justifyContent: 'center', // Center content vertically
     },
     backgroundImage: {
       width: '100%',
@@ -186,7 +148,6 @@ export default function LoginScreen({ onLoginSuccess }) {
       borderWidth: 4,
     },
     dashedLine: {
-      // alignItems: 'center',
       marginLeft: 70,
       width: '80%',
       height: 2,
@@ -236,10 +197,8 @@ export default function LoginScreen({ onLoginSuccess }) {
       marginTop: 5,
       marginBottom: 5,
       padding: 10,
-      flex: 1, 
       width: 400,
-      alignItems: 'left',
-
+      minHeight: 50,
     },
     output: {
       fontSize: 16,
@@ -253,9 +212,8 @@ export default function LoginScreen({ onLoginSuccess }) {
       marginTop: 5,
       marginBottom: 15,
       padding: 10,
-      flex: 1, 
-      alignItems: 'left',
       width: 200,
+      minHeight: 50,
     },
     mainstuff: {
       position: 'absolute',
@@ -265,4 +223,4 @@ export default function LoginScreen({ onLoginSuccess }) {
       height: '90%',
       aspectRatio: 1,
     }
-  });
+    })

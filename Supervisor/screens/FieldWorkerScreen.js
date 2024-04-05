@@ -91,6 +91,7 @@ const FieldWorkerScreen = ({ navigation }) => {
   // }, []);
 
   useEffect(() => {
+    console.log("Inside fieldworkder get");
     const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
     axios.get(getfwlist, {
       headers: {
@@ -98,8 +99,8 @@ const FieldWorkerScreen = ({ navigation }) => {
       }
     })
     .then(response => {
-      console.log("response", response);
-      console.log("response.data", response.data);
+      // console.log("response", response);
+      // console.log("response.data", response.data);
   
       setData(response.data);
       setSelectedUser(response.data[0]);      
@@ -107,7 +108,7 @@ const FieldWorkerScreen = ({ navigation }) => {
     .catch(error => {
       console.error('Error fetching data:', error);
     });
-  }, [authToken]); // Add authToken as a dependency to re-run the effect if it changes
+  }, [authToken,setData]); // Add authToken as a dependency to re-run the effect if it changes
   
 
   return (
