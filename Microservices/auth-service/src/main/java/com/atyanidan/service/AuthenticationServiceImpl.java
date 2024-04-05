@@ -16,6 +16,7 @@ import java.util.Optional;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final SmsMessenger smsMessenger;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Optional<User> optionalEntity = userRepository.findByPhoneNumber(request.getPhoneNumber());
@@ -24,7 +25,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } else {
             User user = optionalEntity.get();
 
-            SmsMessenger smsMessenger = new SmsMessenger();
             smsMessenger.sendSms(user.getPhoneNumber(), request.getOtp());
 
             String userRole = user.getRole().toString();
