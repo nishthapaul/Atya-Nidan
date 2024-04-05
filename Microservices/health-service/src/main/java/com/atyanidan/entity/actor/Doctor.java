@@ -4,7 +4,9 @@ import com.atyanidan.entity.Gender;
 import com.atyanidan.entity.Specialisation;
 import com.atyanidan.entity.Taluka;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.sql.Date;
 
@@ -14,22 +16,22 @@ import java.sql.Date;
 public class Doctor extends User {
 
     @Column(name = "first_name")
-    @NotNull
+    @NotEmpty
     private String firstName;
 
     @Column(name = "middle_name")
     private String middleName;
 
     @Column(name = "last_name")
-    @NotNull
+    @NotEmpty
     private String lastName;
 
     @Column(name = "home_address")
-    @NotNull
+    @NotEmpty
     private String homeAddress;
 
     @Column(name = "hospital_address")
-    @NotNull
+    @NotEmpty
     private String hospitalAddress;
 
     @Column(name = "nearest_railway_station")
@@ -57,6 +59,7 @@ public class Doctor extends User {
 
     @Column(name = "aadhar_number", unique = true)
     @NotNull
+    @Size(max=12, min=12)
     private String aadharNumber;
 
     @Column(name = "language_known_1")

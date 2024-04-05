@@ -3,10 +3,12 @@ import { Alert, ScrollView, View, StyleSheet } from 'react-native';
 import UserInformation from './UserInformation'; 
 import axios from 'axios';
 import { API_PATHS } from '../constants/apiConstants';
+import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 
 
 const AddUser = ({ saveModal }) => {
   console.log("saveModalFw", saveModal)
+  const { authToken } = useAuth(); // Accessing the authToken
   const [firstName, setfirstName] = useState('');
   const [middleName, setmiddleName] = useState('');
   const [lastName, setlastName] = useState('');
@@ -30,23 +32,49 @@ const AddUser = ({ saveModal }) => {
 
   const scrollViewRef = useRef();
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          // Fetch talukas
-          const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'));
-          setTalukaList(talukasResponse.data);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Include authToken in request headers for fetching talukas
+        const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'), {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Using authToken for authentication
+          }
+        });
+        setTalukaList(talukasResponse.data);
   
-          // Fetch specialisations
-          const specialisationsResponse = await axios.get(API_PATHS.SPECIALISATIONS);
-          setSpecialisationList(specialisationsResponse.data);
-        } catch (error) {
-          console.log('Error fetching lists:', error);
-        }
-      };
+        // Include authToken in request headers for fetching specialisations
+        const specialisationsResponse = await axios.get(API_PATHS.SPECIALISATIONS, {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Using authToken for authentication
+          }
+        });
+        setSpecialisationList(specialisationsResponse.data);
+      } catch (error) {
+        console.log('Error fetching lists:', error);
+      }
+    };
   
-      fetchData();
-    }, []);
+    fetchData();
+  }, [authToken]); // Add authToken as a dependency to re-run the effect if it changes
+  
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     try {
+    //       // Fetch talukas
+    //       const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'));
+    //       setTalukaList(talukasResponse.data);
+  
+    //       // Fetch specialisations
+    //       const specialisationsResponse = await axios.get(API_PATHS.SPECIALISATIONS);
+    //       setSpecialisationList(specialisationsResponse.data);
+    //     } catch (error) {
+    //       console.log('Error fetching lists:', error);
+    //     }
+    //   };
+  
+    //   fetchData();
+    // }, []);
 
     const validateField = (fieldName, value) => {
       let hasError = false;
@@ -156,7 +184,7 @@ const AddUser = ({ saveModal }) => {
       const data = {
         "phoneNumber": contactNumber,
         "email": emailId,
-        "role": "FieldWorker",
+        "role": "Doctor",
         "firstName": firstName, 
         "middleName": middleName,
         "lastName": lastName,
@@ -178,16 +206,16 @@ const AddUser = ({ saveModal }) => {
         }
       };
       
-      const fieldworkersByDoctors = API_PATHS.POST_DOCTORS_BY_DISTRICTS.replace(':talukaId', 2)
-
-      // Make POST request to your backend endpoint
-      axios.post(fieldworkersByDoctors, data)
+      const fieldworkersByDoctors = API_PATHS.POST_DOCTORS_BY_DISTRICTS.replace(':talukaId', taluka);
+      axios.post(fieldworkersByDoctors, data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, 
+          'Content-Type': 'application/json'
+        }
+      })
           .then(response => {
-              // Handle success response
               console.log('Response:', response.data);
-              // Show success message or perform any other actions
               Alert.alert('Success', 'Doctor added successfully!');
-              // Close the modal or perform any other actions
               saveModal();
           })
           .catch(error => {
@@ -207,7 +235,6 @@ const AddUser = ({ saveModal }) => {
             //   saveModal();
             // }
             if (error.response) {
-              // Extracting the message sent from the backend
               const message = error.response.data.message || "Our Server is down. Please try again later";
               Alert.alert('Error', message);
             } else {

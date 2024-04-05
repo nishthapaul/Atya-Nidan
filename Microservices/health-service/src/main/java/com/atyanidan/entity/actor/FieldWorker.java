@@ -3,7 +3,9 @@ package com.atyanidan.entity.actor;
 import com.atyanidan.entity.Gender;
 import com.atyanidan.entity.Taluka;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.sql.Date;
 
@@ -13,30 +15,30 @@ import java.sql.Date;
 public class FieldWorker extends User {
 
     @Column(name = "first_name")
-    @NotNull
+    @NotEmpty
     private String firstName;
 
     @Column(name = "middle_name")
     private String middleName;
 
     @Column(name = "last_name")
-    @NotNull
+    @NotEmpty
     private String lastName;
 
     @Column(name = "home_address")
-    @NotNull
+    @NotEmpty
     private String homeAddress;
 
     @Column(name = "office_address")
-    @NotNull
+    @NotEmpty
     private String officeAddress;
 
     @Column(name = "nearest_railway_station")
-    @NotNull
     private String nearestRailwayStation;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
+    @NotNull
     private Gender gender;
 
     @ManyToOne
@@ -52,10 +54,10 @@ public class FieldWorker extends User {
 
     @Column(name = "aadhar_number", unique = true)
     @NotNull
+    @Size(max=12, min=12)
     private String aadharNumber;
 
     @Column(name = "available", columnDefinition = "DEFAULT 0")
-
     private Boolean available;
 
     @OneToOne
@@ -63,6 +65,7 @@ public class FieldWorker extends User {
     private FieldWorker substitute;
 
     @Column(name = "language_known_1")
+    @NotEmpty
     private String languageKnown1;
 
     @Column(name = "language_known_2")

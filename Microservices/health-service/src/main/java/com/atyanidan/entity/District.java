@@ -1,7 +1,7 @@
 package com.atyanidan.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "District")
@@ -12,12 +12,12 @@ public class District {
     private int id;
 
     @Column(name = "name")
-    @NotNull
+    @NotEmpty
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "state_id")
-    @NotNull
+    @NotEmpty
     private State state;
 
     public District() {}

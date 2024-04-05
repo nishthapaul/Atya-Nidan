@@ -1,0 +1,1141 @@
+openapi: 3.0.1
+info:
+  title: Atya Nidan
+  description: Documentation providing list of APIs created for the application
+  version: "1.0"
+servers:
+- url: http://localhost:9003
+  description: Development
+tags:
+- name: Authorization
+  description: Authorization APIs common for all
+- name: FieldWorker
+  description: APIs for implementing functionalities of Field workers
+- name: Taluka
+  description: APIs for handling functionalities of talukas
+- name: User
+  description: APIs for handling functionalities of all types of users
+- name: Doctor
+  description: APIs for implementing functionalities of Doctor
+- name: Specialization
+  description: API for handling functionalities of doctor specialization
+- name: Form
+  description: APIs for handling functionalities of forms
+- name: FollowUp
+  description: APIs for handling functionalities of follow up
+- name: Diagnosis
+  description: APIs for handling functionalities of prescrption and diagnosis
+- name: Stats
+  description: APIs for handling functionalities of statistics
+
+  
+paths:
+  /atyanidan/auth/api/authenticate:
+    post:
+      tags:
+         - Authorization
+      summary: Authenticate User
+      description: Logs in a super admin.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "400":
+          description: Invalid username or OTP
+          
+  
+  /atyanidan/health/api/fieldworkers/{fieldWorkerId}:
+    put:
+      tags:
+      - FieldWorker
+      summary: Update Availability of Fieldworker
+      description: Update the availability status of a fieldworker and assign a substitute
+      operationId: updateFieldWorkerAvailability
+      parameters:
+      - name: fieldWorkerId
+        in: path
+        description: Fieldworker ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Fieldworker availability status and substitute
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldWorkerAvailabilityRequest'
+        required: true
+      responses:
+        "500":
+          description: Could not update field worker availability
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldWorker'
+                
+  /atyanidan/health/api/talukas/{talukaId}/fieldworkers:
+    get:
+      tags:
+      - FieldWorker
+      summary: Retrieve list of fieldworkers
+      description: Retrieve the list of all the fieldworkers of a given taluka
+      operationId: getFieldWorkersFromTalukaId
+      parameters:
+      - name: talukaId
+        in: path
+        description: Taluka ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: available
+        in: query
+        description: Availability status of fieldworker
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "404":
+          description: No fieldworkers found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWorker'
+    post:
+      tags:
+      - FieldWorker
+      summary: Add Field worker
+      description: Add a new Field worker
+      operationId: addFieldWorker
+      parameters:
+      - name: talukaId
+        in: path
+        description: Taluka ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Fieldworker to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldWorker'
+        required: true
+      responses:
+        "500":
+          description: Could not add field worker
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldWorker'
+                
+  /atyanidan/health/api/talukas/{talukaId}/doctors:
+    post:
+      tags:
+      - Doctor
+      summary: Add a doctor
+      description: Add a new doctor
+      operationId: addDoctor
+      parameters:
+      - name: talukaId
+        in: path
+        description: Taluka ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Doctor to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+        "500":
+          description: Could not add doctor
+          
+  /atyanidan/health/api/users/{phoneNumber}:
+    get:
+      tags:
+      - User
+      summary: Retrieve user
+      description: Retrieve a user given the user's phone number
+      operationId: getUserFromPhoneNumber
+      parameters:
+      - name: phoneNumber
+        in: path
+        description: Phone number of user to be retrieved
+        required: true
+        schema:
+          type: string
+      responses:
+        "404":
+          description: User not found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+                
+  /atyanidan/health/api/specialisations:
+    get:
+      tags:
+      - Specialization
+      summary: Retrieve Specialisations
+      description: Retrieve all the specialisations
+      operationId: getAllSpecialisations
+      responses:
+        "404":
+          description: No specializations found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Specialisation'
+                  
+  /atyanidan/health/api/districts/{districtId}/talukas:
+    get:
+      tags:
+      - Taluka
+      summary: Get talukas
+      description: Retrieve all the talukas of a given district
+      operationId: getTalukasFromDistrictId
+      parameters:
+      - name: districtId
+        in: path
+        description: District ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taluka'
+        "404":
+          description: Taluka not found
+          
+  /atyanidan/health/api/districts/{districtId}/fieldworkers:
+    get:
+      tags:
+      - FieldWorker
+      summary: Retrieve list of fieldworkers
+      description: Retrieve the list of all the fieldworkers of a given district
+      operationId: getFieldWorkersFromDistrictId
+      parameters:
+      - name: districtId
+        in: path
+        description: District ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "404":
+          description: No fieldworkers found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWorker'
+                  
+  /atyanidan/health/api/districts/{districtId}/doctors:
+    get:
+      tags:
+      - Doctor
+      summary: Retrieve doctors
+      description: Retrieve the list of doctors given the district ID
+      operationId: getDoctorsFromDistrictId
+      parameters:
+      - name: districtId
+        in: path
+        description: District ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+        "404":
+          description: No doctors found
+          
+  /atyanidan/health/api/stats:
+    get:
+      tags:
+        - Stats
+      summary: Get Dashboard Stats
+      description: Retrieves statistics for the super admin's dashboard.
+      responses:
+        "200":
+          description: Successful stats retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: No stats found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+                
+  /atyanidan/form/api/forms:
+    get:
+      tags:
+        - Form
+      summary: Fetches names of pre-existing forms
+      description: Retrieves a list of all forms available to the super admin.
+      responses:
+        "200":
+          description: Successful retrieval of forms list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormName'
+        "401":
+          description: Unauthorized (if authentication fails)
+        "500":
+          description: General server error
+    post:
+      tags:
+        - Form
+      summary: Create a New Form
+      description: Allows a super admin to create a new form.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSkeleton'
+        required: true
+      responses:
+        "201":
+          description: Form created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormIdResponse'
+        "400":
+          description: "Bad Request (e.g., invalid form structure)"
+          
+  /atyanidan/form/api/forms/{formId}/default:
+    put:
+      tags:
+        - Form
+      summary: Set Form as Default
+      description: Marks an existing form as the default form.
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Form successfully marked as default
+        "400":
+          description: Bad Request (e.g., invalid form ID)
+        "404":
+          description: Form not found
+          
+  /atyanidan/form/api/forms/{formId}:
+    get:
+      tags:
+        - Form
+      summary: Get Form Details
+      description: Fetches the complete details of a specific form.
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful form retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormSkeleton'
+        "404":
+          description: Form not found
+        "500":
+          description: Server error
+    
+    put:
+      tags:
+        - Form
+      summary: Update Existing Form
+      description: Allows a super admin to modify an existing form.
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSkeleton'
+        required: true
+      responses:
+        "200":
+          description: Form updated successfully
+        "400":
+          description: Bad Request (e.g., invalid data, missing fields)
+        "404":
+          description: Form not found
+          
+  /atyanidan/health/api/doctors/{specializationId}:
+    get:
+      tags:
+        - Doctor
+      summary: Retrieve doctors with given specialization
+      description: Retrieve all doctors with a particular specialization
+      parameters:
+        - name: specializationId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved doctor details
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+          
+  /atyanidan/health/api/followups/fieldworkers/{fieldWorkerId}:
+    get:
+      tags:
+        - FollowUp
+      summary: Retrieve follow up details
+      description: Retrieve all follow ups of a particular field worker
+      parameters: 
+        - name: fieldWorkerId
+          required: true
+          in: path
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved details
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FollowUp'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+          
+  /atyanidan/health/api/patients/{patient_id}:
+    get:
+      tags:
+        - Patient
+      summary: Retrieve patient details
+      description: Retrieve a patient details by his/her id
+      parameters:
+        - name: patient_id
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved patient details
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientInfo'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+          
+  /atyanidan/health/api/patients:
+    post:
+      tags:
+        - Patient
+      summary: Create a new patient
+      description: Add a new patient
+      requestBody:
+        description: Request body with new patient details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        "201":
+          description: Successfully added the patient
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+  
+  /atyanidan/health/api/olapforms:
+    post:
+      tags:
+        - OlapForm
+      summary: Create a form entry
+      description: Add a new form details for a patient in OLAP form
+      requestBody:
+        description: Request body with filled form details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OLAPForms'
+      responses:
+        "201":
+          description: Form details saved succesfully
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+          
+  /atyanidan/health/api/diagnoses/{diagnosisId}:
+    get:
+      tags:
+         - Diagnosis
+      summary: Get the diagnosis of a patient
+      description: Retrieve previous diagnosis of patient
+      parameters:
+        - name: diagnosisId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved diagnosis details
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Diagnosis'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+          
+  /atyanidan/health/api/diagnoses:
+    post:
+      tags:
+        - Diagnosis
+      summary: Add a prescription
+      description: Doctor adds a prescription .
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Diagnosis'
+        required: true
+      responses:
+        "201":
+          description: Prescription added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "400":
+          description: Bad Request (e.g., invalid prescription  structure)
+          
+  /atyanidan/health/api/followups:
+    post:
+      tags:
+        - FollowUp
+      summary: Schedule followup .
+      description: Doctor schedules a followup .
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowUp'
+        required: true
+      responses:
+        "201":
+          description: Prescription added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        "400":
+          description: Bad Request (e.g., invalid follow up structure)
+  
+  /atyanidan/health/api/olapforms/{patientId}:
+    get:
+      tags:
+        - OlapForm
+      summary: Fetches previously filled form
+      description: Fetch form of selected patient of respective disease.
+      parameters: 
+      - name: patientId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful retrieval of forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OLAPForms'
+        "401":
+          description: Unauthorized (if authentication fails)
+        "500":
+          description: General server error
+          
+    
+  /atyanidan/health/api/visits/{followUpId}:
+    get:
+      tags:
+        - FollowUp
+      summary: Get Past Followup Details
+      description: Fetches the details of past followup of patient.
+      parameters:
+      - name: followUpId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful followup retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowUp'
+        "404":
+          description: Followup not found
+        "500":
+          description: Server error
+  
+  /atyanidan/health/api/visits/{diagnosisId}:
+    get:
+      tags:
+        - Diagnosis
+      summary: Get Past prescription
+      description: Fetches the past prescription.
+      parameters:
+      - name: diagnosisId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful prescription retrieval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diagnosis'
+        "404":
+          description: Prescription not found
+        "500":
+          description: Server error
+  
+components:
+  schemas:
+    FieldWorkerAvailabilityRequest:
+      type: object
+      properties:
+        substituteFieldWorkerId:
+          type: integer
+          format: int32
+        available:
+          type: boolean
+    District:
+      required:
+      - name
+      - state
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        state:
+          $ref: '#/components/schemas/State'
+    FieldWorker:
+      required:
+      - email
+      - firstName
+      - homeAddress
+      - lastName
+      - nearestRailwayStation
+      - officeAddress
+      - phoneNumber
+      - taluka
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        homeAddress:
+          type: string
+        officeAddress:
+          type: string
+        nearestRailwayStation:
+          type: string
+        gender:
+          type: string
+        taluka:
+          $ref: '#/components/schemas/Taluka'
+        dob:
+          type: string
+          format: date-time
+        bloodGroup:
+          type: string
+        aadharNumber:
+          type: string
+        available:
+          type: boolean
+        substitute:
+          type: integer
+          format: int32
+    State:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    Taluka:
+      required:
+      - district
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        district:
+          $ref: '#/components/schemas/District'
+    Doctor:
+      required:
+      - email
+      - firstName
+      - homeAddress
+      - hospitalAddress
+      - lastName
+      - phoneNumber
+      - specialisation
+      - taluka
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        homeAddress:
+          type: string
+        hospitalAddress:
+          type: string
+        nearestRailwayStation:
+          type: string
+        gender:
+          type: string
+        specialisation:
+          $ref: '#/components/schemas/Specialisation'
+        taluka:
+          $ref: '#/components/schemas/Taluka'
+        dob:
+          type: string
+          format: date-time
+        bloodGroup:
+          type: string
+        aadharNumber:
+          type: string
+    Specialisation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+    User:
+      required:
+      - email
+      - phoneNumber
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+
+    inline_response_200:
+      type: object
+      properties:
+        DistrictId:
+          type: integer
+        DistrictStats:
+          type: object
+          
+    inline_response_400:
+      type: object
+      properties:
+        message:
+          type: string
+          
+    LoginRequest:
+      required:
+      - phoneNumber
+      - otp
+      type: object
+      properties:
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 9875478934
+        otp:
+          type: string
+          example: 3924
+          
+    LoginResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          
+    FormName:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Diabetes
+        isDefault:
+          type: boolean  
+        
+    FormSkeleton:
+      type: object
+      required:
+      - title
+      - xsdFile
+      properties:
+        formSkeletonId:
+          type: integer 
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Diabetes
+        dateOfCreation:
+          type: string
+          format: date
+        isDefault:
+          type: boolean
+        xsdFile:
+          type: string
+        
+    FormIdResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        
+    FollowUp:
+      type: object
+      required:
+      - repeatFreq
+      - days
+      - duration
+      - noOfFolowUpsCompleted
+      - mostRecentFollowUpDate
+      properties:
+        followUpId:
+          type: integer
+          format: int64
+          example: 4
+        repeatFreq: 
+          type: integer
+          format: int64
+          example: 1
+          default: 1
+        days:
+          type: string
+        duration:
+          type: string
+          enum:
+            - Daily
+            - Alternatievly
+            - Weekly 
+            - Biweekly
+            - Monthly
+        mostRecentFollowUpDate:
+          type: string
+          format: date
+        noOfFolowUpsCompleted:
+          type: integer
+          format: int64
+          default: 0
+          
+    Patient:
+      type: object
+      required:
+      - firstName
+      - homeAddress
+      - taluka
+      - phoneNumber
+      - dob
+      - email
+      - gender
+      properties:
+        patientId:
+          type: integer
+          format: int64
+          example: 4
+        firstName:
+          type: string
+          example: Rajesh
+        middleName:
+          type: string
+          example: P
+        lastName:
+          type: string
+          example: Khanna
+        email:
+          type: string
+        homeAddress:
+          type: string
+        taluka:
+          $ref: '#/components/schemas/Taluka'
+        phoneNumber:
+          type: string
+        dob:
+          type: string
+          format: date
+        bloodGroup:
+          type: string
+        gender:
+          type: string
+          enum:
+          - Male
+          - Female
+          - Other
+          
+    OLAPForms:
+      type: object
+      required:
+      - formSkeletonId
+      - patientId
+      - score
+      properties:
+        formId:
+          type: integer
+          format: int64
+          example: 7
+        formSkeletonId:
+          $ref: '#/components/schemas/FormSkeleton'
+        patientId:
+          type: integer
+          format: int64
+          example: 7
+        details:
+          type: object
+        score:
+          type: integer
+          format: int64
+          example: 7
+    
+    Medicine:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 14
+        name:
+          type: string
+          example: Paracetamol
+        dosage:
+          type: string
+          example: 600mg
+    
+    Diagnosis:
+      type: object
+      properties:
+        diagnosisId:
+          type: integer
+          format: int64
+          example: 3
+        followUpId:
+          $ref: '#/components/schemas/FollowUp'
+        codeId:
+          type: integer
+          format: int64
+          example: 3
+        details:
+          type: object
+          properties:
+            medicine:
+              type: array
+              items:
+                $ref: '#/components/schemas/Medicine'
+    ICD10Codes:
+      type: object
+      properties:
+        codeId:
+          type: integer
+          format: int64
+          example: 2
+        code:
+          type: string
+        description:
+          type: string
+    
+    PatientInfo:
+      type: object
+      properties:
+        patient:
+          $ref: '#/components/schemas/Patient'
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              diagnosis:
+                $ref: '#/components/schemas/Diagnosis'
+              olapforms:
+                $ref: '#/components/schemas/OLAPForms'
+    
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'

@@ -46,14 +46,11 @@ export default function LoginScreen() {
       };
 
       // Make POST request to your backend endpoint
-      axios.post('https://62c2-119-161-98-68.ngrok-free.app/atyanidan/auth/api/authenticate', data)
+      axios.post('https://1735-103-156-19-229.ngrok-free.app/atyanidan/auth/api/authenticate', data)
           .then(response => {
               setRole(response.data)
-              // Handle success response
               console.log('Response:', response.data);
-              // Show success message or perform any other actions
               Alert.alert('Success', 'Otp sent!');
-              // Close the modal or perform any other actions
               // saveModal();
           })
           .catch(error => {

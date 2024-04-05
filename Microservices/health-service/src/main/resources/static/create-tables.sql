@@ -75,6 +75,9 @@ CREATE TABLE IF NOT EXISTS Field_Worker (
 	blood_group varchar(10),
 	aadhar_number varchar(12) UNIQUE NOT NULL,
     substitute_id int,
+    language_known_1 varchar(50) DEFAULT "Hindi" NOT NULL,
+    language_known_2 varchar(50),
+    language_known_3 varchar(50),
     primary key (field_worker_id)
 );
 
@@ -110,6 +113,9 @@ CREATE TABLE IF NOT EXISTS Doctor (
 	gender ENUM('Male', 'Female', 'Other') NOT NULL,
 	blood_group varchar(10),
 	aadhar_number varchar(12) UNIQUE NOT NULL,
+	language_known_1 varchar(50) DEFAULT "Hindi" NOT NULL,
+    language_known_2 varchar(50),
+    language_known_3 varchar(50),
     primary key (doctor_id)
 );
 
