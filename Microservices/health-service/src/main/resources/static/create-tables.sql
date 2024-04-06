@@ -37,6 +37,23 @@ CREATE TABLE IF NOT EXISTS User (
     primary key (user_id)
 );
 
+CREATE TABLE IF NOT EXISTS Super_Admin (
+    super_admin_id int,
+    first_name varchar(100) NOT NULL,
+    middle_name varchar(100),
+    last_name varchar(100) NOT NULL,
+    address varchar(100) NOT NULL,
+    state_id int NOT NULL UNIQUE,
+    dob date,
+    primary key (super_admin_id)
+);
+
+ALTER TABLE Super_Admin
+ADD FOREIGN KEY (state_id) REFERENCES State(state_id) ;
+
+ALTER TABLE Super_Admin
+ADD FOREIGN KEY (super_admin_id) REFERENCES User(user_id) ;
+
 CREATE TABLE IF NOT EXISTS Admin (
 	admin_id int,
     first_name varchar(100) NOT NULL,
@@ -44,7 +61,7 @@ CREATE TABLE IF NOT EXISTS Admin (
     last_name varchar(100) NOT NULL,
     home_address varchar(100) NOT NULL,
     office_address varchar(100) NOT NULL,
-    languages_known varchar(50) DEFAULT "Hindi",
+    languages_known varchar(50) DEFAULT 'Hindi',
     district_id int NOT NULL UNIQUE,
     dob date,
     photo blob,
@@ -66,7 +83,6 @@ CREATE TABLE IF NOT EXISTS Field_Worker (
     home_address varchar(100) NOT NULL,
     office_address varchar(100) NOT NULL,
     nearest_railway_station varchar(100),
-    languages_known varchar(50) DEFAULT "Hindi",
     taluka_id int NOT NULL,
     dob date,
     available bit DEFAULT 0,
@@ -75,7 +91,7 @@ CREATE TABLE IF NOT EXISTS Field_Worker (
 	blood_group varchar(10),
 	aadhar_number varchar(12) UNIQUE NOT NULL,
     substitute_id int,
-    language_known_1 varchar(50) DEFAULT "Hindi" NOT NULL,
+    language_known_1 varchar(50) DEFAULT 'Hindi' NOT NULL,
     language_known_2 varchar(50),
     language_known_3 varchar(50),
     primary key (field_worker_id)
@@ -106,14 +122,13 @@ CREATE TABLE IF NOT EXISTS Doctor (
     hospital_address varchar(100) NOT NULL,
     nearest_railway_station varchar(100),
     specialisation_id int NOT NULL,
-    languages_known varchar(50) DEFAULT "Hindi",
     taluka_id int NOT NULL,
     dob date,
     photo blob,
 	gender ENUM('Male', 'Female', 'Other') NOT NULL,
 	blood_group varchar(10),
 	aadhar_number varchar(12) UNIQUE NOT NULL,
-	language_known_1 varchar(50) DEFAULT "Hindi" NOT NULL,
+	language_known_1 varchar(50) DEFAULT 'Hindi' NOT NULL,
     language_known_2 varchar(50),
     language_known_3 varchar(50),
     primary key (doctor_id)
@@ -188,7 +203,7 @@ CREATE TABLE IF NOT EXISTS Form_Skeleton_Normal_Values (
     form_skeleton_normal_values_id int AUTO_INCREMENT,
     normal_values_id int,
     form_skeleton_id int,
-    primary key (form_skeleton_id, normal_values_id)
+    primary key (form_skeleton_normal_values_id, form_skeleton_id, normal_values_id)
 );
 
 -- ALTER TABLE Form_Skeleton_Normal_Values ADD FOREIGN KEY (normal_values_id) REFERENCES NormalValues(normalValuesId);
@@ -203,17 +218,6 @@ CREATE TABLE IF NOT EXISTS ICD10_Code (
     primary key (code_id)
 );
 
-CREATE TABLE IF NOT EXISTS Languages_Known (
-    field_worker_id int NOT NULL,
-    language1 varchar(10) NOT NULL,
-    language2 varchar(10),
-    language3 varchar(10),
-    primary key (field_worker_id)
-);
-
-ALTER TABLE Languages_Known
-ADD FOREIGN KEY (field_worker_id) REFERENCES Field_Worker(field_worker_id);
-
 CREATE TABLE IF NOT EXISTS Follow_Up ( -- is a part of diagnosis
     follow_up_id int AUTO_INCREMENT,
     repeat_freq int DEFAULT 1,
@@ -224,4 +228,16 @@ CREATE TABLE IF NOT EXISTS Follow_Up ( -- is a part of diagnosis
     primary key (follow_up_id)
 );
 
+CREATE TABLE Abha_Details(
+    id int,
+    abha_id int NOT NULL UNIQUE,
+    first_name varchar(100) NOT NULL,
+    middle_name varchar(100),
+    last_name varchar(100) NOT NULL,
+    phone_number varchar(10) NOT NULL UNIQUE,
+    email varchar(100) NOT NULL UNIQUE,
+    primary key (id)
+);
 
+ALTER TABLE Patient
+ADD FOREIGN KEY (abha_id) REFERENCES Abha_Details(abha_id);
