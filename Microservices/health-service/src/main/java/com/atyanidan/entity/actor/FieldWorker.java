@@ -55,6 +55,7 @@ public class FieldWorker extends User {
     @Column(name = "aadhar_number", unique = true)
     @NotNull
     @Size(max=12, min=12)
+    @NotEmpty
     private String aadharNumber;
 
     @Column(name = "available", columnDefinition = "DEFAULT 0")

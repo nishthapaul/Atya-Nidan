@@ -60,9 +60,11 @@ public class Doctor extends User {
     @Column(name = "aadhar_number", unique = true)
     @NotNull
     @Size(max=12, min=12)
+    @NotEmpty
     private String aadharNumber;
 
     @Column(name = "language_known_1")
+    @NotEmpty
     private String languageKnown1;
 
     @Column(name = "language_known_2")

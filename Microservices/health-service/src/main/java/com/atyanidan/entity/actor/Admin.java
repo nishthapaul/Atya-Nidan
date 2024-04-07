@@ -3,7 +3,9 @@ package com.atyanidan.entity.actor;
 import com.atyanidan.entity.District;
 import com.atyanidan.entity.Gender;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.sql.Date;
 
@@ -40,19 +42,30 @@ public class Admin extends User {
     @NotNull
     private District district;
 
+    @Column(name = "language_known")
+    @NotEmpty
+    private String languageKnown;
+
+    @Column(name = "aadhar_number")
+    @Size(max=12, min=12)
+    @NotEmpty
+    private String aadharNumber;
+
     @Column(name = "dob")
     private Date dob;
 
     public Admin() {
     }
 
-    public Admin(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, Gender gender, Date dob) {
+    public Admin(String firstName, String middleName, String lastName, String homeAddress, String officeAddress, Gender gender, String languageKnown, String aadharNumber, Date dob) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.homeAddress = homeAddress;
         this.officeAddress = officeAddress;
         this.gender = gender;
+        this.languageKnown = languageKnown;
+        this.aadharNumber = aadharNumber;
         this.dob = dob;
     }
 
@@ -118,5 +131,21 @@ public class Admin extends User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getLanguageKnown() {
+        return languageKnown;
+    }
+
+    public void setLanguageKnown(String languageKnown) {
+        this.languageKnown = languageKnown;
+    }
+
+    public String getAadharNumber() {
+        return aadharNumber;
+    }
+
+    public void setAadharNumber(String aadharNumber) {
+        this.aadharNumber = aadharNumber;
     }
 }
