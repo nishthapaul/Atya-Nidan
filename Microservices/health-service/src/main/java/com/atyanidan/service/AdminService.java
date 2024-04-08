@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface AdminService {
     List<Admin> getAdminsFromStateId(int stateId);
-
-    Admin addAdmin(int districtId, Admin admin) throws Exception;
 }

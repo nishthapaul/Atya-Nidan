@@ -42,9 +42,13 @@ CREATE TABLE IF NOT EXISTS Super_Admin (
     first_name varchar(100) NOT NULL,
     middle_name varchar(100),
     last_name varchar(100) NOT NULL,
-    address varchar(100) NOT NULL,
+    home_address varchar(100) NOT NULL,
+    office_address varchar(100) NOT NULL,
+    languages_known varchar(50) DEFAULT 'Hindi',
     state_id int NOT NULL UNIQUE,
     dob date,
+    photo blob,
+    gender ENUM('Male', 'Female', 'Other') NOT NULL,
     primary key (super_admin_id)
 );
 

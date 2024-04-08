@@ -30,17 +30,15 @@ INSERT INTO `atya_nidan`.`User` (`phone_number`, `email`, `role`) VALUES ('96506
 INSERT INTO `atya_nidan`.`User` (`phone_number`, `email`, `role`) VALUES ('9650644174', 'angadgill@gmail.com', 'Doctor');
 INSERT INTO `atya_nidan`.`User` (`phone_number`, `email`, `role`) VALUES ('9650644175', 'rudrarathod@gmail.com', 'Doctor');
 
-INSERT INTO `atya_nidan`.`Admin` (`admin_id`, `first_name`, `middle_name`, `last_name`, `home_address`, `office_address`, `district_id`, `gender`, `dob`) VALUES ('1', 'Shourya', 'Gupta', 'House No. 1812 Sector 17', 'neelkanth office sector 62', '1', 'Male', '1990-12-12');
-INSERT INTO `atya_nidan`.`Admin` (`admin_id`, `first_name`, `last_name`, `home_address`, `office_address`, `district_id`, `gender`, `dob`) VALUES ('2', 'Priya', 'Singhania', 'House No. 1812 Sector 17', 'neelkanth office sector 63', '2', 'Female', '1990-12-22');
-INSERT INTO `atya_nidan`.`Admin` (`admin_id`, `first_name`, `last_name`, `home_address`, `office_address`, `district_id`, `gender`, `dob`) VALUES ('3', 'Gia', 'Kundra', 'House No. 1812 Sector 17', 'neelkanth office sector 64', '3', 'Female', '1990-12-24');
+INSERT INTO `atya_nidan`.`Admin` (`admin_id`, `first_name`, `last_name`, `home_address`, `office_address`, `district_id`, `gender`, `dob`, aadhar_number) VALUES (1, 'Shourya', 'Gupta', 'House No. 1812 Sector 17', 'neelkanth office sector 62', '1', 'Male', '1990-12-12', '999999999998');
+INSERT INTO `atya_nidan`.`Admin` (`admin_id`, `first_name`, `last_name`, `home_address`, `office_address`, `district_id`, `gender`, `dob`, aadhar_number) VALUES (2, 'Priya', 'Singhania', 'House No. 1812 Sector 17', 'neelkanth office sector 63', '2', 'Female', '1990-12-22', '999999999999');
+INSERT INTO `atya_nidan`.`Admin` (`admin_id`, `first_name`, `last_name`, `home_address`, `office_address`, `district_id`, `gender`, `dob`, aadhar_number) VALUES (3, 'Gia', 'Kundra', 'House No. 1812 Sector 17', 'neelkanth office sector 64', '3', 'Female', '1990-12-24', '999999999910');
 
-INSERT INTO `atya_nidan`.`Field_Worker` (`field_worker_id`, `first_name`, `middle_name`, `last_name`, `home_address`, `office_address`, `nearest_railway_station`, `taluka_id`, `dob`, `available`, `gender`, `blood-group`, `language_known_1`) VALUES
-(4, 'Ram', 'Kumar', 'Gupta', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 8, '2020-12-12', 1, 'Male', 'B+', 'Hindi'),
-(5, 'Ajay', 'H', 'Kumar', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 8, '2020-12-12', 1, 'Male', 'O', 'Hindi'),
-(6, 'Anirudh', 'G', 'Chaudhary', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 6, '2020-12-12', 0, 'Male' ,'B+', 'Hindi'),
-(7, 'Simran', 'A', 'Gupta', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 9, '2020-12-12', 1, 'Female', 'AB+', 'Hindi'),
-(8, 'Juhi', 'Kumari', 'Chawla', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 10, '2020-12-12', 1, 'Female', 'B+', 'Hindi'),
-(9, 'Rani', 'Kumari', 'Mishra', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 11, '2020-12-12', 1, 'Female', 'B+', 'Hindi'),
-(10, 'Prakash', 'H', 'Chauhan', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 10, '2020-12-12', 0, 'Male', 'B+', 'Hindi');
-
-INSERT INTO `atya_nidan`.`Doctor` (`doctor_id`, `first_name`, `last_name`, `home_address`, `office_address`, `nearest_railway_station`, `specialisation_id`, `language_known_1`, `taluka_id`, `dob`, `gender`, `blood_group`, `aadhar_number`) VALUES ('11', 'Angad', 'Gill', 'House No. 345, Sector 23, Friends Colony', 'AIIMS Hospital', 'AIIMS Metro Station, Ansari Nagar East', '3', 'English', '3', '1980-12-24', 'Male', 'B+', '123456789999');
+INSERT INTO `atya_nidan`.`Field_Worker` (`field_worker_id`, `first_name`, `middle_name`, `last_name`, `home_address`, `office_address`, `nearest_railway_station`, `taluka_id`, `dob`, `available`, `gender`, `blood_group`, `language_known_1`, aadhar_number) VALUES
+(4, 'Ram', 'Kumar', 'Gupta', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 8, '2020-12-12', 1, 'Male', 'B+', 'Hindi', '999999999991'),
+(5, 'Ajay', 'H', 'Kumar', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 8, '2020-12-12', 1, 'Male', 'O', 'Hindi', '999999999992'),
+(6, 'Anirudh', 'G', 'Chaudhary', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 6, '2020-12-12', 0, 'Male' ,'B+', 'Hindi', '999999999993'),
+(7, 'Simran', 'A', 'Gupta', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 9, '2020-12-12', 1, 'Female', 'AB+', 'Hindi', '999999999994'),
+(8, 'Juhi', 'Kumari', 'Chawla', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 7, '2020-12-12', 1, 'Female', 'B+', 'Hindi', '999999999995'),
+(9, 'Rani', 'Kumari', 'Mishra', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 4, '2020-12-12', 1, 'Female', 'B+', 'Hindi', '999999999996'),
+(10, 'Prakash', 'H', 'Chauhan', 'House no 1811 sector 16', 'Office No 1234, Sector 17, MG Road', 'Old Faridabad Metro Station', 7, '2020-12-12', 0, 'Male', 'B+', 'Hindi', '999999999997');

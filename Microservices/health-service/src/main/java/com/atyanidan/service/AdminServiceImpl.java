@@ -26,37 +26,4 @@ public class AdminServiceImpl implements AdminService{
     public List<Admin> getAdminsFromStateId(int stateId) {
         return adminRepository.getAdminsByStateId(stateId);
     }
-
-    @Override
-    public Admin addAdmin(int districtId, Admin admin) throws Exception{
-        if (admin.getRole() != Role.Admin) {
-            throw new BadRequestException("Role should be admin");
-        }
-        if (admin.getDistrict().getId() != districtId) {
-            throw new BadRequestException("District Id in API and Response Body don't match");
-        }
-        Optional<District> optionalEntity = districtRepository.findById(districtId);
-        if (optionalEntity.isPresent()) {
-            District district = optionalEntity.get();
-            admin.setDistrict(district);
-            try {
-                return adminRepository.save(admin);
-            } catch (DataIntegrityViolationException e) {
-                String exceptionRootCause = e.getRootCause().getMessage();
-                if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("phone_number") ) {
-                    String errorMessage = "Phone number already exists.";
-                    throw new ConflictException(errorMessage, e);
-                } else if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("email") ) {
-                    String errorMessage = "Email ID already exists.";
-                    throw new ConflictException(errorMessage, e);
-                } else {
-                    throw new BadRequestException("Some fields are required and not provided.", e);
-                }
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
-            }
-        } else {
-            throw new NotFoundException("District id not found: " + districtId);
-        }
-    }
 }
