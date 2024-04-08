@@ -42,9 +42,9 @@ public class Admin extends User {
     @NotNull
     private District district;
 
-    @Column(name = "language_known")
+    @Column(name = "languages_known")
     @NotEmpty
-    private String languageKnown;
+    private String languagesKnown;
 
     @Column(name = "aadhar_number")
     @Size(max=12, min=12)
@@ -64,7 +64,7 @@ public class Admin extends User {
         this.homeAddress = homeAddress;
         this.officeAddress = officeAddress;
         this.gender = gender;
-        this.languageKnown = languageKnown;
+        this.languagesKnown = languageKnown;
         this.aadharNumber = aadharNumber;
         this.dob = dob;
     }
@@ -134,11 +134,11 @@ public class Admin extends User {
     }
 
     public String getLanguageKnown() {
-        return languageKnown;
+        return languagesKnown;
     }
 
     public void setLanguageKnown(String languageKnown) {
-        this.languageKnown = languageKnown;
+        this.languagesKnown = languageKnown;
     }
 
     public String getAadharNumber() {

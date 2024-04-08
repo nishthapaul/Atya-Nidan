@@ -1,3 +1,3 @@
 INSERT INTO `atya_nidan`.`Doctor` (`doctor_id`, `first_name`, `last_name`, `home_address`, `hospital_address`, `nearest_railway_station`, `specialisation_id`, `language_known_1`, `taluka_id`, `dob`, `gender`, `blood_group`, `aadhar_number`) VALUES
-('11', 'Angad', 'Gill', 'House No. 345, Sector 23, Friends Colony', 'AIIMS Hospital', 'AIIMS Metro Station, Ansari Nagar East', '3', 'English', '3', '1980-12-24', 'Male', 'B+', '123456789999');
+('11', 'Angad', 'Gill', 'House No. 345, Sector 23, Friends Colony', 'AIIMS Hospital', 'AIIMS Metro Station, Ansari Nagar East', '3', 'English', '3', '1980-12-24', 'Male', 'B+', '123456789999'),
 ('12', 'Rudra', 'Rathod', 'House No. 345, Sector 23, Friends Colony', 'AIIMS Hospital', 'AIIMS Metro Station, Ansari Nagar East', '3', 'Gujrati', '2', '1981-12-24', 'Male', 'B+', '123456789998');
