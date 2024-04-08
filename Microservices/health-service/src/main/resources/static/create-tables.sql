@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS Super_Admin (
     last_name varchar(100) NOT NULL,
     home_address varchar(100) NOT NULL,
     office_address varchar(100) NOT NULL,
-    languages_known varchar(50) DEFAULT 'Hindi',
+    language_known varchar(50) DEFAULT 'Hindi',
     state_id int NOT NULL UNIQUE,
     dob date,
     photo blob,
