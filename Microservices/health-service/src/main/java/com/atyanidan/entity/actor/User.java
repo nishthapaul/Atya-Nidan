@@ -1,8 +1,8 @@
 package com.atyanidan.entity.actor;
 
 import com.atyanidan.entity.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,21 +14,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int id;
+    @JsonIgnore
+    protected int id;
 
     @Column(name = "phone_number", unique = true)
     @NotEmpty
     @Size(max=10, min=10)
-    private String phoneNumber;
+    protected String phoneNumber;
 
     @Column(name = "email", unique = true)
     @NotEmpty
-    private String email;
+    protected String email;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     @NotNull
-    private Role role;
+    protected Role role;
 
     public User() {
     }

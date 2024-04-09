@@ -1,14 +1,15 @@
 package com.atyanidan.service;
 
+import com.atyanidan.utils.EmployeeIdGenerator;
 import com.atyanidan.dao.DoctorRepository;
 import com.atyanidan.dao.SpecialisationRepository;
 import com.atyanidan.dao.TalukaRepository;
 import com.atyanidan.entity.Role;
 import com.atyanidan.entity.Specialisation;
-import com.atyanidan.exception.ConflictException;
-import com.atyanidan.exception.NotFoundException;
 import com.atyanidan.entity.Taluka;
 import com.atyanidan.entity.actor.Doctor;
+import com.atyanidan.exception.ConflictException;
+import com.atyanidan.exception.NotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,12 +25,15 @@ public class DoctorServiceImpl implements DoctorService {
     private final TalukaRepository talukaRepository;
     private final SpecialisationRepository specialisationRepository;
 
+    private final EmployeeIdGenerator employeeIdGenerator;
+
 
     @Autowired
-    public DoctorServiceImpl(DoctorRepository doctorRepository, TalukaRepository talukaRepository, SpecialisationRepository specialisationRepository) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, TalukaRepository talukaRepository, SpecialisationRepository specialisationRepository, EmployeeIdGenerator employeeIdGenerator) {
         this.doctorRepository = doctorRepository;
         this.talukaRepository = talukaRepository;
         this.specialisationRepository = specialisationRepository;
+        this.employeeIdGenerator = employeeIdGenerator;
     }
 
     @Override
@@ -39,10 +43,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor addDoctor(int talukaId, Doctor doctor) throws Exception {
-        if (doctor.getRole() != Role.Doctor) {
+        if ( doctor.getRole() != Role.Doctor ) {
             throw new BadRequestException("Role should be Doctor");
         }
-        if (doctor.getTaluka().getId() != talukaId) {
+        if ( doctor.getTaluka().getId() != talukaId ) {
             throw new BadRequestException("Taluka Id in API and Response Body don't match");
         }
 
@@ -63,7 +67,11 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setSpecialisation(specialisation);
 
         try {
-            return doctorRepository.save(doctor);
+            Doctor dbDoctor = doctorRepository.save(doctor);
+            String employeeID = employeeIdGenerator.generate("DC", doctor.getId(), doctor.getFirstName());
+            dbDoctor.setEmployeeId(employeeID);
+            dbDoctor = doctorRepository.save(dbDoctor);
+            return dbDoctor;
         } catch (DataIntegrityViolationException e) {
             String exceptionRootCause = e.getRootCause().getMessage();
             if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("phone_number") ) {
@@ -71,6 +79,9 @@ public class DoctorServiceImpl implements DoctorService {
                 throw new ConflictException(errorMessage, e);
             } else if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("email") ) {
                 String errorMessage = "Email ID already exists.";
+                throw new ConflictException(errorMessage, e);
+            } else if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("aadhar_number") ) {
+                String errorMessage = "Aadhar Number already exists.";
                 throw new ConflictException(errorMessage, e);
             } else {
                 throw new BadRequestException("Some fields are required and not provided.", e);

@@ -15,6 +15,9 @@ import java.sql.Date;
 @PrimaryKeyJoinColumn(name = "doctor_id")
 public class Doctor extends User {
 
+    @Column(name = "emp_id")
+    private String employeeId;
+
     @Column(name = "first_name")
     @NotEmpty
     private String firstName;
@@ -91,6 +94,14 @@ public class Doctor extends User {
         this.languageKnown1 = languageKnown1;
         this.languageKnown2 = languageKnown2;
         this.languageKnown3 = languageKnown3;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getFirstName() {
