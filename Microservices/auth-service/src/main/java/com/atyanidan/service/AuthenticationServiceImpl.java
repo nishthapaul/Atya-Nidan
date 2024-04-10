@@ -3,7 +3,7 @@ package com.atyanidan.service;
 import com.atyanidan.dao.UserRepository;
 import com.atyanidan.dto.AuthenticationRequest;
 import com.atyanidan.dto.AuthenticationResponse;
-import com.atyanidan.entity.User;
+import com.atyanidan.entity.actor.User;
 import com.atyanidan.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

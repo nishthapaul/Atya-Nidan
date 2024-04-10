@@ -28,15 +28,15 @@ public class AdminController {
 
     @Operation(summary = "Retrieve list of admins", description = "Retrieve the list of all the admins of a given state")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = Admin.class))) }),
+            @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = Admin.class)))}),
             @ApiResponse(responseCode = "404", description = "No fieldworkers found",
                     content = @Content)
     })
     @GetMapping("/states/{stateId}/admins")
     public List<Admin> getAdminsFromStateId(
             @Parameter(name = "stateId", description = "State ID", required = true)
-            @PathVariable int stateId){
+            @PathVariable int stateId) {
         return adminService.getAdminsFromStateId(stateId);
     }
 

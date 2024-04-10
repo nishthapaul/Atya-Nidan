@@ -1,6 +1,6 @@
 package com.atyanidan.dao;
 
-import com.atyanidan.entity.User;
+import com.atyanidan.entity.actor.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.atyanidan.dto;
 
-import com.atyanidan.entity.User;
+import com.atyanidan.entity.actor.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

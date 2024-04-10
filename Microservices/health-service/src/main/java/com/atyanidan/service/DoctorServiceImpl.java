@@ -1,6 +1,5 @@
 package com.atyanidan.service;
 
-import com.atyanidan.utils.EmployeeIdGenerator;
 import com.atyanidan.dao.DoctorRepository;
 import com.atyanidan.dao.SpecialisationRepository;
 import com.atyanidan.dao.TalukaRepository;
@@ -10,6 +9,7 @@ import com.atyanidan.entity.Taluka;
 import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.exception.ConflictException;
 import com.atyanidan.exception.NotFoundException;
+import com.atyanidan.utils.EmployeeIdGenerator;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

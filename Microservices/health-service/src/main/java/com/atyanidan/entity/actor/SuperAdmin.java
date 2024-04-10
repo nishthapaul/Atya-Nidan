@@ -1,6 +1,5 @@
 package com.atyanidan.entity.actor;
 
-import com.atyanidan.entity.District;
 import com.atyanidan.entity.Gender;
 import com.atyanidan.entity.State;
 import jakarta.persistence.*;

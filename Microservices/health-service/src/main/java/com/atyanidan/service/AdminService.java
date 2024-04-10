@@ -1,7 +1,6 @@
 package com.atyanidan.service;
 
 import com.atyanidan.entity.actor.Admin;
-import com.atyanidan.entity.actor.FieldWorker;
 
 import java.util.List;
 
