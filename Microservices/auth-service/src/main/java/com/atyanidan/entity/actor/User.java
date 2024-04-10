@@ -1,4 +1,4 @@
-package com.atyanidan.entity;
+package com.atyanidan.entity.actor;
 
 import com.atyanidan.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
