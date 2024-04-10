@@ -5,17 +5,19 @@ import axios from 'axios';
 import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 import { API_PATHS } from '../constants/apiConstants';
 
-export default FWDeassign = ({ filteredData, visibleModal, closeModal, talukaName, AssignDeassign}) => {
+export default FWDeassign = ({ mainid , filteredData, visibleModal, closeModal, talukaName, AssignDeassign}) => {
     console.log("Inside Modal");
     console.log("filteredData" , filteredData);
     const { authToken } = useAuth(); // Accessing the authToken
 
-    const {id} = filteredData;
+    // const {id} = mainid;
+    console.log("mainid" , mainid);
     const [assignid, setAssignId] = useState('');
     const [assigned, setAssigned] = useState('');
 
     const handleAssignPutCall = () => {
-        const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', id);
+        const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', mainid);
+        console.log("deassign url" , url);
     axios.put(url, {
       available: true,
       "substituteFieldWorkerId": assignid
@@ -38,7 +40,7 @@ export default FWDeassign = ({ filteredData, visibleModal, closeModal, talukaNam
 
     const handlePress = () => {
         closeModal();
-        handleAssignPutCall();
+        // handleAssignPutCall();
       };
 
   const DropdownReturnValue = ({id , available}) => {

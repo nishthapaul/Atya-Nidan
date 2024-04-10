@@ -6,13 +6,16 @@ import Footer from '../components/AppFooter';
 import axios from 'axios';
 import { useAuth } from '../Context/AuthContext';
 import { API_PATHS } from '../constants/apiConstants';
+import { LogBox } from 'react-native';
 
 export default function LoginScreen({ onLoginSuccess }) {
+  LogBox.ignoreAllLogs();
+
     const [otp, setOtp] = React.useState('');
     const [phoneNumber, setPhoneNumber] = React.useState('');
     const [enteredOtp, setEnteredOtp] = React.useState('');
     const [otpResponse, setOtpResponse] = React.useState(null);
-    const { setAuthToken, setUserRole, setIsLoggedIn } = useAuth();
+    const { setAuthToken, setUser, setIsLoggedIn } = useAuth();
 
     let random_otp = '';
 
@@ -44,12 +47,13 @@ export default function LoginScreen({ onLoginSuccess }) {
 
     const matchOtp = () => {
         if (enteredOtp === otp) {
-          const { role, token } = otpResponse;
+          const { token, user } = otpResponse;
           setAuthToken(token);
-          setUserRole(role);
+          setUser(user);
           setIsLoggedIn(true);
+          console.log(user);
           Alert.alert('Success', 'User verified!');
-          onLoginSuccess(role, token); 
+          onLoginSuccess(user, token); 
         } else {
           Alert.alert('Error', 'Unauthorized User');
         }

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 
 export default DoctorCard = ({ user }) => {
     
-  const name = `${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
+  const name = `${user.empId}: ${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
   const knownLanguages = `${user.languageKnown1}${user.languageKnown2 ? ' ' + user.languageKnown2 : ''}${user.languageKnown3 ? ' ' + user.languageKnown3 : ''}`;
     return(
         <View style={styles.card}>

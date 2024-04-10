@@ -42,35 +42,30 @@ const handleDeassign = () => {
       setShowModal(true);
   }
   const handleAssign = () => {
-    console.log("API PAth" , API_PATHS.PUT_FIELDWORKER_ASSIGN);
-    const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', id);
-    console.log("url" , url);
-    axios.put(url, {
-      "available": true
-    }, {
-      headers: {
-        Authorization: `Bearer ${authToken}`, // Include the token here
-        'Content-Type': 'application/json'
-      }
-    })
-  // const handleAssign = () => {
-  //   const url = `http://10.0.2.2:3000/fieldWorker?id=${id}`
-  //   axios.put(url , {
-  //     available : true
-    
-  //   })
-    .then(response => {
-      // Update state with API data
-      console.log("response", response);
-      console.log("response status", response.status);
-      if(response.status === 200) {
-        setValue(true);
-      }
+    // console.log("API PAth" , API_PATHS.PUT_FIELDWORKER_ASSIGN);
+    // const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', id);
+    // console.log("url" , url);
+    // axios.put(url, {
+    //   "available": true
+    // }, {
+    //   headers: {
+    //     Authorization: `Bearer ${authToken}`, // Include the token here
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    // .then(response => {
+    //   // Update state with API data
+    //   console.log("response", response);
+    //   console.log("response status", response.status);
+    //   if(response.status === 200) {
+    //     setValue(true);
+    //   }
       
-    })
-    .catch(error => {
-      console.error('Error in assign request :', error);
-    });
+    // })
+    // .catch(error => {
+    //   console.error('Error in assign request :', error);
+    // });
+    setValue(true);
   }
  
 
@@ -84,7 +79,7 @@ const handleDeassign = () => {
         onValueChange = { Value ? handleDeassign : handleAssign}      
       />
        </View>
-       {showModal && <FWDeassign filteredData={FWList} visibleModal={showModal} closeModal={closeModal} talukaName = {talukaName} AssignDeassign={AssignDeassign}/>}
+       {showModal && <FWDeassign mainid = {id} filteredData={FWList} visibleModal={showModal} closeModal={closeModal} talukaName = {talukaName} AssignDeassign={AssignDeassign}/>}
        </View>
     );
 };

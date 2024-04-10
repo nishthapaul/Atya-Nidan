@@ -4,16 +4,20 @@ import MainContainer from './MainContainer';
 import LoginScreen from './screens/LoginScreen';
 import React, { useState , useEffect} from 'react';
 import { AuthProvider } from './Context/AuthContext';
+import { LogBox } from 'react-native';
+import SuperadminContainer from './SuperadminContainer';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState('');
-  const [authToken, setAuthToken] = useState('');
-  const handleLoginSuccess = (role, token) => {
-    setIsLoggedIn(true);
-    setUserRole(role);
-    setAuthToken(token);
+  LogBox.ignoreAllLogs();
 
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authToken, setAuthToken] = useState('');
+  const handleLoginSuccess = (user, token) => {
+    setIsLoggedIn(true);
+    setUser(user);
+    setAuthToken(token);
   };
 
   return (
@@ -22,8 +26,10 @@ export default function App() {
     {isLoggedIn && <View style={styles.header}><AppHeader /></View>}
      {!isLoggedIn ? (
         <LoginScreen onLoginSuccess={handleLoginSuccess} />
-      ) : userRole === 'Admin' ? (
-        <MainContainer authToken={authToken}/>
+      ) : user.role === 'Admin' ? (
+        <MainContainer authToken={authToken} user={user}/>
+      ) : user.role === 'SuperAdmin' ? (
+        <SuperadminContainer authToken={authToken} user={user}/>
       ) : (
         // Optionally handle different roles here
         <View style={styles.header}><AppHeader/></View>

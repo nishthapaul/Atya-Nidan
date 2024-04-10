@@ -8,7 +8,8 @@ export default function ProfileScreen({ navigation , data}) {
     console.log("data" , data);
     //const { adminData } = route.params
    // console.log("profile_adminData" , adminData);
-    const [district, setDistrict] = useState(data.district.name);
+    // const [district, setDistrict] = useState(data.district.name);
+    const [place, setPlace] = useState(data.role === 'Admin' ? data.district.name : data.state.name);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [firstName, setFirstName] = useState(data.firstName);
     const [middleName, setMiddleName] = useState(data.middleName);
@@ -24,7 +25,7 @@ export default function ProfileScreen({ navigation , data}) {
     const [emailId, setEmailId] = useState(data.email);
     const [nearestRailwayStation, setNearestRailwayStation] = useState('Nearest Railway Station');
     const [languagesKnown, setLanguagesKnown] = useState('English, Spanish, Mandarin');
-
+    const [role, setRole] = useState(data.role);
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
     };
@@ -125,10 +126,14 @@ export default function ProfileScreen({ navigation , data}) {
                         setDateOfBirth={setDateOfBirth}
                         gender={gender}
                         setGender={setGender}
-                        district={district}
-                        setDistrict={setDistrict}
+                        // district={district}
+                        // setDistrict={setDistrict}
+                        place = {place}
+                        setPlace = {setPlace}
                         officeAddress={officeAddress}
                         setOfficeAddress={setOfficeAddress}
+                        role = {role}
+                        setRole = {setRole}
                     />
                 </ScrollView>
             </View>

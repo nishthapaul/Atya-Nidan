@@ -21,15 +21,19 @@ const ProfileContent = ({
   setDateOfBirth,
   gender,
   setGender,
-  district,
-  setDistrict,
+  // district,
+  // setDistrict,
+  place,
+  setPlace,
   officeAddress,
-  setOfficeAddress
+  setOfficeAddress,
+  role,
+  setRole
 }) => {
   return (
       <View style={styles.container}>
         <Text style={styles.fsectionHeading}>Personal Information</Text>
-        <Text style={styles.sectionTitle}>Registration Number: A3982 </Text>
+        {/* <Text style={styles.sectionTitle}>Registration Number: A3982 </Text> */}
           <Text style={styles.sectionTitle}>Name</Text>
           <View style={styles.nameContainer}>
           <TextInput
@@ -110,11 +114,11 @@ const ProfileContent = ({
 
           <View style={styles.row}>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>District:</Text>
+              <Text style={styles.label}>{role === 'Admin' ? 'District' : 'State'}</Text>
               <TextInput 
                 style={[styles.input, styles.inputSpacing]} 
-                value={district}
-                onChangeText={setDistrict}
+                value={place}
+                onChangeText={setPlace}
                 editable={false}
               />
             </View>

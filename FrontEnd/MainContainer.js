@@ -18,7 +18,8 @@ function MainContainer(props) {
 
          React.useEffect(() => {
     // Make API call on component mount
-    const getuserinfo = API_PATHS.GET_USER_INFO.replace(':phoneNumber', 9083422799)
+    console.log("employee id:", props.user.empId)
+    const getuserinfo = API_PATHS.GET_USER_INFO.replace(':employeeId', props.user.empId)
 
     axios.get(getuserinfo, {
       headers: {
@@ -40,7 +41,7 @@ function MainContainer(props) {
 
       });
   }, [props.authToken]);
-
+  // console.log("admin.district.id:", admin.district.id);
    // Render the Tab.Navigator only when adminData is available
    if (admin.length === 0) {
     return null; // Render nothing while waiting for data
@@ -57,17 +58,18 @@ function MainContainer(props) {
         }}>
         <Tab.Screen
             name="FieldWorker"
-            component={ FieldWorkerScreen }
-          />
+            // component={ FieldWorkerScreen }
+            component={() => <FieldWorkerScreen districtId={admin.district.id} />}
+            />
           <Tab.Screen
             name="Doctor" 
-            component={ DoctorScreen } 
+            component={() => <DoctorScreen districtId={admin.district.id} />} 
           />
           <Tab.Screen
             name="Stats" 
             component={ StatsScreen } 
           />
-          {console.log("maincontainer admin: ", admin)}
+          {/* {console.log("maincontainer admin: ", admin)} */}
           <Tab.Screen
             name="Profile" 
             component={() => <ProfileScreen

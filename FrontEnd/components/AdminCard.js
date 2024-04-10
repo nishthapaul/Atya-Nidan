@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
-const Card = ({ user }) => {
-  const name = `${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
+const AdminCard = ({ user }) => {
+  const name = `${user.empId}: ${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
   const knownLanguages = `${user.languageKnown1}${user.languageKnown2 ? ' ' + user.languageKnown2 : ''}${user.languageKnown3 ? ' ' + user.languageKnown3 : ''}`;
 
   return (
@@ -21,14 +21,14 @@ const Card = ({ user }) => {
           <Text style={styles.userDetail}>
           <Text style={{fontWeight: 'bold'}}>Address: </Text>{user.officeAddress}
           </Text>
-          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka Assigned: </Text>{user.taluka.name}</Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>District Assigned: </Text>{user.district.name}</Text>
           <Text style={styles.userDetail}>
           <Text style={{fontWeight: 'bold'}}>Language known: </Text>{knownLanguages}
           </Text>
         </View>
         <View style={styles.rightColumn}>
           <Image
-          source={require('../assets/fwpic.png')}
+          source={require('../assets/adminpic.png')}
           style={styles.userPic}
           />
         </View>
@@ -97,5 +97,5 @@ const styles = StyleSheet.create({
     },
   });
   
-  export default Card;
+  export default AdminCard;
   

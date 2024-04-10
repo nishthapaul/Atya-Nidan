@@ -16,7 +16,7 @@ const TableHeader = () => (
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Specialization</Text>
   </View>
 );
-const DoctorScreen = ({ navigation }) => {
+const DoctorScreen = ({ navigation, districtId }) => {
   const { authToken } = useAuth(); // Accessing the authToken
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,7 +60,7 @@ const DoctorScreen = ({ navigation }) => {
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
           <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
@@ -85,7 +85,7 @@ const DoctorScreen = ({ navigation }) => {
   // }, []);
 
   useEffect(() => {
-    const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', 1)
+    const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', districtId)
     axios.get(getdoclist, {
       headers: {
         Authorization: `Bearer ${authToken}` // Include the authToken in the request
@@ -151,7 +151,7 @@ const DoctorScreen = ({ navigation }) => {
             data={searchQuery ? filteredData : data}
             ListHeaderComponent={<TableHeader />}
             renderItem={({ item }) => <TableRow item={item} />}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.empId}
             showsVerticalScrollIndicator={false}
           />
         </View>
@@ -161,7 +161,7 @@ const DoctorScreen = ({ navigation }) => {
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddUser saveModal={saveModal}/>
+        <AddUser saveModal={saveModal} districtId={districtId}/>
       </Modal>
     </View>
   );
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flatlist: {
-    marginTop: 50,
+    marginTop: 0,
     flex: 2,
     backgroundColor: 'white',
     marginRight: 20,

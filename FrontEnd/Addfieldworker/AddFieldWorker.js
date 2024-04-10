@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Alert, ScrollView, View, StyleSheet } from 'react-native';
-import UserInformation from './UserInformation'; 
+import FieldWorkerInformation from './FieldWorkerInformation'; 
 import axios from 'axios';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 
 
-const AddUser = ({ saveModal }) => {
+const AddFieldWorker = ({ saveModal, districtId }) => {
   console.log("saveModalFw", saveModal)
-  const { authToken } = useAuth(); // Accessing the authToken
+  const { authToken } = useAuth();
   const [firstName, setfirstName] = useState('');
   const [middleName, setmiddleName] = useState('');
   const [lastName, setlastName] = useState('');
@@ -19,73 +19,41 @@ const AddUser = ({ saveModal }) => {
   const [gender, setGender] = useState('');
   const [aadhar, setAadhar] = useState('');
   const [railwaystation, setRailwayStation] = useState('');
-  const [clinicaddress, setClinicAddress] = useState('');
-  const [specialisation, setSpecialisation] = useState('');
+  const [officeaddress, setOfficeAddress] = useState('');
   const [taluka, setTaluka] = useState('');
   const [bloodgroup, setBloodGroup] = useState('');
   const [lagknown1, setLangKnown1] = useState('');
   const [lagknown2, setLangKnown2] = useState('');
   const [lagknown3, setLangKnown3] = useState('');
+
   const [errors, setErrors] = useState({});
-  const [talukaList, setTalukaList] = useState([]);
-  const [specialisationList, setSpecialisationList] = useState([]);
+  const [talukaList, setTalukaList] = useState([]); // State to hold fetched taluka list
 
   const scrollViewRef = useRef();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Include authToken in request headers for fetching talukas
-        const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'), {
-          headers: {
-            Authorization: `Bearer ${authToken}`, // Using authToken for authentication
-          }
-        });
-        setTalukaList(talukasResponse.data);
-  
-        // Include authToken in request headers for fetching specialisations
-        const specialisationsResponse = await axios.get(API_PATHS.SPECIALISATIONS, {
-          headers: {
-            Authorization: `Bearer ${authToken}`, // Using authToken for authentication
-          }
-        });
-        setSpecialisationList(specialisationsResponse.data);
-      } catch (error) {
-        console.log('Error fetching lists:', error);
-      }
-    };
-  
-    fetchData();
-  }, [authToken]); // Add authToken as a dependency to re-run the effect if it changes
-  
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     try {
-    //       // Fetch talukas
-    //       const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'));
-    //       setTalukaList(talukasResponse.data);
-  
-    //       // Fetch specialisations
-    //       const specialisationsResponse = await axios.get(API_PATHS.SPECIALISATIONS);
-    //       setSpecialisationList(specialisationsResponse.data);
-    //     } catch (error) {
-    //       console.log('Error fetching lists:', error);
-    //     }
-    //   };
-  
-    //   fetchData();
-    // }, []);
+        // setErrors(prevErrors => ({...prevErrors, [fieldName]: `${fieldName} is required`}));
+    useEffect(() => {
+      const fetchTalukaList = async () => {
+        try {
+          const talukasResponse = await axios.get(API_PATHS.TALUKAS.replace(':districtId', districtId), {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // Using authToken for authentication
+            }
+          });
+          // const response = await axios.get(API_PATHS.TALUKAS.replace(':districtId', '2'));
+          setTalukaList(talukasResponse.data);
+          console.log("Fetched Taluka List: ", talukasResponse.data); 
+        } catch (error) {
+          console.log('Error fetching taluka list:', error);
+          // Handle error here
+        }
+      };
+      fetchTalukaList();
+    }, []);
 
     const validateField = (fieldName, value) => {
       let hasError = false;
       if (fieldName === 'taluka') {
         // Ensure that taluka is not empty and is an integer
-        if (value === '' || isNaN(value) || parseInt(value, 10) !== Number(value)) {
-          hasError = true;
-        }
-      }
-      else if (fieldName === 'specialisation') {
-        // Ensure that specialisation is not empty and is an integer
         if (value === '' || isNaN(value) || parseInt(value, 10) !== Number(value)) {
           hasError = true;
         }
@@ -164,7 +132,7 @@ const AddUser = ({ saveModal }) => {
     const handleSubmit = async () => {
       console.log("handleSubmit called"); // Add this line
 
-      const fieldsToValidate = {firstName, lastName, address, dateofbirth, gender, aadhar, emailId, contactNumber, taluka, lagknown1, specialisation, clinicaddress}; // Extend this with more fields as needed
+      const fieldsToValidate = {firstName, lastName, address, dateofbirth, gender, officeaddress, aadhar, emailId, contactNumber, taluka, lagknown1}; // Extend this with more fields as needed
       let isValid = true;
 
       // Validate each field in the list
@@ -184,12 +152,12 @@ const AddUser = ({ saveModal }) => {
       const data = {
         "phoneNumber": contactNumber,
         "email": emailId,
-        "role": "Doctor",
+        "role": "FieldWorker",
         "firstName": firstName, 
         "middleName": middleName,
         "lastName": lastName,
         "homeAddress": address,
-        "hospitalAddress": clinicaddress,
+        "officeAddress": officeaddress,
         "nearestRailwayStation": railwaystation,
         "gender": gender,
         "taluka": {
@@ -200,46 +168,33 @@ const AddUser = ({ saveModal }) => {
         "aadharNumber": aadhar,
         "languageKnown1": lagknown1,
         "languageKnown2": lagknown2,
-        "languageKnown3": lagknown3,
-        "specialisation": {
-          "id": specialisation
-        }
+        "languageKnown3": lagknown3
       };
       
-      const fieldworkersByDoctors = API_PATHS.POST_DOCTORS_BY_DISTRICTS.replace(':talukaId', taluka);
+      const fieldworkersByDoctors = API_PATHS.FIELD_WORKERS_BY_TALUKAS.replace(':talukaId', taluka);
+      // Include Authorization header with the authToken
       axios.post(fieldworkersByDoctors, data, {
         headers: {
-          Authorization: `Bearer ${authToken}`, 
+          Authorization: `Bearer ${authToken}`, // Include the token here
           'Content-Type': 'application/json'
         }
       })
           .then(response => {
+              // Handle success response
               console.log('Response:', response.data);
-              Alert.alert('Success', 'Doctor added successfully!');
+              // Show success message or perform any other actions
+              Alert.alert('Success', 'Field worker added successfully!');
+              // Close the modal or perform any other actions
               saveModal();
           })
           .catch(error => {
-            // if (error.response && error.response.status === 409) {
-            //   // Here you can extract more details if your API sends specific messages for email vs phone
-            //   Alert.alert('Error', 'Phone number or email already exists.');
-            //   // Alert.alert(error.response)
-            // }
-            // else if (error.response && error.response.status === 500){
-            //   Alert.alert('Server Error', 'Our Server is down. Please try again later');
-            // }
-            // else{
-            //   // Handle error
-            //   console.error('Error:', error);
-            //   // Show error message or perform any other actions
-            //   Alert.alert('Error', 'Failed to add Doctor. Please try again later.');
-            //   saveModal();
-            // }
             if (error.response) {
+              // Extracting the message sent from the backend
               const message = error.response.data.message || "Our Server is down. Please try again later";
               Alert.alert('Error', message);
             } else {
               console.error('Error:', error);
-              Alert.alert('Error', 'Failed to add Doctor. Please try again later.');
+              Alert.alert('Error', 'Failed to add Field Worker. Please try again later.');
             }
           });
           
@@ -250,7 +205,7 @@ const AddUser = ({ saveModal }) => {
         {/* Main Content */}
         
         <ScrollView ref={scrollViewRef} style={styles.mainContent} alwaysBounceVertical={false}> 
-        <UserInformation
+        <FieldWorkerInformation
           firstName={firstName}
           middleName={middleName}
           lastName={lastName}
@@ -274,8 +229,8 @@ const AddUser = ({ saveModal }) => {
           dateofbirth={dateofbirth}
           setRailwayStation={setRailwayStation}
           railwaystation={railwaystation}
-          clinicaddress={clinicaddress}
-          setClinicAddress={setClinicAddress}
+          officeaddress={officeaddress}
+          setOfficeAddress={setOfficeAddress}
           bloodgroup = {bloodgroup}
           setBloodGroup = {setBloodGroup}
           taluka = {taluka}
@@ -291,10 +246,6 @@ const AddUser = ({ saveModal }) => {
           lagknown3 = {lagknown3}
           lagknown2 = {lagknown2}
           lagknown1 = {lagknown1}
-          specialisation = {specialisation}
-          setSpecialisation = {setSpecialisation}
-          specialisationList = {specialisationList}
-          setSpecialisationList = {setSpecialisationList}
       />
         </ScrollView>
       </View>
@@ -313,4 +264,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddUser;
+export default AddFieldWorker;

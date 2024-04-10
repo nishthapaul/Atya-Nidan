@@ -2,24 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
-import Card from '../components/Card';
+import AdminCard from '../components/AdminCard';
 import RadioButton from '../components/RadioButton';
-import AddFieldWorker from '../Addfieldworker/AddFieldWorker';
 import { API_PATHS } from '../constants/apiConstants';
-import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
-import CustomSwitch from '../components/FWAssign'
-// Sample data
-
+import { useAuth } from '../Context/AuthContext'; 
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>ID</Text>
-    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Name</Text>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Taluka</Text>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Assigned</Text>
+    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>ID</Text>
+    <Text style={[styles.tableCell, { flex: 3 }, { fontWeight: 'bold' }]}>Name</Text>
+    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>State</Text>
+    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Phone Number</Text>
   </View>
 );
-const FieldWorkerScreen = ({ navigation }) => {
+const AdminScreen = ({ navigation, stateId }) => {
   const { authToken } = useAuth(); // Accessing the authToken
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,14 +23,13 @@ const FieldWorkerScreen = ({ navigation }) => {
   const [valueFromRadio, setValueFromRadio] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [admin, setAdmin] = useState([]);
 
   const handleSearch = (text) => {
     console.log(valueFromRadio);
     const filteredSearchData = data.filter((item) => {
       return valueFromRadio === 1 ?
         (item.firstName.toLowerCase().includes(text.toLowerCase())) :
-        (item.taluka.name.toLowerCase().includes(text.toLowerCase()))
+        (item.district.name.toLowerCase().includes(text.toLowerCase()))
     }
     );
     setSearchQuery(text);
@@ -61,29 +56,27 @@ const FieldWorkerScreen = ({ navigation }) => {
 
   const TableRow = ({ item }) => {
     console.log("item", item);
-    const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
-    const newDataObject = { available: item.available, id: item.id, name: name, talukaName: item.taluka.name};
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data}/></Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.empId}</Text>
+          <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.district.name}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.phoneNumber}</Text>
         </View>
       </Pressable>
     )
   };
-  
   // useEffect(() => {
-  //   const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
-  //   axios.get(getfwlist)
+  //   // Make API call on component mount
+  //   // axios.get('https://459e-119-161-98-68.ngrok-free.app/atyanidan/health/api/districts/1/doctors')
+  //   const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', 1)
+  //   axios.get(getdoclist)
   //     .then(response => {
+  //       // Update state with API data
   //       console.log("response", response);
-  //       console.log("response.data", response.data);
-
   //       setData(response.data);
-  //       setSelectedUser(response.data[0]);      
+  //       setSelectedUser(response.data[0]);
   //     })
   //     .catch(error => {
   //       console.error('Error fetching data:', error);
@@ -91,16 +84,15 @@ const FieldWorkerScreen = ({ navigation }) => {
   // }, []);
 
   useEffect(() => {
-    console.log("Inside fieldworkder get");
-    const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
-    axios.get(getfwlist, {
+    const getadminlist = API_PATHS.GET_ADMINS_BY_STATES.replace(':stateId', stateId)
+    axios.get(getadminlist, {
       headers: {
         Authorization: `Bearer ${authToken}` // Include the authToken in the request
       }
     })
     .then(response => {
-      // console.log("response", response);
-      // console.log("response.data", response.data);
+      console.log("response", response);
+      console.log("response.data", response.data);
   
       setData(response.data);
       setSelectedUser(response.data[0]);      
@@ -108,8 +100,7 @@ const FieldWorkerScreen = ({ navigation }) => {
     .catch(error => {
       console.error('Error fetching data:', error);
     });
-  }, [authToken,setData]); // Add authToken as a dependency to re-run the effect if it changes
-  
+  }, [authToken]);
 
   return (
     <View style={styles.container}>
@@ -146,11 +137,11 @@ const FieldWorkerScreen = ({ navigation }) => {
               searchIcon={{ size: 24 }} // Style for the search icon
               clearIcon={{ size: 24 }} // Style for the clear icon
             />
-            <TouchableOpacity onPress={showModal}>
+            {/* <TouchableOpacity onPress={showModal}>
               <View style={styles.circle}>
                 <Icon name="plus" type="font-awesome" color="black" />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <RadioButton onValueChange={handleChildValueChange} />
         </View>
@@ -159,18 +150,18 @@ const FieldWorkerScreen = ({ navigation }) => {
             data={searchQuery ? filteredData : data}
             ListHeaderComponent={<TableHeader />}
             renderItem={({ item }) => <TableRow item={item} />}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.empId}
             showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
       <View style={styles.card}>
-        {selectedUser && <Card user={selectedUser} />}
+        {selectedUser && <AdminCard user={selectedUser} />}
       </View>
       {/* Modal */}
-      <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddFieldWorker saveModal={saveModal}/>
-      </Modal>
+      {/* <Modal visible={isModalVisible} transparent animationType="slide">
+        <AddUser saveModal={saveModal} districtId={districtId}/>
+      </Modal> */}
     </View>
   );
 };
@@ -190,14 +181,17 @@ const styles = StyleSheet.create({
     marginEnd: 30,
   },
   tableCell: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 18,
     fontStyle: 'bold',
+    justifyContent: 'center',
   },
   flatlist: {
-    marginTop: 50,
+    marginTop: 0,
     flex: 2,
     backgroundColor: 'white',
+    marginRight: 20,
+    marginLeft:20
   },
   list: {
     flex: 0.55,
@@ -218,4 +212,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FieldWorkerScreen;
+export default AdminScreen;
