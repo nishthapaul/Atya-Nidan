@@ -31,13 +31,25 @@ public class User {
     @NotNull
     protected Role role;
 
+    @Column(name = "emp_id")
+    protected String empId;
+
     public User() {
     }
 
-    public User(String phoneNumber, String email, Role role) {
+    public User(String phoneNumber, String email, Role role, String empId) {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.role = role;
+        this.empId = empId;
+    }
+
+    public String getEmpId() {
+        return empId;
+    }
+
+    public void setEmpId(String empId) {
+        this.empId = empId;
     }
 
     public int getId() {

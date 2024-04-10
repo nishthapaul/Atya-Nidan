@@ -33,12 +33,12 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content)
     })
-    @GetMapping("/users/{phoneNumber}")
-    public User getUserFromPhoneNumber(@Parameter(
-            name = "phoneNumber",
-            description = "Phone number of user to be retrieved",
+    @GetMapping("/users/{employeeId}")
+    public User getUserFromEmployeeId(@Parameter(
+            name = "employeeId",
+            description = "Employee ID of user to be retrieved",
             required = true)
-            @PathVariable String phoneNumber) {
-        return userService.getUserFromPhoneNumber(phoneNumber);
+            @PathVariable String employeeId) {
+        return userService.getUserFromEmployeeId(employeeId);
     }
 }

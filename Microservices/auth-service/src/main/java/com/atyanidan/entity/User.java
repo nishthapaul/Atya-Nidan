@@ -1,5 +1,7 @@
 package com.atyanidan.entity;
 
+import com.atyanidan.entity.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,10 +22,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+    @JsonIgnore
     private int id;
 
     @Column(name = "phone_number", unique = true)
@@ -39,6 +43,9 @@ public class User implements UserDetails {
     @Column(name = "role")
     @NotNull
     private Role role;
+
+    @Column(name = "emp_id")
+    protected String empId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

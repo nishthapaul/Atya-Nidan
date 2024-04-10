@@ -8,6 +8,7 @@ import com.atyanidan.exception.NotFoundException;
 import com.atyanidan.entity.Taluka;
 import com.atyanidan.entity.actor.FieldWorker;
 import com.atyanidan.model.requestbody.FieldWorkerAvailabilityRequest;
+import com.atyanidan.utils.EmployeeIdGenerator;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,11 +25,13 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
 
     private final FieldWorkerRepository fieldWorkerRepository;
     private final TalukaRepository talukaRepository;
+    private final EmployeeIdGenerator employeeIdGenerator;
 
     @Autowired
-    public FieldWorkerServiceImpl(FieldWorkerRepository fieldWorkerRepository, TalukaRepository talukaRepository) {
+    public FieldWorkerServiceImpl(FieldWorkerRepository fieldWorkerRepository, TalukaRepository talukaRepository, EmployeeIdGenerator employeeIdGenerator) {
         this.fieldWorkerRepository = fieldWorkerRepository;
         this.talukaRepository = talukaRepository;
+        this.employeeIdGenerator = employeeIdGenerator;
     }
 
     @Override
@@ -76,7 +79,11 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
             Taluka taluka = optionalEntity.get();
             fieldWorker.setTaluka(taluka);
             try {
-                return fieldWorkerRepository.save(fieldWorker);
+                FieldWorker dbFieldWorker = fieldWorkerRepository.save(fieldWorker);
+                String employeeID = employeeIdGenerator.generate("FW", fieldWorker.getId(), fieldWorker.getFirstName());
+                dbFieldWorker.setEmpId(employeeID);
+                dbFieldWorker = fieldWorkerRepository.save(dbFieldWorker);
+                return dbFieldWorker;
             } catch (DataIntegrityViolationException e) {
                 String exceptionRootCause = e.getRootCause().getMessage();
                 if ( exceptionRootCause.contains("Duplicate entry") && exceptionRootCause.contains("phone_number") ) {

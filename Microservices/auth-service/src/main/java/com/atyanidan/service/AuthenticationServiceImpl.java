@@ -25,6 +25,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } else {
             User user = optionalEntity.get();
 
+            System.out.println("user " + user);
+
             smsMessenger.sendSms(user.getPhoneNumber(), request.getOtp());
 
             String userRole = user.getRole().toString();
@@ -34,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return AuthenticationResponse.builder()
                     .token(jwtToken)
-                    .role(userRole)
+                    .user(user)
                     .build();
         }
     }

@@ -69,7 +69,7 @@ public class DoctorServiceImpl implements DoctorService {
         try {
             Doctor dbDoctor = doctorRepository.save(doctor);
             String employeeID = employeeIdGenerator.generate("DC", doctor.getId(), doctor.getFirstName());
-            dbDoctor.setEmployeeId(employeeID);
+            dbDoctor.setEmpId(employeeID);
             dbDoctor = doctorRepository.save(dbDoctor);
             return dbDoctor;
         } catch (DataIntegrityViolationException e) {

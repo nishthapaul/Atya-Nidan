@@ -4,5 +4,5 @@ import com.atyanidan.entity.actor.User;
 
 public interface UserService {
 
-    User getUserFromPhoneNumber(String phoneNumber);
+    User getUserFromEmployeeId(String phoneNumber);
 }
