@@ -34,6 +34,7 @@ const optionTypeList = [
 const FormCard = () => {
 
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [quesText, setQuesText] = useState('');
     const [optionType, setOptionType] = useState('');
     const [quesValue, setQuesValue] = useState('');
@@ -45,21 +46,34 @@ const FormCard = () => {
     const handleTitleChange = (inputText) => {
         setTitle(inputText);
     };
+
+    const handleDescriptionChange = (inputText) => {
+        setDescription(inputText);
+    };
+
     const handleQuesText = (inputText) => {
         setQuesText(inputText);
     };
-    const addValues = () => {
+    const addQuesValues = () => {
         if (quesValue) {
             setQuesValues(prevValues => [...prevValues, quesValue]);
             setQuesValue('')
         }
     }
 
-    const showModal = () => {
-        setIsModalVisible(true);
+    const handleSaveFormData = () => {
+        const formData = {};
+        formData.title = title;
+        formData.description = description;
+        formData.quesList = quesList;
+        //console.log("form Data quesList", formData.quesList);
+        console.log("form Data Saved", formData);
+        setTitle('');
+        setDescription('');
+        setQuesList([]);
     }
 
-    const saveQuestions = () => {
+    const handleSaveQuestions = () => {
 
         if (quesText && optionType && quesValues) {
             const quesObj = {};
@@ -76,7 +90,7 @@ const FormCard = () => {
         setOptionType('');
     }
     useEffect(() => {
-        console.log("quesList", quesList);
+        //console.log("quesList", quesList);
     }, [quesList])
 
     const removeItem = index => {
@@ -99,10 +113,14 @@ const FormCard = () => {
                             autoFocus={true} />
                         <TextInput
                             style={styles.description}
-                            placeholder="Enter Disease Description" />
+                            value={description}
+                            onChangeText={handleDescriptionChange}
+                            placeholder="Enter Disease Description"
+                            placeholderTextColor="#888"
+                            autoFocus={true} />
                     </View>
                     <View>
-                        <Button title="ADD Question" onPress={showModal}></Button>
+                        <Button title="ADD Question" onPress={() => setIsModalVisible(true)}></Button>
                     </View>
                 </View>
                 {quesList && quesList.map((item, index) => (
@@ -122,7 +140,7 @@ const FormCard = () => {
                 ))}
             </ScrollView>
             <View style={styles.buttonstyle} >
-                <Button title='Save Form' onPress={() => console.log("form saved")}></Button>
+                <Button title='Save Form' onPress={handleSaveFormData}></Button>
             </View>
 
             <Modal visible={isModalVisible} transparent={true} animationType="fade">
@@ -160,12 +178,12 @@ const FormCard = () => {
                                         style={styles.quesValueInput}
                                         value={quesValue}
                                         onChangeText={(inputText) => setQuesValue(inputText)}
-                                        placeholder="Add Values"
+                                        placeholder="Add Question Values"
                                         placeholderTextColor="#888"
                                         autoFocus={true} />
                                 </View>
                                 <View>
-                                    <Button title='Add Values' onPress={addValues}></Button>
+                                    <Button title='Add Values' onPress={addQuesValues}></Button>
                                 </View>
                             </View>
                             <View style={styles.valueListContainer}>
@@ -180,7 +198,7 @@ const FormCard = () => {
                             </View>
                         </View>
                         <View style={styles.buttonstyle} >
-                            <Button title='Save Question' onPress={saveQuestions}></Button>
+                            <Button title='Save Question' onPress={handleSaveQuestions}></Button>
                         </View>
                     </View>
                 </View>
@@ -192,12 +210,11 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         backgroundColor: '#eee',
-        marginTop: 100,
+        marginTop: 50,
         justifyContent: 'space-between'
     },
     scrollView: {
-        height: 580,
-       // backgroundColor: 'red'
+        height: 600,
     },
 
     card: {
