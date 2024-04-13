@@ -8,4 +8,5 @@ public class Constants {
     protected static final String DOCTORS_BY_DISTRICTS = "/districts/{districtId}/doctors";
     protected static final String FIELDWORKERS_BY_DISTRICTS = "/districts/{districtId}/fieldworkers";
     protected static final String FIELDWORKERS_BY_TALUKAS = "/talukas/{talukaId}/fieldworkers";
+    protected static final String ADMINS_BY_STATES = "/states/{stateId}/admins";
 }
