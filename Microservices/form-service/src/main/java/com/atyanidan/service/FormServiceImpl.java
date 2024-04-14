@@ -7,6 +7,7 @@ import com.atyanidan.entity.mysql.Form;
 import com.atyanidan.exception.ConflictException;
 import com.atyanidan.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +54,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public List<Form> getForms() {
-        return formRepository.findAll();
+        return formRepository.findAllByOrderBySelectedDescTitleAsc();
     }
 }

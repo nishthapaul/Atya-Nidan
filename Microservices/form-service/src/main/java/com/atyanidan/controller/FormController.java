@@ -32,7 +32,7 @@ public class FormController {
         return ResponseEntity.ok(formService.setDefaultForm(formId));
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<Form> getForm() {
         return formService.getForms();
     }
