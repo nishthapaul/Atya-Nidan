@@ -27,7 +27,6 @@ public class FormServiceImpl implements FormService {
     public Form createForm(FormDefinition formDefinition) {
         if ( formRepository.countByTitle(formDefinition.getTitle()) == 0 ) {
             FormDefinition savedFormDefinition = formDefinitionRepository.save(formDefinition);
-            System.out.println(savedFormDefinition.getId());
 
             Form form = new Form(savedFormDefinition.getTitle(), savedFormDefinition.getId());
             return formRepository.save(form);

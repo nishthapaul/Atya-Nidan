@@ -22,7 +22,7 @@ public class Form {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "selected", columnDefinition = "DEFAULT 0", insertable = false)
+    @Column(name = "selected", insertable = false)
     private Boolean selected;
 
     @Column(name = "created_on", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
