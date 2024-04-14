@@ -33,6 +33,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-
-auth-service/src/main/resources/application-dev.properties
-health-service/src/main/resources/application-dev.properties
