@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS Abha (
     dob date NOT NULL,
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
     address varchar(100) NOT NULL,
+    blood_group varchar(50) NOT NULL,
     primary key (abha_id)
 );
 
