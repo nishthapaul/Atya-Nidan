@@ -6,6 +6,7 @@ import React, { useState , useEffect} from 'react';
 import { AuthProvider } from './Context/AuthContext';
 import { LogBox } from 'react-native';
 import SuperadminContainer from './SuperadminContainer';
+import DoctorContainer from './DoctorContainer';
 
 export default function App() {
   LogBox.ignoreAllLogs();
@@ -30,8 +31,9 @@ export default function App() {
         <MainContainer authToken={authToken} user={user}/>
       ) : user.role === 'SuperAdmin' ? (
         <SuperadminContainer authToken={authToken} user={user}/>
+      ) : user.role === 'Doctor' ? (
+        <DoctorContainer authToken={authToken} user={user}/>
       ) : (
-        // Optionally handle different roles here
         <View style={styles.header}><AppHeader/></View>
       )}
     </View>

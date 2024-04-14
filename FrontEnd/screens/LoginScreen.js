@@ -16,6 +16,8 @@ export default function LoginScreen({ onLoginSuccess }) {
     const [enteredOtp, setEnteredOtp] = React.useState('');
     const [otpResponse, setOtpResponse] = React.useState(null);
     const { setAuthToken, setUser, setIsLoggedIn } = useAuth();
+    const [otpGenerationTime, setOtpGenerationTime] = useState(null); // Track OTP generation time
+    const [remainingTime, setRemainingTime] = useState(0);
 
     let random_otp = '';
 
@@ -25,6 +27,7 @@ export default function LoginScreen({ onLoginSuccess }) {
         random_otp += Math.floor(Math.random() * 10);
       }
       setOtp(random_otp);
+      setOtpGenerationTime(new Date()); // Record the OTP generation time
 
       // Send OTP request to server
       const data = {
@@ -46,6 +49,18 @@ export default function LoginScreen({ onLoginSuccess }) {
     };
 
     const matchOtp = () => {
+        if (!otp || !otpGenerationTime) {
+          Alert.alert('Error', 'Please generate OTP first.');
+          return;
+        }
+    
+        // Check if OTP generation time is within 5 minutes
+        const currentTime = new Date();
+        const timeDifference = (currentTime - otpGenerationTime) / (1000 * 60); // Difference in minutes
+        if (timeDifference > 5) {
+          Alert.alert('Error', 'OTP has expired. Please generate a new OTP.');
+          return;
+        }
         if (enteredOtp === otp) {
           const { token, user } = otpResponse;
           setAuthToken(token);
@@ -57,6 +72,23 @@ export default function LoginScreen({ onLoginSuccess }) {
         } else {
           Alert.alert('Error', 'Unauthorized User');
         }
+    };
+    useEffect(() => {
+      if (otpGenerationTime) {
+        const interval = setInterval(() => {
+          const currentTime = new Date();
+          const timeDifference = (otpGenerationTime.getTime() + 5 * 60 * 1000 - currentTime.getTime()) / 1000; // Difference in seconds
+          setRemainingTime(Math.max(0, Math.floor(timeDifference))); // Update remaining time
+        }, 1000);
+  
+        return () => clearInterval(interval);
+      }
+    }, [otpGenerationTime]);
+  
+    const formatTime = (time) => {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
     return (
       <View style={styles.container}>
@@ -104,14 +136,18 @@ export default function LoginScreen({ onLoginSuccess }) {
                     Verify OTP
                   </Text>
                 </TouchableOpacity>           
-  
+                <Text style={styles.timerText}>Time Remaining: {formatTime(remainingTime)}</Text>
+                {/* <Text style={[styles.timerText, remainingTime < 60 && otpGenerationTime && { color: 'red' }]}>
+                {otpGenerationTime ? `Time Remaining: ${formatTime(remainingTime)}` : null}
+              </Text> */}
+
               <View style={styles.dashedLine}></View>
               <Text style={styles.Ortext}>OR</Text>
 
               <TouchableOpacity
                 style={styles.button}
                 // onPress={onPress}
-              >
+              > 
                 <Text style={styles.buttonText}>
                   Login with Google
                 </Text>
@@ -226,5 +262,11 @@ const styles = StyleSheet.create({
       width: '60%', 
       height: '90%',
       aspectRatio: 1,
-    }
+    },
+    timerText: {
+      fontSize: 18,
+      textAlign: 'center',
+      marginTop: 10,
+      // color: remainingTime < 60 && otpGenerationTime ? 'red' : Colors.BLACK,
+    },
     })
