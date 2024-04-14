@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @Table(name = "Form")
@@ -21,6 +19,10 @@ public class Form {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long formId;
 
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "selected", columnDefinition = "DEFAULT 0", insertable = false)
     private Boolean selected;
 
     @Column(name = "created_on", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -28,16 +30,9 @@ public class Form {
 
     private String formDefinitionId;
 
-    public Form(Boolean selected, Timestamp createdOn, String formDefinitionId) {
-        this.selected = selected;
-        this.createdOn = createdOn;
+    public Form(String title, String formDefinitionId) {
+        this.title = title;
         this.formDefinitionId = formDefinitionId;
     }
-
-    public Form(Boolean selected, String formDefinitionId) {
-        this.selected = selected;
-        this.formDefinitionId = formDefinitionId;
-    }
-
 
 }

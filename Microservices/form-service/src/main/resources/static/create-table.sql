@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS Form (
     selected bit DEFAULT 0,
     created_on DATETIME NOT NULL,
     form_definition_id varchar(100) NOT NULL,
+    title varchar(100) NOT NULL UNIQUE,
     primary key (form_id)
 );
 
