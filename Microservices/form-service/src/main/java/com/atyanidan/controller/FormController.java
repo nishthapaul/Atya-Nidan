@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/forms")
 public class FormController {
@@ -28,5 +30,10 @@ public class FormController {
     @PutMapping("/{formId}")
     public ResponseEntity<Form> setDefaultForm(@PathVariable int formId) {
         return ResponseEntity.ok(formService.setDefaultForm(formId));
+    }
+
+    @GetMapping("")
+    public List<Form> getForm() {
+        return formService.getForms();
     }
 }

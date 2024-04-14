@@ -50,4 +50,9 @@ public class FormServiceImpl implements FormService {
             throw new NotFoundException("Form id not found: " + formId);
         }
     }
+
+    @Override
+    public List<Form> getForms() {
+        return formRepository.findAll();
+    }
 }
