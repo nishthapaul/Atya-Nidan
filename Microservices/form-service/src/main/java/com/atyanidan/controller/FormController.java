@@ -6,10 +6,7 @@ import com.atyanidan.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/forms")
@@ -26,5 +23,10 @@ public class FormController {
     public ResponseEntity<Form> addForm(@RequestBody FormDefinition formDefinition) {
         Form dbForm = formService.createForm(formDefinition);
         return ResponseEntity.status(HttpStatus.CREATED).body(dbForm);
+    }
+
+    @PutMapping("/{formId}")
+    public ResponseEntity<Form> setDefaultForm(@PathVariable int formId) {
+        return ResponseEntity.ok(formService.setDefaultForm(formId));
     }
 }

@@ -5,4 +5,6 @@ import com.atyanidan.entity.mysql.Form;
 
 public interface FormService {
     Form createForm(FormDefinition formDefinition);
+
+    Form setDefaultForm(int formId);
 }
