@@ -5,13 +5,13 @@ USE atya_nidan;
 
 CREATE TABLE IF NOT EXISTS State (
 	state_id int AUTO_INCREMENT,
-    name varchar(100) NOT NULL,
+    name varchar(100) NOT NULL UNIQUE,
     primary key (state_id)
 );
 
 CREATE TABLE IF NOT EXISTS District (
 	district_id int AUTO_INCREMENT,
-    name varchar(100) NOT NULL,
+    name varchar(100) NOT NULL UNIQUE,
     state_id int NOT NULL,
     primary key (district_id)
 );
@@ -21,7 +21,7 @@ ADD FOREIGN KEY (state_id) REFERENCES State(state_id);
 
 CREATE TABLE IF NOT EXISTS Taluka (
 	taluka_id int AUTO_INCREMENT,
-    name varchar(100) NOT NULL,
+    name varchar(100) NOT NULL UNIQUE,
     district_id int NOT NULL,
     primary key (taluka_id)
 );
