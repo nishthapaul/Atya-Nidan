@@ -23,10 +23,9 @@ public class Patient {
     @JsonIgnore
     private int id;
 
-    @JoinColumn(name = "abha_number")
+    @Column(name = "abha_number")
     @NotEmpty
-    @OneToOne
-    protected Abha abha;
+    protected String abhaNumber;
 
     @Column(name = "patient_number")
     @NotEmpty
@@ -37,8 +36,8 @@ public class Patient {
     @NotEmpty
     private Demographic demographic;
 
-    public Patient(Abha abha, Demographic demographic) {
-        this.abha = abha;
+    public Patient(String abhaNumber, Demographic demographic) {
+        this.abhaNumber = abhaNumber;
         this.demographic = demographic;
     }
 }

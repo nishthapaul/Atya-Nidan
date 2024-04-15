@@ -50,6 +50,9 @@ public class FormResponseServiceImpl implements FormResponseService {
         Form form = optionalForm.get();
 
         Abha abha = abhaRepository.findByAbhaNumber(olapForm.getAbhaNumber());
+        if (abha == null) {
+            throw new NotFoundException("Abha ID doesn't exist.");
+        }
         System.out.println(abha);
 
         Taluka taluka = talukaRepository.findByName(abha.getTaluka());
@@ -58,7 +61,7 @@ public class FormResponseServiceImpl implements FormResponseService {
         Demographic savedDemographic = demographicRepository.save(demographic);
         System.out.println(savedDemographic);
 
-        Patient patient = new Patient(abha, savedDemographic);
+        Patient patient = new Patient(olapForm.getAbhaNumber(), savedDemographic);
         Patient savedPatient = patientRepository.save(patient);
         System.out.println(savedPatient);
 
@@ -67,13 +70,11 @@ public class FormResponseServiceImpl implements FormResponseService {
         savedPatient = patientRepository.save(savedPatient);
         System.out.println(savedPatient);
 
-        // save patient in olap forms
-
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());
         String olapFormId = savedOlapForm.getId();
 
-        FormResponse formResponse = new FormResponse(form, fieldWorker, olapFormId);
+        FormResponse formResponse = new FormResponse(form, fieldWorker, savedPatient, olapFormId);
         FormResponse savedFormResponse = formResponseRepository.save(formResponse);
 
         return savedFormResponse;

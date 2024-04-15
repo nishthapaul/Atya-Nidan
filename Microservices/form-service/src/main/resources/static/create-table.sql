@@ -33,14 +33,11 @@ CREATE TABLE IF NOT EXISTS Demographic (
 
 CREATE TABLE IF NOT EXISTS Patient (
     patient_id int AUTO_INCREMENT,
-    abha_number int NOT NULL UNIQUE,
+    abha_number VARCHAR(14) NOT NULL UNIQUE,
     patient_number varchar(8) UNIQUE,
     demographic_id int NOT NULL UNIQUE,
     primary key (patient_id)
 );
-
-ALTER TABLE Patient
-ADD FOREIGN KEY (abha_number) REFERENCES Abha(abha_number);
 
 ALTER TABLE Patient
 ADD FOREIGN KEY (demographic_id) REFERENCES Demographic(demographic_id) ON DELETE CASCADE;

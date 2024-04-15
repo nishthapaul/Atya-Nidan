@@ -32,9 +32,10 @@ public class FormResponse {
     @NotNull
     private FieldWorker fieldWorker;
 
-//    @ManyToOne
-//    @JoinColumn(name = "patient_id")
-//    private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    @NotNull
+    private Patient patient;
 
     @Column(name = "submitted_on", insertable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
     private Timestamp submittedOn;
@@ -43,9 +44,10 @@ public class FormResponse {
     @NotEmpty
     private String olapFormId;
 
-    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, String olapFormId) {
+    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, String olapFormId) {
         this.form = form;
         this.fieldWorker = fieldWorker;
+        this.patient = patient;
         this.olapFormId = olapFormId;
     }
 }
