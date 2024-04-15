@@ -55,26 +55,31 @@ public class FormResponseServiceImpl implements FormResponseService {
         }
         System.out.println(abha);
 
-        Taluka taluka = talukaRepository.findByName(abha.getTaluka());
-        System.out.println(taluka);
-        Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getPhoneNumber(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
-        Demographic savedDemographic = demographicRepository.save(demographic);
-        System.out.println(savedDemographic);
-
-        Patient patient = new Patient(olapForm.getAbhaNumber(), savedDemographic);
-        Patient savedPatient = patientRepository.save(patient);
-        System.out.println(savedPatient);
-
-        String patientNumber = idGenerator.generate("PT", savedPatient.getId(), abha.getFirstName());
-        savedPatient.setPatientNumber(patientNumber);
-        savedPatient = patientRepository.save(savedPatient);
-        System.out.println(savedPatient);
-
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());
-        String olapFormId = savedOlapForm.getId();
 
-        FormResponse formResponse = new FormResponse(form, fieldWorker, savedPatient, olapFormId);
+        Patient patient = patientRepository.findByAbhaNumber(olapForm.getAbhaNumber());
+        if (patient == null) {
+            Taluka taluka = talukaRepository.findByName(abha.getTaluka());
+            System.out.println(taluka);
+            Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getPhoneNumber(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
+            Demographic savedDemographic = demographicRepository.save(demographic);
+            System.out.println(savedDemographic);
+
+            patient = new Patient(olapForm.getAbhaNumber(), savedDemographic);
+            Patient savedPatient = patientRepository.save(patient);
+            System.out.println(savedPatient);
+
+            String patientNumber = idGenerator.generate("PT", savedPatient.getId(), abha.getFirstName());
+            savedPatient.setPatientNumber(patientNumber);
+            savedPatient = patientRepository.save(savedPatient);
+            System.out.println(savedPatient);
+
+            patient = savedPatient;
+        }
+
+        String olapFormId = savedOlapForm.getId();
+        FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId);
         FormResponse savedFormResponse = formResponseRepository.save(formResponse);
 
         return savedFormResponse;
