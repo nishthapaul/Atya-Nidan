@@ -1,388 +1,223 @@
-// import * as React from 'react';
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Button, Modal, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Dropdown } from 'react-native-element-dropdown';
-import { CheckBox } from 'react-native-elements';
+import axios from 'axios';
+import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
+import { SearchBar, Icon } from 'react-native-elements';
+// import Card from '../components/Card';
+import RadioButton from '../components/RadioButton';
+import AddForm from '../AddForm/AddForm';
+import { API_PATHS } from '../constants/apiConstants';
+import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
+import CustomSwitch from '../components/FWAssign'
+// Sample data
 
-const CustomCheckbox = ({ labelValue, index }) => {
-    return (
-        <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
-            <CheckBox
-                value={false}
-                style={styles.checkbox}
-                disabled={true}
-            />
-            <Text style={styles.label}>{labelValue}</Text>
-        </View>
-    );
-};
 
-const CustomRadioButton = ({ labelValue, index }) => {
-    return (
-        <View style = {styles.radiowrapper} key={`${labelValue}-${index}`}>
-        <View style={styles.radio}></View>
-        <Text style={styles.radioText}>{labelValue}</Text>
-        </View>
+const TableHeader = () => (
+  <View style={styles.tableRow}>
+    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Form ID</Text>
+    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Form Title</Text>
+    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Created On</Text>
+    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Default</Text>
+  </View>
+);
+const FormScreen = ({ navigation }) => {
+  const { authToken } = useAuth(); // Accessing the authToken
+  const [data, setData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [valueFromRadio, setValueFromRadio] = useState(1);
+//   const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+//   const [admin, setAdmin] = useState([]);
+
+  const handleSearch = (text) => {
+    console.log(valueFromRadio);
+    const filteredSearchData = data.filter((item) => {
+      return valueFromRadio === 1 ?
+        (item.firstName.toLowerCase().includes(text.toLowerCase())) :
+        (item.taluka.name.toLowerCase().includes(text.toLowerCase()))
+    }
     );
-};
+    setSearchQuery(text);
+    setFilteredData(filteredSearchData);
+  };
+//   const handleChildValueChange = (newValue) => {
+//     console.log("newValue: ", newValue);
+//     setSearchQuery("");
+//     setValueFromRadio(newValue);
+//   };
+//   const onSelectUser = (user) => {
+//     console.log("selecteduser", user);
+//     setSelectedUser(user);
+//   }
+  const showModal = () => {
+    console.log("Show Modal");
+    setIsModalVisible(true);
+  };
+
+  const saveModal = () => {
+    console.log("Save Modal");
+    setIsModalVisible(false);
+  };
+
+
+  const TableRow = ({ item }) => {
+    console.log("item", item.formId);
+    // const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
+    const newDataObject = { selected: item.selected, formId: item.formId, title: item.title, createdOn: item.createdOn};
+    return (
+      <Pressable onPress={() => onSelectUser(item)}>
+        <View style={styles.tableRow}>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.formId}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.title}</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.createdOn.slice(0, 10)}</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data}/></Text>
+        </View>
+      </Pressable>
+    )
+  };
   
-const optionTypeList = [
-    { label: 'Multiple choice', value: 'MultiSelect' },
-    { label: 'Checkboxes', value: 'CheckBox' },
-];
+  // useEffect(() => {
+  //   const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
+  //   axios.get(getfwlist)
+  //     .then(response => {
+  //       console.log("response", response);
+  //       console.log("response.data", response.data);
 
-// export default function FormScreen({ navigation }) {
-//     return (
-//         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//             {/* <Text
-//                 onPress={() => navigation.navigate('Home')}
-//                 style={{ fontSize: 26, fontWeight: 'bold' }}>Forms</Text> */}
-//         </View>
-//     );
-// }
+  //       setData(response.data);
+  //       setSelectedUser(response.data[0]);      
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
 
-const FormScreen = () => {
+  useEffect(() => {
+    console.log("Inside fieldworkder get");
+    const getformlist = API_PATHS.GET_FORMS_LIST
+    axios.get(getformlist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      // console.log("response", response);
+      // console.log("response.data", response.data);
+  
+      setData(response.data);
+    //   setSelectedUser(response.data[0]);      
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }, [authToken]); 
+  
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [quesText, setQuesText] = useState('');
-    const [optionType, setOptionType] = useState('');
-    const [quesValue, setQuesValue] = useState('');
-    const [quesValues, setQuesValues] = useState([]);
-    const [quesList, setQuesList] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+  return (
+    <View style={styles.container}>
+      <View style={styles.list}>
+        <View style={{ marginTop: 20, marginBottom: 20, height: 110 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              height: 70,
+              alignItems: 'center',
+              backgroundColor: "white",
+              marginRight: 60,
 
-
-    const handleTitleChange = (inputText) => {
-        setTitle(inputText);
-    };
-
-    const handleDescriptionChange = (inputText) => {
-        setDescription(inputText);
-    };
-
-    const handleQuesText = (inputText) => {
-        setQuesText(inputText);
-    };
-    const addQuesValues = () => {
-        if (quesValue) {
-            setQuesValues(prevValues => [...prevValues, quesValue]);
-            setQuesValue('')
-        }
-    }
-
-    const handleSaveFormData = () => {
-        const formData = {};
-        formData.title = title;
-        formData.description = description;
-        formData.quesList = quesList;
-        //console.log("form Data quesList", formData.quesList);
-        console.log("form Data Saved", formData);
-        setTitle('');
-        setDescription('');
-        setQuesList([]);
-    }
-
-    const handleSaveQuestions = () => {
-
-        if (quesText && optionType && quesValues) {
-            const quesObj = {};
-            quesObj.number = `Question${quesList.length + 1}`;
-            quesObj.quetion = quesText;
-            quesObj.optionType = optionType;
-            quesObj.values = quesValues;
-            setQuesList(prevValues => [...prevValues, quesObj]);
-        }
-        setIsModalVisible(false);
-        setQuesText('');
-        setQuesValue('');
-        setQuesValues('');
-        setOptionType('');
-    }
-    useEffect(() => {
-        //console.log("quesList", quesList);
-    }, [quesList])
-
-    const removeItem = index => {
-        const newItems = [...quesValues];
-        newItems.splice(index, 1);
-        setQuesValues(newItems);
-    };
-
-    return (
-        <View style={styles.container}>
-            <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="never">
-                <View style={styles.card}>
-                    <View style={styles.title}>
-                        <TextInput
-                            style={styles.input}
-                            value={title}
-                            onChangeText={handleTitleChange}
-                            placeholder="Untitled Form"
-                            placeholderTextColor="#888"
-                            autoFocus={true} />
-                        <TextInput
-                            style={styles.description}
-                            value={description}
-                            onChangeText={handleDescriptionChange}
-                            placeholder="Enter Disease Description"
-                            placeholderTextColor="#888"
-                            autoFocus={true} />
-                    </View>
-                    <View>
-                        <Button title="ADD Question" onPress={() => setIsModalVisible(true)}></Button>
-                    </View>
-                </View>
-                {quesList && quesList.map((item, index) => (
-                    <View style={styles.quesCard} key={`${item.number}-${index}`}>
-                        <View>
-                            <View>
-                                <Text style={styles.quesStyle}>{`${item.number}: ${item.quetion}`}</Text>
-                            </View>
-                            {item?.values && item.values.map((value, idx) => (
-                                item.optionType == 'CheckBox' ?
-                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />:
-                                <CustomRadioButton labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />
-
-                            ))}
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-            <View style={styles.buttonstyle} >
-                <Button title='Save Form' onPress={handleSaveFormData}></Button>
-            </View>
-
-            <Modal visible={isModalVisible} transparent={true} animationType="fade">
-                <View style={styles.modal}>
-                    <View style={styles.modalbody}>
-                        <View style={styles.modalContainer} >
-                            <View>
-                                <TextInput
-                                    style={styles.questionInput}
-                                    value={quesText}
-                                    onChangeText={handleQuesText}
-                                    placeholder="Untitled Question"
-                                    placeholderTextColor="#888"
-                                    autoFocus={true} />
-                            </View>
-                            <View style={styles.secondContainer}>
-                                <View style={styles.dropdown}>
-                                    <Dropdown
-                                        placeholderStyle={styles.placeholderStyle}
-                                        selectedTextStyle={styles.selectedTextStyle}
-                                        iconStyle={styles.iconStyle}
-                                        data={optionTypeList}
-                                        maxHeight={300}
-                                        labelField="label"
-                                        valueField="value"
-                                        placeholder="Select Question Type"
-                                        value={optionType}
-                                        onChange={item => {
-                                            setOptionType(item.value);
-                                        }}
-                                    />
-                                </View>
-                                <View style={styles.quesValueInputContainer}>
-                                    <TextInput
-                                        style={styles.quesValueInput}
-                                        value={quesValue}
-                                        onChangeText={(inputText) => setQuesValue(inputText)}
-                                        placeholder="Add Question Values"
-                                        placeholderTextColor="#888"
-                                        autoFocus={true} />
-                                </View>
-                                <View>
-                                    <Button title='Add Values' onPress={addQuesValues}></Button>
-                                </View>
-                            </View>
-                            <View style={styles.valueListContainer}>
-                                {quesValues && quesValues.map((item, index) => (
-                                    <View key={`quesValues-${index}`} style={styles.item}>
-                                        <Text>{item}</Text>
-                                        <TouchableOpacity onPress={() => removeItem(index)} style={styles.deleteButton}>
-                                            <Ionicons name="trash-outline" size={24} color="red" />
-                                        </TouchableOpacity>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                        <View style={styles.buttonstyle} >
-                            <Button title='Save Question' onPress={handleSaveQuestions}></Button>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+            }}
+          >
+            <SearchBar
+              placeholder="Search"
+              onChangeText={handleSearch}
+              value={searchQuery}
+              inputStyle={{ backgroundColor: 'white', color: 'black' }} // Style for the text input
+              containerStyle={{
+                backgroundColor: 'transparent',
+                borderBottomColor: 'transparent',
+                borderTopColor: 'transparent',
+                borderWidth: 2,
+                borderColor: 'black',
+                borderRadius: 24,
+                width: "80%",
+                margin: 20,
+                marginBottom: 0,
+              }} // Style for the container
+              inputContainerStyle={{ backgroundColor: 'white', borderRadius: 10, height: 30 }} // Style for the input container
+              searchIcon={{ size: 24 }} // Style for the search icon
+              clearIcon={{ size: 24 }} // Style for the clear icon
+            />
+            <TouchableOpacity onPress={showModal}>
+              <View style={styles.circle}>
+                <Icon name="plus" type="font-awesome" color="black" />
+              </View>
+            </TouchableOpacity>
+          </View>
+          {/* <RadioButton onValueChange={handleChildValueChange} /> */}
         </View>
-    );
+        <View style={styles.flatlist}>
+          <FlatList
+            data={searchQuery ? filteredData : data}
+            ListHeaderComponent={<TableHeader />}
+            renderItem={({ item }) => <TableRow item={item} />}
+            // keyExtractor={item => item.formId.toString()}
+            keyExtractor={item => item.formId}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+      </View>
+      {/* <View style={styles.card}>
+        {selectedUser && <Card user={selectedUser} />}
+      </View> */}
+      {/* Modal */}
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <AddForm saveModal={saveModal}/>
+      </Modal>
+    </View>
+  );
 };
+
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        backgroundColor: '#eee',
-        marginTop: 50,
-        justifyContent: 'space-between'
-    },
-    scrollView: {
-        height: 600,
-    },
-
-    card: {
-        display: 'flex',
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        height: 180,
-        borderRadius: 20,
-        margin: 15,
-        padding: 50,
-        alignItems: 'center',
-        borderTopWidth: 20,
-        borderTopColor: 'purple',
-        borderTopStyle: 'solid',
-    },
-    quesCard: {
-        display: 'flex',
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        borderRadius: 10,
-        margin: 15,
-        padding: 10,
-        borderLeftWidth: 5,
-        borderLeftColor: 'green',
-    },
-    quesStyle: {
-        fontSize: 20,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 10,
-        fontSize: 35,
-    },
-    title: {
-        flex: 3,
-        marginRight: 200,
-    },
-    buttonstyle: {
-        marginLeft: 90,
-        marginRight: 90,
-        marginBottom: 50,
-    },
-    description: {
-        padding: 10,
-        fontSize: 15,
-    },
-    modal: {
-        display: 'flex',
-        backgroundColor: '#eee',
-        height: 710,
-    },
-    modalbody: {
-        flex: 1,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        shadowColor: 'black',
-        elevation: 5,
-        margin: 50,
-        paddingLeft: 50,
-        paddingRight: 50,
-        paddingTop: 20,
-
-    },
-    questionInput: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 10,
-        fontSize: 25,
-    },
-    secondContainer: {
-        marginTop: 20,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    dropdown: {
-        width: '35%',
-        height: 40,
-        borderWidth: 0.5,
-        borderRadius: 8,
-        paddingHorizontal: 8,
-        marginLeft: 10
-    },
-    placeholderStyle: {
-        fontSize: 16,
-    },
-    selectedTextStyle: {
-        fontSize: 16,
-    },
-    quesValueInput: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 10,
-        fontSize: 20,
-        height: 40,
-    },
-    quesValueView: {
-        flex: 1
-    },
-    quesValueInputContainer: {
-        flex: 1,
-        paddingLeft: 20,
-        paddingRight: 20
-    },
-    modalContainer: {
-        flex: 1,
-        display: 'flex',
-        alignContent: 'flex-end',
-
-    },
-    valueListContainer: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-    },
-    item: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        marginVertical: 5,
-        backgroundColor: '#eee',
-        borderRadius: 5,
-    },
-    deleteButton: {
-        marginLeft: 'auto',
-    },
-    checkboxContainer: {
-        flexDirection: 'row',
-    },
-    checkbox: {
-        alignSelf: 'center',
-    },
-    label: {
-        alignSelf: 'center',
-        width: 300,
-        fontSize: 20,
-    },
-    radioText: {
-        fontSize:20,
-    },
-    radio: {
-        height:20,
-        width:20,
-        borderColor:'black',
-        borderWidth: 2,
-        borderRadius: 9,
-        margin: 10,
-    },
-    radiowrapper: {
-        flexDirection:'row',
-        alignItems:'center',
-    }
+  container: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderColor: 'white',
+    backgroundColor: 'white',
+    paddingVertical: 10,
+    marginEnd: 30,
+  },
+  tableCell: {
+    textAlign: 'center',
+    fontSize: 18,
+    fontStyle: 'bold',
+  },
+  flatlist: {
+    marginTop: 0,
+    flex: 2,
+    backgroundColor: 'white',
+  },
+  list: {
+    flex: 0.55,
+  },
+  card: {
+    paddingTop: 50,
+    flex: 0.45,
+    backgroundColor: 'white',
+  },
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "lightgrey",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20
+  },
 });
-
 
 export default FormScreen;

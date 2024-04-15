@@ -26,6 +26,39 @@ const PatientScreen = () => {
     // Your search logic here
   };
 
+  useEffect(() => {
+    const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', districtId)
+    axios.get(getdoclist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      console.log("response", response);
+      console.log("response.data", response.data);
+  
+      setData(response.data);
+      setSelectedUser(response.data[0]);      
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }, [authToken]);
+
+  const TableRow = ({ item }) => {
+    console.log("item", item);
+    return (
+      <Pressable onPress={() => onSelectUser(item)}>
+        <View style={styles.tableRow}>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
+          <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
+        </View>
+      </Pressable>
+    )
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.list}>
