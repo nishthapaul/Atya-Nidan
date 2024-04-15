@@ -27,19 +27,20 @@ CREATE TABLE IF NOT EXISTS Demographic (
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
     address varchar(100) NOT NULL,
     taluka_id int NOT NULL,
+    blood_group varchar(50) NOT NULL,
     primary key (demographic_id)
 );
 
 CREATE TABLE IF NOT EXISTS Patient (
     patient_id int AUTO_INCREMENT,
-    abha_id varchar(14) NOT NULL UNIQUE,
-    patient_number varchar(8) NOT NULL UNIQUE,
+    abha_number int NOT NULL UNIQUE,
+    patient_number varchar(8) UNIQUE,
     demographic_id int NOT NULL UNIQUE,
     primary key (patient_id)
 );
 
 ALTER TABLE Patient
-ADD FOREIGN KEY (abha_id) REFERENCES Abha(abha_id);
+ADD FOREIGN KEY (abha_number) REFERENCES Abha(abha_number);
 
 ALTER TABLE Patient
 ADD FOREIGN KEY (demographic_id) REFERENCES Demographic(demographic_id) ON DELETE CASCADE;

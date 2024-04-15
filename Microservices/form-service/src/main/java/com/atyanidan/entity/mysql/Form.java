@@ -28,6 +28,7 @@ public class Form {
     @Column(name = "created_on", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdOn;
 
+    @Column(name = "form_definition_id")
     private String formDefinitionId;
 
     public Form(String title, String formDefinitionId) {

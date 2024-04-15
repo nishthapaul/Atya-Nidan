@@ -38,6 +38,10 @@ public class Abha {
     @NotEmpty
     private String lastName;
 
+    @Column(name = "phone_number")
+    @NotEmpty
+    private String phoneNumber;
+
     @Column(name = "address")
     @NotEmpty
     private String address;

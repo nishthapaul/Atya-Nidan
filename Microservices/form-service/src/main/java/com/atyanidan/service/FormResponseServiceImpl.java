@@ -4,6 +4,7 @@ import com.atyanidan.dao.*;
 import com.atyanidan.entity.elasticsearch.OlapForm;
 import com.atyanidan.entity.mysql.*;
 import com.atyanidan.exception.NotFoundException;
+import com.atyanidan.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,11 @@ public class FormResponseServiceImpl implements FormResponseService {
     private final AbhaRepository abhaRepository;
     private final TalukaRepository talukaRepository;
     private final DemographicRepository demographicRepository;
+    private final PatientRepository patientRepository;
+    private final IdGenerator idGenerator;
 
     @Autowired
-    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository, AbhaRepository abhaRepository, TalukaRepository talukaRepository, DemographicRepository demographicRepository) {
+    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository, AbhaRepository abhaRepository, TalukaRepository talukaRepository, DemographicRepository demographicRepository, PatientRepository patientRepository, IdGenerator idGenerator) {
         this.formResponseRepository = formResponseRepository;
         this.olapFormRepository = olapFormRepository;
         this.fieldWorkerRepository = fieldWorkerRepository;
@@ -29,6 +32,8 @@ public class FormResponseServiceImpl implements FormResponseService {
         this.abhaRepository = abhaRepository;
         this.talukaRepository = talukaRepository;
         this.demographicRepository = demographicRepository;
+        this.patientRepository = patientRepository;
+        this.idGenerator = idGenerator;
     }
 
     public FormResponse createFormResponse(OlapForm olapForm) {
@@ -47,9 +52,22 @@ public class FormResponseServiceImpl implements FormResponseService {
         Abha abha = abhaRepository.findByAbhaNumber(olapForm.getAbhaNumber());
         System.out.println(abha);
 
-//        Taluka taluka = talukaRepository.findByName(abha.getTaluka());
-//        Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
-//        Demographic savedDemographic = demographicRepository.save(demographic);
+        Taluka taluka = talukaRepository.findByName(abha.getTaluka());
+        System.out.println(taluka);
+        Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getPhoneNumber(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
+        Demographic savedDemographic = demographicRepository.save(demographic);
+        System.out.println(savedDemographic);
+
+        Patient patient = new Patient(abha, savedDemographic);
+        Patient savedPatient = patientRepository.save(patient);
+        System.out.println(savedPatient);
+
+        String patientNumber = idGenerator.generate("PT", savedPatient.getId(), abha.getFirstName());
+        savedPatient.setPatientNumber(patientNumber);
+        savedPatient = patientRepository.save(savedPatient);
+        System.out.println(savedPatient);
+
+        // save patient in olap forms
 
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());

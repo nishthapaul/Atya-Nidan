@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DemographicRepository extends JpaRepository<Demographic, Integer> {
-    Taluka findByName(String name);
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 
 @Entity
-@Table(name = "Abha")
+@Table(name = "Demographic")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,11 +56,16 @@ public class Demographic {
     @NotNull
     private Taluka taluka;
 
-    public Demographic(String firstName, String middleName, String lastName, String address, Date dob, @NotNull Gender gender, String bloodGroup, @NotNull Taluka taluka) {
+    @Column(name = "phone_number")
+    @NotEmpty
+    private String phoneNumber;
+
+    public Demographic(String firstName, String middleName, String lastName, String address, String phoneNumber, Date dob, @NotNull Gender gender, String bloodGroup, @NotNull Taluka taluka) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.address = address;
+        this.phoneNumber = phoneNumber;
         this.dob = dob;
         this.gender = gender;
         this.bloodGroup = bloodGroup;
