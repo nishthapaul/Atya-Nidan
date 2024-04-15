@@ -20,6 +20,10 @@ public class OlapForm {
     @JsonIgnore
     private String id;
 
+    private int formId;
+
+    private int fieldWorkerId;
+
     @Field(type = FieldType.Object)
     private Map<String, Object> fields;
 

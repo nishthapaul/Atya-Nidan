@@ -1,6 +1,7 @@
 package com.atyanidan.entity.mysql;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,13 +22,15 @@ public class FormResponse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long formResponseId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "form_id")
-//    private Form form;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "fieldworker_id")
-//    private FieldWorker fieldWorker;
+    @ManyToOne
+    @JoinColumn(name = "form_id")
+    @NotNull
+    private Form form;
+
+    @ManyToOne
+    @JoinColumn(name = "fieldworker_id")
+    @NotNull
+    private FieldWorker fieldWorker;
 
 //    @ManyToOne
 //    @JoinColumn(name = "patient_id")
@@ -37,9 +40,12 @@ public class FormResponse {
     private Timestamp submittedOn;
 
     @Column(name = "olap_form_id")
+    @NotEmpty
     private String olapFormId;
 
-    public FormResponse(String olapFormId) {
+    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, String olapFormId) {
+        this.form = form;
+        this.fieldWorker = fieldWorker;
         this.olapFormId = olapFormId;
     }
 }

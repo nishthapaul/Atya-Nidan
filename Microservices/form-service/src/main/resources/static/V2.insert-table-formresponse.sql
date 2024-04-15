@@ -1,9 +1,9 @@
-CREATE TABLE IF NOT EXISTS FormResponse (
+CREATE TABLE IF NOT EXISTS Form_Response (
     form_response_id int AUTO_INCREMENT,
---    form_id int NOT NULL,
---    fieldworker_id int NOT NULL,
+    form_id int NOT NULL,
+    fieldworker_id int NOT NULL,
 --    patient_id int NOT NULL,
---    submitted_on DATETIME NOT NULL,
+    submitted_on DATETIME NOT NULL,
     olap_form_id varchar(50) NOT NULL UNIQUE,
     primary key (form_response_id)
 );
