@@ -1,4 +1,3 @@
-// import * as React from 'react';
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Button, Modal, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,17 +31,7 @@ const optionTypeList = [
     { label: 'Checkboxes', value: 'CheckBox' },
 ];
 
-// export default function FormScreen({ navigation }) {
-//     return (
-//         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//             {/* <Text
-//                 onPress={() => navigation.navigate('Home')}
-//                 style={{ fontSize: 26, fontWeight: 'bold' }}>Forms</Text> */}
-//         </View>
-//     );
-// }
-
-const FormScreen = () => {
+const FormCard = () => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -385,4 +374,5 @@ const styles = StyleSheet.create({
 });
 
 
-export default FormScreen;
+export default FormCard;
+
