@@ -1,10 +1,8 @@
 package com.atyanidan.service;
 
-import com.atyanidan.dao.FieldWorkerRepository;
-import com.atyanidan.dao.FormRepository;
-import com.atyanidan.dao.FormResponseRepository;
-import com.atyanidan.dao.OlapFormRepository;
+import com.atyanidan.dao.*;
 import com.atyanidan.entity.elasticsearch.OlapForm;
+import com.atyanidan.entity.mysql.Abha;
 import com.atyanidan.entity.mysql.FieldWorker;
 import com.atyanidan.entity.mysql.Form;
 import com.atyanidan.entity.mysql.FormResponse;
@@ -21,13 +19,15 @@ public class FormResponseServiceImpl implements FormResponseService {
     private final OlapFormRepository olapFormRepository;
     private final FieldWorkerRepository fieldWorkerRepository;
     private final FormRepository formRepository;
+    private final AbhaRepository abhaRepository;
 
     @Autowired
-    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository) {
+    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository, AbhaRepository abhaRepository) {
         this.formResponseRepository = formResponseRepository;
         this.olapFormRepository = olapFormRepository;
         this.fieldWorkerRepository = fieldWorkerRepository;
         this.formRepository = formRepository;
+        this.abhaRepository = abhaRepository;
     }
 
     public FormResponse createFormResponse(OlapForm olapForm) {
@@ -42,6 +42,9 @@ public class FormResponseServiceImpl implements FormResponseService {
             throw new NotFoundException("Form doesn't exist.");
         }
         Form form = optionalForm.get();
+
+        Abha abha = abhaRepository.findByAbhaNumber(olapForm.getAbhaNumber());
+        System.out.println(abha);
 
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());

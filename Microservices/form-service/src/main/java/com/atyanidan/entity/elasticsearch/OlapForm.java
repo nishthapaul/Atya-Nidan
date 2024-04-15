@@ -22,6 +22,8 @@ public class OlapForm {
 
     private int formId;
 
+    private String abhaNumber;
+
     private int fieldWorkerId;
 
     @Field(type = FieldType.Object)

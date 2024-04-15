@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,9 +25,8 @@ public class Abha {
     @JsonIgnore
     private int id;
 
-    @Column(name = "abha_number")
-    @NotEmpty
-    protected String abhaNumber;
+    @Column(name = "emp_id")
+    protected String empId;
 
     @Column(name = "first_name")
     @NotEmpty
@@ -43,7 +44,6 @@ public class Abha {
     private String address;
 
     @Column(name = "dob")
-    @NotNull
     private Date dob;
 
     @Enumerated(EnumType.STRING)
@@ -52,10 +52,5 @@ public class Abha {
     private Gender gender;
 
     @Column(name = "blood_group")
-    @NotEmpty
     private String bloodGroup;
-
-    @Column(name = "taluka")
-    @NotEmpty
-    private String taluka;
 }
