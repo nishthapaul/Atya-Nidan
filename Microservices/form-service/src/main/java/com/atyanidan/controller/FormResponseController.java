@@ -1,9 +1,11 @@
 package com.atyanidan.controller;
 
 import com.atyanidan.entity.elasticsearch.OlapForm;
-import com.atyanidan.entity.mysql.Form;
+import com.atyanidan.entity.mysql.FormResponse;
 import com.atyanidan.service.FormResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +23,9 @@ public class FormResponseController {
     }
 
     @PostMapping
-    public void addForm(@RequestBody OlapForm olapForm) {
+    public ResponseEntity<FormResponse> addForm(@RequestBody OlapForm olapForm) {
         System.out.println(olapForm);
-        Form dbForm = formResponseService.createFormResponse(olapForm);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(new Object());
+        FormResponse savedFormResponse = formResponseService.createFormResponse(olapForm);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedFormResponse);
     }
 }

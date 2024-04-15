@@ -1,9 +1,9 @@
 package com.atyanidan.service;
 
 import com.atyanidan.entity.elasticsearch.OlapForm;
-import com.atyanidan.entity.mysql.Form;
+import com.atyanidan.entity.mysql.FormResponse;
 
 public interface FormResponseService {
 
-    Form createFormResponse(OlapForm olapForm);
+    FormResponse createFormResponse(OlapForm olapForm);
 }
