@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,16 +15,13 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Abha {
+public class Demographic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "abha_id")
+    @Column(name = "demographic_id")
     @JsonIgnore
     private int id;
-
-    @Column(name = "emp_id")
-    protected String empId;
 
     @Column(name = "first_name")
     @NotEmpty
@@ -44,6 +39,7 @@ public class Abha {
     private String address;
 
     @Column(name = "dob")
+    @NotEmpty
     private Date dob;
 
     @Enumerated(EnumType.STRING)
@@ -52,5 +48,22 @@ public class Abha {
     private Gender gender;
 
     @Column(name = "blood_group")
+    @NotEmpty
     private String bloodGroup;
+
+    @ManyToOne
+    @JoinColumn(name = "taluka_id")
+    @NotNull
+    private Taluka taluka;
+
+    public Demographic(String firstName, String middleName, String lastName, String address, Date dob, @NotNull Gender gender, String bloodGroup, @NotNull Taluka taluka) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.address = address;
+        this.dob = dob;
+        this.gender = gender;
+        this.bloodGroup = bloodGroup;
+        this.taluka = taluka;
+    }
 }

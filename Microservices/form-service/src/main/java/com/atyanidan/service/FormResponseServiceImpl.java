@@ -2,10 +2,7 @@ package com.atyanidan.service;
 
 import com.atyanidan.dao.*;
 import com.atyanidan.entity.elasticsearch.OlapForm;
-import com.atyanidan.entity.mysql.Abha;
-import com.atyanidan.entity.mysql.FieldWorker;
-import com.atyanidan.entity.mysql.Form;
-import com.atyanidan.entity.mysql.FormResponse;
+import com.atyanidan.entity.mysql.*;
 import com.atyanidan.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,14 +17,18 @@ public class FormResponseServiceImpl implements FormResponseService {
     private final FieldWorkerRepository fieldWorkerRepository;
     private final FormRepository formRepository;
     private final AbhaRepository abhaRepository;
+    private final TalukaRepository talukaRepository;
+    private final DemographicRepository demographicRepository;
 
     @Autowired
-    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository, AbhaRepository abhaRepository) {
+    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository, AbhaRepository abhaRepository, TalukaRepository talukaRepository, DemographicRepository demographicRepository) {
         this.formResponseRepository = formResponseRepository;
         this.olapFormRepository = olapFormRepository;
         this.fieldWorkerRepository = fieldWorkerRepository;
         this.formRepository = formRepository;
         this.abhaRepository = abhaRepository;
+        this.talukaRepository = talukaRepository;
+        this.demographicRepository = demographicRepository;
     }
 
     public FormResponse createFormResponse(OlapForm olapForm) {
@@ -45,6 +46,10 @@ public class FormResponseServiceImpl implements FormResponseService {
 
         Abha abha = abhaRepository.findByAbhaNumber(olapForm.getAbhaNumber());
         System.out.println(abha);
+
+//        Taluka taluka = talukaRepository.findByName(abha.getTaluka());
+//        Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
+//        Demographic savedDemographic = demographicRepository.save(demographic);
 
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());
