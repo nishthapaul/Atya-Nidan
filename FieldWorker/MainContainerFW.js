@@ -21,6 +21,11 @@ export default MainContainerFW = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSearch = (text) => {
+
+    const filteredSearchData = data.filter((item) => 
+    item.firstName.toLowerCase().includes(text.toLowerCase()))
+   setSearchQuery(text);
+    setFilteredData(filteredSearchData);
    
 };
 
