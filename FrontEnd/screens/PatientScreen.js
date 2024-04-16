@@ -4,6 +4,7 @@ import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } 
 import { SearchBar, Icon } from 'react-native-elements';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; 
+import AddPatient from '../AddPatient/AddPatient';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -16,48 +17,61 @@ const TableHeader = () => (
   </View>
 );
 
+
 const PatientScreen = () => {
   const { authToken } = useAuth(); // Accessing the authToken
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+
+  const showModal = () => {
+    console.log("Show Modal");
+    setIsModalVisible(true);
+  };
+
+  const saveModal = () => {
+    console.log("Save Modal");
+    setIsModalVisible(false);
+  };
 
   const handleSearch = (text) => {
     // Your search logic here
   };
 
-  useEffect(() => {
-    const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', districtId)
-    axios.get(getdoclist, {
-      headers: {
-        Authorization: `Bearer ${authToken}` // Include the authToken in the request
-      }
-    })
-    .then(response => {
-      console.log("response", response);
-      console.log("response.data", response.data);
+  // useEffect(() => {
+  //   const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', districtId)
+  //   axios.get(getdoclist, {
+  //     headers: {
+  //       Authorization: `Bearer ${authToken}` // Include the authToken in the request
+  //     }
+  //   })
+  //   .then(response => {
+  //     console.log("response", response);
+  //     console.log("response.data", response.data);
   
-      setData(response.data);
-      setSelectedUser(response.data[0]);      
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
-  }, [authToken]);
+  //     setData(response.data);
+  //     setSelectedUser(response.data[0]);      
+  //   })
+  //   .catch(error => {
+  //     console.error('Error fetching data:', error);
+  //   });
+  // }, [authToken]);
 
-  const TableRow = ({ item }) => {
-    console.log("item", item);
-    return (
-      <Pressable onPress={() => onSelectUser(item)}>
-        <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
-          <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
-        </View>
-      </Pressable>
-    )
-  };
+  // const TableRow = ({ item }) => {
+  //   console.log("item", item);
+  //   return (
+  //     <Pressable onPress={() => onSelectUser(item)}>
+  //       <View style={styles.tableRow}>
+  //         <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
+  //         <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
+  //         <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
+  //         <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
+  //       </View>
+  //     </Pressable>
+  //   )
+  // };
 
   return (
     <View style={styles.container}>
@@ -93,23 +107,26 @@ const PatientScreen = () => {
               searchIcon={{ size: 24 }}
               clearIcon={{ size: 24 }}
             />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={showModal}>
               <View style={styles.circle}>
                 <Icon name="plus" type="font-awesome" color="black" />
               </View>
             </TouchableOpacity>
             <View style={styles.flatlist}>
-              <FlatList
+              {/* <FlatList
                 data={searchQuery ? filteredData : data}
                 ListHeaderComponent={<TableHeader />}
                 renderItem={({ item }) => <TableRow item={item} />}
                 keyExtractor={item => item.empId}
                 showsVerticalScrollIndicator={false}
-              />
+              /> */}
             </View>
           </View>
         </View>
       </View>
+      <Modal visible={isModalVisible} transparent animationType="none">
+        <AddPatient saveModal={saveModal}/>
+      </Modal>
     </View>
   );
 };

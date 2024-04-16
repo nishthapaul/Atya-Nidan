@@ -14,5 +14,6 @@ export const API_PATHS = {
     POST_AUTH_TOKEN_IN_LOGIN: `${BASE_URL}/${AUTH_BASE_PATH}/authenticate`,
     PUT_FIELDWORKER_ASSIGN: `${BASE_URL}/${HEALTH_BASE_PATH}/fieldworkers/:fieldworkerId`,
     GET_ADMINS_BY_STATES: `${BASE_URL}/${HEALTH_BASE_PATH}/states/:stateId/admins`,
-    GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`
+    GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
+    POST_ABHAID_OF_PATIENT: `${BASE_URL}/${FORM_BASE_PATH}/abha/demographics`,
 };
