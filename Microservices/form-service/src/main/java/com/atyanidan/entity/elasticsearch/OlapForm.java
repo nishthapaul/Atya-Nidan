@@ -22,11 +22,13 @@ public class OlapForm {
 
     private int formId;
 
-    private String abhaNumber;
-
     private int fieldWorkerId;
 
-    @Field(type = FieldType.Object)
     private Map<String, Object> fields;
 
+    public OlapForm(int formId, int fieldWorkerId, Map<String, Object> fields) {
+        this.formId = formId;
+        this.fieldWorkerId = fieldWorkerId;
+        this.fields = fields;
+    }
 }
