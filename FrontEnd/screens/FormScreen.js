@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
-import { SearchBar, Icon } from 'react-native-elements';
+import { SearchBar, Icon, Button } from 'react-native-elements';
 // import Card from '../components/Card';
 import RadioButton from '../components/RadioButton';
 import AddForm from '../AddForm/AddForm';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
-import CustomSwitch from '../components/FWAssign'
+import { Switch } from 'react-native'; // Or another switch component
+
 // Sample data
 
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Form ID</Text>
-    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Form Title</Text>
+    <Text style={[styles.tableCellID, { flex: 1 }, { fontWeight: 'bold' }]}>Form ID</Text>
+    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Form Title</Text>
     <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Created On</Text>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Default</Text>
+    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}></Text>
   </View>
 );
 const FormScreen = ({ navigation }) => {
@@ -27,14 +28,15 @@ const FormScreen = ({ navigation }) => {
   const [valueFromRadio, setValueFromRadio] = useState(1);
 //   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(false); 
 //   const [admin, setAdmin] = useState([]);
 
   const handleSearch = (text) => {
     console.log(valueFromRadio);
     const filteredSearchData = data.filter((item) => {
       return valueFromRadio === 1 ?
-        (item.firstName.toLowerCase().includes(text.toLowerCase())) :
-        (item.taluka.name.toLowerCase().includes(text.toLowerCase()))
+        (item.title.toLowerCase().includes(text.toLowerCase())) :
+        (item.formId.toLowerCase().includes(text.toLowerCase()))
     }
     );
     setSearchQuery(text);
@@ -45,10 +47,10 @@ const FormScreen = ({ navigation }) => {
 //     setSearchQuery("");
 //     setValueFromRadio(newValue);
 //   };
-//   const onSelectUser = (user) => {
-//     console.log("selecteduser", user);
-//     setSelectedUser(user);
-//   }
+  const onSelectUser = (user) => {
+    console.log("selecteduser", user);
+    setSelectedUser(user);
+  }
   const showModal = () => {
     console.log("Show Modal");
     setIsModalVisible(true);
@@ -67,30 +69,27 @@ const FormScreen = ({ navigation }) => {
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.formId}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.title}</Text>
+          <Text style={[styles.tableCellID, { flex: 1 }]}>{item.formId}</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.title}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.createdOn.slice(0, 10)}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data}/></Text>
+          {/* <Text style={[styles.tableCell, { flex: 1 }]}><Switch 
+          value={isSwitchOn} 
+          onValueChange={(newValue) => setIsSwitchOn(newValue)}
+        /></Text> */}
+        <Text style={[styles.tableCell, { flex: 1 }]}>
+          {/* {item.selected ? "Default" : null} */}
+          {item.selected ? (
+          <View style={[styles.defaultBox, { flex: 1 }]}>
+            <Text style={styles.defaultText}>Default</Text>
+          </View>
+        ) : null}
+        </Text>
+          {/* <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data}/></Text> */}
         </View>
       </Pressable>
     )
   };
   
-  // useEffect(() => {
-  //   const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
-  //   axios.get(getfwlist)
-  //     .then(response => {
-  //       console.log("response", response);
-  //       console.log("response.data", response.data);
-
-  //       setData(response.data);
-  //       setSelectedUser(response.data[0]);      
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  // }, []);
-
   useEffect(() => {
     console.log("Inside fieldworkder get");
     const getformlist = API_PATHS.GET_FORMS_LIST
@@ -100,10 +99,8 @@ const FormScreen = ({ navigation }) => {
       }
     })
     .then(response => {
-      // console.log("response", response);
-      // console.log("response.data", response.data);
-  
       setData(response.data);
+      // setIsSwitchOn(response.data.item.select);
     //   setSelectedUser(response.data[0]);      
     })
     .catch(error => {
@@ -154,6 +151,11 @@ const FormScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           {/* <RadioButton onValueChange={handleChildValueChange} /> */}
+          {/* <View style={styles.setDefaultButtonContainer}>
+          <TouchableOpacity style={styles.setDefaultButton}>
+            <Text style={styles.setDefaultButtonText}>Set Default</Text>
+          </TouchableOpacity>
+        </View> */}
         </View>
         <View style={styles.flatlist}>
           <FlatList
@@ -192,14 +194,23 @@ const styles = StyleSheet.create({
     marginEnd: 30,
   },
   tableCell: {
+    textAlign: 'left',
+    fontSize: 18,
+    fontStyle: 'bold',
+    justifyContent: 'center',
+  },
+  tableCellID: {
     textAlign: 'center',
     fontSize: 18,
     fontStyle: 'bold',
+    justifyContent: 'center',
   },
   flatlist: {
     marginTop: 0,
     flex: 2,
     backgroundColor: 'white',
+    marginRight: 20,
+    marginLeft:20
   },
   list: {
     flex: 0.55,
@@ -217,6 +228,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20
+  },
+  defaultBox: {
+    flex: 1,
+    height: 30,
+    width: 60,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#DFF4F3',
+    borderRadius: 5, // Adjust as needed
+    marginRight: 5, // Add spacing if necessary
+  },
+  defaultText: {
+    color: 'black', // Text color inside the box
+    fontWeight: 'bold',
+  },
+  setDefaultButtonContainer: {
+    alignItems: 'center',
+    marginTop: 10, // Adjust spacing as needed
+  },
+  setDefaultButton: {
+    backgroundColor: '#007AFF', // Adjust background color
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  setDefaultButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

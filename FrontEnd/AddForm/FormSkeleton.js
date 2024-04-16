@@ -292,7 +292,46 @@ const styles = StyleSheet.create({
     radiowrapper: {
         flexDirection:'row',
         alignItems:'center',
-    }    
+    },
+    headerContainer: {
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        paddingVertical: 3, // Reduced padding
+        justifyContent: 'space-between',
+        padding: 10,
+        backgroundColor: '#DFF4F3', // A light grey background
+        borderBottomWidth: 1,
+        borderColor: 'black', // Slight border for the bottom
+      },    
+      row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+      },
+      headerText: {
+        marginTop:15,
+        marginLeft: 20,
+        fontSize: 23,
+        fontWeight: 'bold',
+        color: 'black', // iOS system blue color
+      },
+      backbutton: {
+        backgroundColor: '#ddd',
+        fontSize: 15,
+        fontWeight: 'bold',
+        borderWidth: 2,
+        borderColor: 'black',
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 15,
+        marginRight: 20,
+      },
+      saveButtonText: {
+        color: 'white', 
+        fontWeight: 'bold',
+      },
 });
 
 export default FormSkeleton;
