@@ -33,7 +33,7 @@ public class FormController {
     }
 
     @GetMapping
-    public List<Form> getForm() {
+    public List<Form> getForms() {
         return formService.getForms();
     }
 }

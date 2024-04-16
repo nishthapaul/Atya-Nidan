@@ -29,7 +29,7 @@ public class FormResponseController {
     }
 
     @GetMapping("/patient/{patientNumber}")
-    public List<FormNameTimestampResponse> getFormsByPatientNumber(@PathVariable String patientNumber) {
+    public List<FormNameTimestampResponse> getFormResponsesByPatientNumber(@PathVariable String patientNumber) {
         return formResponseService.getFormsNameAndTimestampByPatientNumber(patientNumber);
     }
 }

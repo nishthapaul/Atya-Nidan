@@ -3,13 +3,10 @@ package com.atyanidan.controller;
 import com.atyanidan.response.PatientDemographicDetailsResponse;
 import com.atyanidan.service.AbhaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/abha")
+@RequestMapping("/api")
 public class AbhaController {
     private final AbhaService abhaService;
 
@@ -18,8 +15,8 @@ public class AbhaController {
         this.abhaService = abhaService;
     }
 
-    @GetMapping("/{abhaNumber}/demographics")
-    public PatientDemographicDetailsResponse getPersonDemographics(@PathVariable String abhaNumber) {
+    @PostMapping("/abha/demographics")
+    public PatientDemographicDetailsResponse getPersonDemographics(@RequestBody String abhaNumber) {
         return abhaService.getPatientDemographicDetails(abhaNumber);
     }
 }
