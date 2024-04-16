@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 public class FormResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long formResponseId;
+    private int formResponseId;
 
     @ManyToOne
     @JoinColumn(name = "form_id")

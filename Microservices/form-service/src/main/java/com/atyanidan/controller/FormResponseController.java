@@ -2,14 +2,14 @@ package com.atyanidan.controller;
 
 import com.atyanidan.entity.elasticsearch.OlapForm;
 import com.atyanidan.entity.mysql.FormResponse;
+import com.atyanidan.response.FormNameTimestampResponse;
 import com.atyanidan.service.FormResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/form-responses")
@@ -24,8 +24,12 @@ public class FormResponseController {
 
     @PostMapping
     public ResponseEntity<FormResponse> addForm(@RequestBody OlapForm olapForm) {
-        System.out.println(olapForm);
         FormResponse savedFormResponse = formResponseService.createFormResponse(olapForm);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFormResponse);
+    }
+
+    @GetMapping("/patient/{patientNumber}")
+    public List<FormNameTimestampResponse> getFormsByPatientNumber(@PathVariable String patientNumber) {
+        return formResponseService.getFormsNameAndTimestampByPatientNumber(patientNumber);
     }
 }

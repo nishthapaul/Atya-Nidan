@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 public class Form {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long formId;
+    private int formId;
 
     @Column(name = "title")
     private String title;

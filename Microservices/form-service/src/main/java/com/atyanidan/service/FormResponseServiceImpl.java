@@ -4,10 +4,13 @@ import com.atyanidan.dao.*;
 import com.atyanidan.entity.elasticsearch.OlapForm;
 import com.atyanidan.entity.mysql.*;
 import com.atyanidan.exception.NotFoundException;
+import com.atyanidan.response.FormNameTimestampResponse;
 import com.atyanidan.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,6 +74,22 @@ public class FormResponseServiceImpl implements FormResponseService {
         FormResponse savedFormResponse = formResponseRepository.save(formResponse);
 
         return savedFormResponse;
+    }
+
+    @Override
+    public List<FormNameTimestampResponse> getFormsNameAndTimestampByPatientNumber(String patientNumber) {
+        Patient patient = patientRepository.findByPatientNumber(patientNumber);
+        if (patient == null) {
+            throw new NotFoundException("Patient doesn't exist");
+        }
+        List<FormResponse> formResponsesByPatient = formResponseRepository.findByPatient(patient);
+        List<FormNameTimestampResponse> responseList = new ArrayList<>();
+
+        for (FormResponse formResponse : formResponsesByPatient) {
+            responseList.add(new FormNameTimestampResponse(formResponse.getFormResponseId(), formResponse.getForm().getTitle(), formResponse.getSubmittedOn()));
+        }
+        System.out.println(responseList);
+        return responseList;
     }
 
 }
