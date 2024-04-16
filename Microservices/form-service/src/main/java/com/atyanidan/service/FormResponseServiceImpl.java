@@ -15,21 +15,21 @@ public class FormResponseServiceImpl implements FormResponseService {
 
     private final FormResponseRepository formResponseRepository;
     private final OlapFormRepository olapFormRepository;
-    private final FieldWorkerRepository fieldWorkerRepository;
-    private final FormRepository formRepository;
-    private final AbhaRepository abhaRepository;
+    private final FieldworkerService fieldworkerService;
+    private final FormService formService;
+    private final AbhaService abhaService;
     private final TalukaRepository talukaRepository;
     private final DemographicRepository demographicRepository;
     private final PatientRepository patientRepository;
     private final IdGenerator idGenerator;
 
     @Autowired
-    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldWorkerRepository fieldWorkerRepository, FormRepository formRepository, AbhaRepository abhaRepository, TalukaRepository talukaRepository, DemographicRepository demographicRepository, PatientRepository patientRepository, IdGenerator idGenerator) {
+    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldworkerService fieldworkerService, FormService formService, AbhaService abhaService, TalukaRepository talukaRepository, DemographicRepository demographicRepository, PatientRepository patientRepository, IdGenerator idGenerator) {
         this.formResponseRepository = formResponseRepository;
         this.olapFormRepository = olapFormRepository;
-        this.fieldWorkerRepository = fieldWorkerRepository;
-        this.formRepository = formRepository;
-        this.abhaRepository = abhaRepository;
+        this.fieldworkerService = fieldworkerService;
+        this.formService = formService;
+        this.abhaService = abhaService;
         this.talukaRepository = talukaRepository;
         this.demographicRepository = demographicRepository;
         this.patientRepository = patientRepository;
@@ -37,23 +37,11 @@ public class FormResponseServiceImpl implements FormResponseService {
     }
 
     public FormResponse createFormResponse(OlapForm olapForm) {
-        Optional<FieldWorker> optionalFieldWorker = fieldWorkerRepository.findById(olapForm.getFieldWorkerId());
-        if (optionalFieldWorker.isEmpty()) {
-            throw new NotFoundException("Fieldworker doesn't exist.");
-        }
-        FieldWorker fieldWorker = optionalFieldWorker.get();
+        FieldWorker fieldWorker = fieldworkerService.getFieldWorkerById(olapForm.getFieldWorkerId());
 
-        Optional<Form> optionalForm = formRepository.findById(olapForm.getFormId());
-        if (optionalForm.isEmpty()) {
-            throw new NotFoundException("Form doesn't exist.");
-        }
-        Form form = optionalForm.get();
+        Form form = formService.getFormById(olapForm.getFormId());
 
-        Abha abha = abhaRepository.findByAbhaNumber(olapForm.getAbhaNumber());
-        if (abha == null) {
-            throw new NotFoundException("Abha ID doesn't exist.");
-        }
-        System.out.println(abha);
+        Abha abha = abhaService.getAbhaByAbhaNumber(olapForm.getAbhaNumber());
 
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());

@@ -11,4 +11,6 @@ public interface FormService {
     Form setDefaultForm(int formId);
 
     List<Form> getForms();
+
+    public Form getFormById(int formId);
 }

@@ -7,7 +7,6 @@ import com.atyanidan.entity.mysql.Form;
 import com.atyanidan.exception.ConflictException;
 import com.atyanidan.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,18 +36,21 @@ public class FormServiceImpl implements FormService {
     }
 
     public Form setDefaultForm(int formId) {
-        Optional<Form> optionalEntity = formRepository.findById(formId);
-        if ( optionalEntity.isPresent() ) {
-            List<Form> forms = formRepository.findAll();
-            forms.forEach(form -> form.setSelected(false));
-            formRepository.saveAll(forms);
+        Form formToBeDefault = getFormById(formId);
+        List<Form> forms = formRepository.findAll();
+        forms.forEach(form -> form.setSelected(false));
+        formRepository.saveAll(forms);
 
-            Form form = optionalEntity.get();
-            form.setSelected(true);
-            return formRepository.save(form);
-        } else {
-            throw new NotFoundException("Form id not found: " + formId);
+        formToBeDefault.setSelected(true);
+        return formRepository.save(formToBeDefault);
+    }
+
+    public Form getFormById(int formId) {
+        Optional<Form> optionalForm = formRepository.findById(formId);
+        if ( optionalForm.isEmpty() ) {
+            throw new NotFoundException("Form doesn't exist.");
         }
+        return optionalForm.get();
     }
 
     @Override
