@@ -11,4 +11,7 @@ public interface FormRepository extends JpaRepository<Form, Integer> {
     int countByTitle(String title);
 
     List<Form> findAllByOrderBySelectedDescTitleAsc();
+
+    @Query("SELECT f FROM Form f WHERE f.selected = true")
+    Form getSelectedForm();
 }

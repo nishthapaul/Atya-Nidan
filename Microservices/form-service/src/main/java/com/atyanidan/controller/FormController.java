@@ -36,4 +36,9 @@ public class FormController {
     public List<Form> getForms() {
         return formService.getForms();
     }
+
+    @GetMapping("/default")
+    public FormDefinition getDefaultForm() {
+        return formService.getSelectedForm();
+    }
 }

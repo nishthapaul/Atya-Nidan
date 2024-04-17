@@ -1,6 +1,5 @@
 package com.atyanidan.service;
 
-import com.atyanidan.dao.FormDefinitionRepository;
 import com.atyanidan.dao.FormRepository;
 import com.atyanidan.entity.elasticsearch.FormDefinition;
 import com.atyanidan.entity.mysql.Form;
@@ -15,17 +14,17 @@ import java.util.Optional;
 @Service
 public class FormServiceImpl implements FormService {
     private final FormRepository formRepository;
-    private final FormDefinitionRepository formDefinitionRepository;
+    private final FormDefinitionService formDefinitionService;
 
     @Autowired
-    public FormServiceImpl(FormRepository formRepository, FormDefinitionRepository formDefinitionRepository) {
+    public FormServiceImpl(FormRepository formRepository, FormDefinitionService formDefinitionService) {
         this.formRepository = formRepository;
-        this.formDefinitionRepository = formDefinitionRepository;
+        this.formDefinitionService = formDefinitionService;
     }
 
     public Form createForm(FormDefinition formDefinition) {
         if ( formRepository.countByTitle(formDefinition.getTitle()) == 0 ) {
-            FormDefinition savedFormDefinition = formDefinitionRepository.save(formDefinition);
+            FormDefinition savedFormDefinition = formDefinitionService.insertFormDefinition(formDefinition);
 
             Form form = new Form(savedFormDefinition.getTitle(), savedFormDefinition.getId());
             return formRepository.save(form);
@@ -51,6 +50,12 @@ public class FormServiceImpl implements FormService {
             throw new NotFoundException("Form doesn't exist.");
         }
         return optionalForm.get();
+    }
+
+    @Override
+    public FormDefinition getSelectedForm() {
+        Form selectedForm = formRepository.getSelectedForm();
+        return formDefinitionService.getFormDefinition(selectedForm.getFormDefinitionId());
     }
 
     @Override

@@ -13,4 +13,6 @@ public interface FormService {
     List<Form> getForms();
 
     public Form getFormById(int formId);
+
+    FormDefinition getSelectedForm();
 }
