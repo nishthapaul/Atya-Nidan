@@ -246,3 +246,26 @@ CREATE TABLE Abha_Details(
 
 ALTER TABLE Patient
 ADD FOREIGN KEY (abha_id) REFERENCES Abha_Details(abha_id);
+
+CREATE TABLE Prescription_Response (
+    prescription_response_id int AUTO_INCREMENT,
+    form_id int NOT NULL,
+    patient_id int NOT NULL,
+    fieldworker_id int NOT NULL,
+    doctor_id int NOT NULL,
+    submitted_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    olap_prescription_id varchar(50) NOT NULL UNIQUE,
+    primary key(prescription_response_id)
+);
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (form_id) REFERENCES Form(form_id);
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (fieldworker_id) REFERENCES Field_Worker(field_worker_id);
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id);
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (patient_id) REFERENCES Patient(patient_id);
