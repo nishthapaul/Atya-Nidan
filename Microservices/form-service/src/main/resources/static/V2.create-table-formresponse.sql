@@ -12,7 +12,7 @@ ALTER TABLE Form_Response
 ADD FOREIGN KEY (form_id) REFERENCES Form(form_id);
 
 ALTER TABLE Form_Response
-ADD FOREIGN KEY (fieldworker_id) REFERENCES Fieldworker(field_worker_id);
+ADD FOREIGN KEY (fieldworker_id) REFERENCES Field_Worker(field_worker_id);
 
 ALTER TABLE Form_Response
 ADD FOREIGN KEY (patient_id) REFERENCES Patient(patient_id);
