@@ -27,7 +27,7 @@ public class FormController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dbForm);
     }
 
-    @PutMapping("/{formId}")
+    @PutMapping("/default/{formId}")
     public ResponseEntity<Form> setDefaultForm(@PathVariable int formId) {
         return ResponseEntity.ok(formService.setDefaultForm(formId));
     }
