@@ -41,54 +41,9 @@ const CustomRadioButton = ({ labelValue, index }) => {
   );
 };
 
-export default FormCard = ({ id, formId }) => {
+export default FormCard = ({ id, formId, onRefresh }) => {
   const [formData, setFormData] = useState([]);
-  const { authToken } = useAuth(); // Accessing the authToken
-
-  // {
-  //     title: "Malaria",
-  //     description: "life at risk",
-  //     questions: [
-  //         {
-  //             number: "Question1",
-  //             question: "fever",
-  //             optionType: "MultiSelect",
-  //             values: [
-  //                 "high",
-  //                 "low"
-  //             ]
-  //         },
-  //         {
-  //             number: "Question2",
-  //             question: "cold",
-  //             optionType: "CheckBox",
-  //             values: [
-  //                 "yes",
-  //                 "no"
-  //             ]
-  //         }
-  //     ]
-  // }
-
-  // useEffect(() => {
-  //     console.log("Inside FormCard API get");
-  //     const getformcard = API_PATHS.GET_FORM_CARD_DETAILS.replace(':form-definition-id', id)
-  //     axios.get(getformcard, {
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`
-  //       }
-  //     })
-  //     .then(response => {
-  //         console.log("Form id",id);
-  //         setFormData(response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  //   }, [authToken]);
-
-  // console.log("formData", formData);
-  // console.log("Patient id", id);
+  const { authToken } = useAuth(); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,6 +68,25 @@ export default FormCard = ({ id, formId }) => {
   console.log("Form definitive id", id);
   console.log("Form id", formId);
 
+  const setDefaultForm = async () => {
+    const apiUrl = API_PATHS.PUT_FORM_DEFAULT.replace(":formId", formId);
+    try {
+      const response = await axios.put(
+        apiUrl,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Successfully set default:", response.data);
+      onRefresh(); // Call the passed callback function to refresh the list
+    } catch (error) {
+      console.error("Error updating default form:", error);
+    }
+  };
 
   return (
     <View style={styles.card}>
@@ -171,13 +145,10 @@ export default FormCard = ({ id, formId }) => {
           <Text>Patient's Health Remarks:</Text>
         </View>
       </ScrollView>
-      <Button
+      {/* <Button
         title="Set Default"
         onPress={async () => {
-          const apiUrl = API_PATHS.PUT_FORM_DEFAULT.replace(
-            ":formId",
-            formId
-          );
+          const apiUrl = API_PATHS.PUT_FORM_DEFAULT.replace(":formId", formId);
           try {
             const response = await axios.put(
               apiUrl,
@@ -196,6 +167,11 @@ export default FormCard = ({ id, formId }) => {
             // Optionally handle error, update state or show an error message
           }
         }}
+        color="#DFF4F3"
+      /> */}
+      <Button
+        title="Set Default"
+        onPress={setDefaultForm}
         color="#DFF4F3"
       />
     </View>
