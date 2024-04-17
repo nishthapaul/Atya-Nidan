@@ -18,4 +18,5 @@ export const API_PATHS = {
     POST_ABHAID_OF_PATIENT: `${BASE_URL}/${FORM_BASE_PATH}/abha/demographics`,
     GET_FORM_CARD_DETAILS: `${BASE_URL}/${FORM_BASE_PATH}/form-definitions/:form-definition-id`,
     PUT_FORM_DEFAULT: `${BASE_URL}/${FORM_BASE_PATH}/forms/default/:formId`,
+    POST_FORM_SKELETON: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
 };

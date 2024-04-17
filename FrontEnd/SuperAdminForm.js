@@ -78,7 +78,7 @@ const FormCard = () => {
         if (quesText && optionType && quesValues) {
             const quesObj = {};
             quesObj.number = `Question${quesList.length + 1}`;
-            quesObj.quetion = quesText;
+            quesObj.question = quesText;
             quesObj.optionType = optionType;
             quesObj.values = quesValues;
             setQuesList(prevValues => [...prevValues, quesObj]);
@@ -127,7 +127,7 @@ const FormCard = () => {
                     <View style={styles.quesCard} key={`${item.number}-${index}`}>
                         <View>
                             <View>
-                                <Text style={styles.quesStyle}>{`${item.number}: ${item.quetion}`}</Text>
+                                <Text style={styles.quesStyle}>{`${item.number}: ${item.question}`}</Text>
                             </View>
                             {item?.values && item.values.map((value, idx) => (
                                 item.optionType == 'CheckBox' ?

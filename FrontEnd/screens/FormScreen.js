@@ -225,7 +225,7 @@ const FormScreen = ({ navigation }) => {
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddForm saveModal={saveModal} />
+        <AddForm saveModal={saveModal}  onRefresh={refreshList}/>
       </Modal>
     </View>
   );

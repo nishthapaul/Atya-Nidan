@@ -41,6 +41,7 @@ const FormSkeleton = ({
   handleSaveQuestions,
   removeItem,
   handleSubmitOrClose,
+  handleSubmit
 }) => {
   //   console.log("Form skeleton Savemodal", saveModal)
   return (
@@ -91,7 +92,7 @@ const FormSkeleton = ({
                   <View>
                     <Text
                       style={styles.quesStyle}
-                    >{`${item.number}: ${item.quetion}`}</Text>
+                    >{`${item.number}: ${item.question}`}</Text>
                   </View>
                   {item?.values &&
                     item.values.map((value, idx) =>
@@ -112,7 +113,7 @@ const FormSkeleton = ({
             ))}
         </ScrollView>
         <View style={styles.buttonstyle}>
-          <Button title="Save Form" onPress={handleSaveFormData}></Button>
+          <Button title="Save Form" onPress={handleSubmit}></Button>
         </View>
 
         <Modal visible={isModalVisible} transparent={true} animationType="fade">
