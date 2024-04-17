@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  TextInput,
-  Button,
-  Modal,
   Text,
   TouchableOpacity,
   ScrollView,
@@ -169,11 +166,14 @@ export default FormCard = ({ id, formId, onRefresh }) => {
         }}
         color="#DFF4F3"
       /> */}
-      <Button
+      {/* <Button
         title="Set Default"
         onPress={setDefaultForm}
         color="#DFF4F3"
-      />
+      /> */}
+      <TouchableOpacity style={styles.button} onPress={setDefaultForm}>
+        <Text style={styles.buttonText}>Set Default</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -185,9 +185,9 @@ const styles = StyleSheet.create({
     height: 550,
     width: 550,
     borderWidth: 2,
-    borderColor: "purple",
+    borderColor:  "#003366",
     borderTopWidth: 20,
-    borderTopColor: "purple",
+    borderTopColor: "#003366",
     borderTopStyle: "solid",
     backgroundColor: "#eee",
   },
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10,
     borderLeftWidth: 5,
-    borderLeftColor: "green",
+    borderLeftColor: "#003366",
   },
   quesStyle: {
     fontSize: 16,
@@ -251,5 +251,17 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     height: 600,
+  },
+  button: {
+    backgroundColor: "#FFA62B", // Background color of the button
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 5,
+    borderWidth: 1,
+  },
+  buttonText: {
+    color: "black", // Here you can set the text color
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
