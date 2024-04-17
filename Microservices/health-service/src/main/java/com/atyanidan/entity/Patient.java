@@ -1,58 +1,40 @@
 package com.atyanidan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.sql.Date;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Patient")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Patient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "patient_id")
-    private int patientId;
+    @JsonIgnore
+    private int id;
 
-    @Column(name = "first_name")
-    @NotNull
-    private String firstName;
+    @Column(name = "abha_number")
+    @NotEmpty
+    protected String abhaNumber;
 
-    @Column(name = "middle_name")
-    private String middleName;
+    @Column(name = "patient_number")
+    @NotEmpty
+    private String patientNumber;
 
-    @Column(name = "last_name")
-    @NotNull
-    private String lastName;
+    @OneToOne
+    @JoinColumn(name = "demographic_id")
+    @NotEmpty
+    private Demographic demographic;
 
-    @Column(name = "home_address")
-    @NotNull
-    private String homeAddress;
-
-    @Column(name = "phone_number", unique = true)
-    @NotNull
-    @Size(min = 10, max = 10)
-    private String phoneNumber;
-
-    @Column(name = "email", unique = true)
-    @NotNull
-    private String email;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
-    @NotNull
-    private Gender gender;
-
-    @ManyToOne
-    @JoinColumn(name = "taluka_id")
-    @NotNull
-    private Taluka taluka;
-
-    @Column(name = "dob")
-    private Date dob;
-
-    @Column(name = "blood_group")
-    private String bloodGroup;
+    public Patient(String abhaNumber, Demographic demographic) {
+        this.abhaNumber = abhaNumber;
+        this.demographic = demographic;
+    }
 }
