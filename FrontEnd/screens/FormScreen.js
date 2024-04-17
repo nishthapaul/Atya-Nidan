@@ -30,6 +30,8 @@ const FormScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false); 
+  const [selectedFormId, setSelectedFormId] = useState(null);
+
 //   const [admin, setAdmin] = useState([]);
 
   const handleSearch = (text) => {
@@ -68,7 +70,7 @@ const FormScreen = ({ navigation }) => {
     // const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
     const newDataObject = { selected: item.selected, formId: item.formId, title: item.title, createdOn: item.createdOn};
     return (
-      <Pressable onPress={() => setSelectedId(item.formDefinitionId)}>
+      <Pressable onPress={() =>{ setSelectedId(item.formDefinitionId); setSelectedFormId(item.formId); }}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCellID, { flex: 1 }]}>{item.formId}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.title}</Text>
@@ -170,7 +172,7 @@ const FormScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.card}>
-        {selectedId && <Card id={selectedId} />}
+        {selectedId && <Card id={selectedId} formId={selectedFormId}/>}
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
