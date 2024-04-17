@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, TextInput, Button, Modal, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
+import { API_PATHS } from '../constants/apiConstants';
+import axios from 'axios';
+
 
 const CustomCheckbox = ({ labelValue, index }) => {
     return (
@@ -30,34 +34,74 @@ const CustomRadioButton = ({ labelValue, index }) => {
 };
 
 export default FormCard = ({ id }) => {
-    const [formData, setFormData] = useState(
-        {
-            title: "Malaria",
-            description: "life at risk",
-            questions: [
-                {
-                    number: "Question1",
-                    question: "fever",
-                    optionType: "MultiSelect",
-                    values: [
-                        "high",
-                        "low"
-                    ]
-                },
-                {
-                    number: "Question2",
-                    question: "cold",
-                    optionType: "CheckBox",
-                    values: [
-                        "yes",
-                        "no"
-                    ]
-                }
-            ]
-        }
-    );
+    const [formData, setFormData] = useState([]);
+    const { authToken } = useAuth(); // Accessing the authToken
+
+        // {
+        //     title: "Malaria",
+        //     description: "life at risk",
+        //     questions: [
+        //         {
+        //             number: "Question1",
+        //             question: "fever",
+        //             optionType: "MultiSelect",
+        //             values: [
+        //                 "high",
+        //                 "low"
+        //             ]
+        //         },
+        //         {
+        //             number: "Question2",
+        //             question: "cold",
+        //             optionType: "CheckBox",
+        //             values: [
+        //                 "yes",
+        //                 "no"
+        //             ]
+        //         }
+        //     ]
+        // }
+
+    // useEffect(() => {
+    //     console.log("Inside FormCard API get");
+    //     const getformcard = API_PATHS.GET_FORM_CARD_DETAILS.replace(':form-definition-id', id)
+    //     axios.get(getformcard, {
+    //       headers: {
+    //         Authorization: `Bearer ${authToken}` 
+    //       }
+    //     })
+    //     .then(response => {
+    //         console.log("Form id",id);
+    //         setFormData(response.data);     
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching data:', error);
+    //     });
+    //   }, [authToken]); 
+
+    // console.log("formData", formData);
+    // console.log("Patient id", id);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const formResponse = await axios.get(API_PATHS.GET_FORM_CARD_DETAILS.replace(':form-definition-id', id), {
+              headers: {
+                Authorization: `Bearer ${authToken}`, 
+              }
+            });
+            setFormData(formResponse.data);
+          } catch (error) {
+            console.log('Error fetching lists:', error);
+          } 
+        };
+      
+        fetchData();
+      }, [authToken, id]); 
     console.log("formData", formData);
-    console.log("Patient id", id);
+    console.log("Form id", id);
+
+
     return (
         <View style={styles.card}>
              <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="never" showsVerticalScrollIndicator={false}>
@@ -110,7 +154,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 20,
         shadowColor: '#000',
-        height: 600,
+        height: 550,
         width: 550,
         borderWidth: 2,
         borderColor: 'purple',

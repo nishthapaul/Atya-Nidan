@@ -1,4 +1,4 @@
-const BASE_URL = 'https://d23f-119-161-98-68.ngrok-free.app';
+const BASE_URL = 'https://fb31-103-156-19-229.ngrok-free.app';
 const HEALTH_BASE_PATH = "atyanidan/health/api";
 const AUTH_BASE_PATH = "atyanidan/auth/api";
 const FORM_BASE_PATH = "atyanidan/form/api";
@@ -16,4 +16,5 @@ export const API_PATHS = {
     GET_ADMINS_BY_STATES: `${BASE_URL}/${HEALTH_BASE_PATH}/states/:stateId/admins`,
     GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
     POST_ABHAID_OF_PATIENT: `${BASE_URL}/${FORM_BASE_PATH}/abha/demographics`,
+    GET_FORM_CARD_DETAILS: `${BASE_URL}/${FORM_BASE_PATH}/form-definitions/:form-definition-id`,
 };

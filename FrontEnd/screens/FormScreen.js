@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon, Button } from 'react-native-elements';
 // import Card from '../components/Card';
+import Card from '../components/FormCard'
 import RadioButton from '../components/RadioButton';
 import AddForm from '../AddForm/AddForm';
 import { API_PATHS } from '../constants/apiConstants';
@@ -26,7 +27,7 @@ const FormScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [valueFromRadio, setValueFromRadio] = useState(1);
-//   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSwitchOn, setIsSwitchOn] = useState(false); 
 //   const [admin, setAdmin] = useState([]);
@@ -47,10 +48,10 @@ const FormScreen = ({ navigation }) => {
 //     setSearchQuery("");
 //     setValueFromRadio(newValue);
 //   };
-  const onSelectUser = (user) => {
-    console.log("selecteduser", user);
-    setSelectedUser(user);
-  }
+  // const onSelectUser = (user) => {
+  //   console.log("selecteduser", user);
+  //   setSelectedUser(user);
+  // }
   const showModal = () => {
     console.log("Show Modal");
     setIsModalVisible(true);
@@ -67,7 +68,7 @@ const FormScreen = ({ navigation }) => {
     // const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
     const newDataObject = { selected: item.selected, formId: item.formId, title: item.title, createdOn: item.createdOn};
     return (
-      <Pressable onPress={() => onSelectUser(item)}>
+      <Pressable onPress={() => setSelectedId(item.formDefinitionId)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCellID, { flex: 1 }]}>{item.formId}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.title}</Text>
@@ -168,9 +169,9 @@ const FormScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      {/* <View style={styles.card}>
-        {selectedUser && <Card user={selectedUser} />}
-      </View> */}
+      <View style={styles.card}>
+        {selectedId && <Card id={selectedId} />}
+      </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
         <AddForm saveModal={saveModal}/>
