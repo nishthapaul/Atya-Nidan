@@ -22,6 +22,7 @@ public class FormDefinition {
     private String id;
     private String title;
     private String description;
+    private String specialisation;
 
     @Field(type = FieldType.Object)
     private List<Map<String, Object>> questions;
