@@ -27,9 +27,4 @@ public class PrescriptionResponseController {
         PrescriptionResponse savedPrescriptionResponse = prescriptionResponseService.createPrescriptionResponse(olapPrescription);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPrescriptionResponse);
     }
-
-//    @GetMapping("/patient/{patientNumber}")
-//    public List<FormNameTimestampResponse> getFormResponsesByPatientNumber(@PathVariable String patientNumber) {
-//        return formResponseService.getFormsNameAndTimestampByPatientNumber(patientNumber);
-//    }
 }
