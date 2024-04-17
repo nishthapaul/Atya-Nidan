@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS Form_Response (
     patient_id int NOT NULL,
     submitted_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     olap_form_id varchar(50) NOT NULL UNIQUE,
+    form_type ENUM('Regular', 'FollowUp') NOT NULL,
     primary key (form_response_id)
 );
 

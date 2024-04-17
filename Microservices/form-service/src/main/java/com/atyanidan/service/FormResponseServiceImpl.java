@@ -40,13 +40,14 @@ public class FormResponseServiceImpl implements FormResponseService {
     }
 
     public FormResponse createFormResponse(OlapFormRequest olapFormRequest) {
+        System.out.println(olapFormRequest);
         FieldWorker fieldWorker = fieldworkerService.getFieldWorkerById(olapFormRequest.getFieldWorkerId());
 
         Form form = formService.getFormById(olapFormRequest.getFormId());
 
         Abha abha = abhaService.getAbhaByAbhaNumber(olapFormRequest.getAbhaNumber());
 
-        OlapForm olapForm = new OlapForm(olapFormRequest.getFormId(), olapFormRequest.getFieldWorkerId(), olapFormRequest.getFields());
+        OlapForm olapForm = new OlapForm(olapFormRequest.getFormId(), olapFormRequest.getFieldWorkerId(), olapFormRequest.getFormType(), olapFormRequest.getFields());
 
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());
@@ -72,7 +73,7 @@ public class FormResponseServiceImpl implements FormResponseService {
         }
 
         String olapFormId = savedOlapForm.getId();
-        FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId);
+        FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType());
         FormResponse savedFormResponse = formResponseRepository.save(formResponse);
 
         return savedFormResponse;

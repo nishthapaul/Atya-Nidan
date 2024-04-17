@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.sql.Timestamp;
 
@@ -44,10 +43,16 @@ public class FormResponse {
     @NotEmpty
     private String olapFormId;
 
-    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, String olapFormId) {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "form_type")
+    @NotNull
+    private FormType formType;
+
+    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, String olapFormId, FormType formType) {
         this.form = form;
         this.fieldWorker = fieldWorker;
         this.patient = patient;
         this.olapFormId = olapFormId;
+        this.formType = formType;
     }
 }

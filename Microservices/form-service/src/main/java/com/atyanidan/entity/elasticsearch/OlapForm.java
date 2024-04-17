@@ -1,13 +1,12 @@
 package com.atyanidan.entity.elasticsearch;
 
+import com.atyanidan.entity.mysql.FormType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Map;
 
@@ -26,9 +25,12 @@ public class OlapForm {
 
     private Map<String, Object> fields;
 
-    public OlapForm(int formId, int fieldWorkerId, Map<String, Object> fields) {
+    private FormType formType;
+
+    public OlapForm(int formId, int fieldWorkerId, FormType formType, Map<String, Object> fields) {
         this.formId = formId;
         this.fieldWorkerId = fieldWorkerId;
+        this.formType = formType;
         this.fields = fields;
     }
 }
