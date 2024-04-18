@@ -6,7 +6,7 @@ import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 
 
-const AddFieldWorker = ({ saveModal, districtId }) => {
+const AddFieldWorker = ({ saveModal, districtId, onRefresh }) => {
   console.log("saveModalFw", saveModal)
   const { authToken } = useAuth();
   const [firstName, setfirstName] = useState('');
@@ -186,6 +186,7 @@ const AddFieldWorker = ({ saveModal, districtId }) => {
               Alert.alert('Success', 'Field worker added successfully!');
               // Close the modal or perform any other actions
               saveModal();
+              onRefresh();
           })
           .catch(error => {
             if (error.response) {

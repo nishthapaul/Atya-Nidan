@@ -6,7 +6,7 @@ import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; // Adjust the import path as needed
 
 
-const AddUser = ({ saveModal, districtId }) => {
+const AddUser = ({ saveModal, districtId, onRefresh }) => {
   console.log("saveModalFw", saveModal)
   const { authToken } = useAuth(); // Accessing the authToken
   const [firstName, setfirstName] = useState('');
@@ -217,29 +217,15 @@ const AddUser = ({ saveModal, districtId }) => {
               console.log('Response:', response.data);
               Alert.alert('Success', 'Doctor added successfully!');
               saveModal();
+              onRefresh();
           })
           .catch(error => {
-            // if (error.response && error.response.status === 409) {
-            //   // Here you can extract more details if your API sends specific messages for email vs phone
-            //   Alert.alert('Error', 'Phone number or email already exists.');
-            //   // Alert.alert(error.response)
-            // }
-            // else if (error.response && error.response.status === 500){
-            //   Alert.alert('Server Error', 'Our Server is down. Please try again later');
-            // }
-            // else{
-            //   // Handle error
-            //   console.error('Error:', error);
-            //   // Show error message or perform any other actions
-            //   Alert.alert('Error', 'Failed to add Doctor. Please try again later.');
-            //   saveModal();
-            // }
             if (error.response) {
               const message = error.response.data.message || "Our Server is down. Please try again later";
               Alert.alert('Error', message);
             } else {
               console.error('Error:', error);
-              Alert.alert('Error', 'Failed to add Doctor. Please try again later.');
+              // Alert.alert('Error', 'Failed to add Doctor. Please try again later.');
             }
           });
           

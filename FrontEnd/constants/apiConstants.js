@@ -1,4 +1,4 @@
-const BASE_URL = 'https://b2f8-119-161-98-68.ngrok-free.app';
+const BASE_URL = 'https://72c3-119-161-98-68.ngrok-free.app';
 const HEALTH_BASE_PATH = "atyanidan/health/api";
 const AUTH_BASE_PATH = "atyanidan/auth/api";
 const FORM_BASE_PATH = "atyanidan/form/api";

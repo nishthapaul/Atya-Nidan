@@ -7,10 +7,11 @@ import RadioButton from '../components/RadioButton';
 import AddUser from '../AddUser/AddUser';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; 
+console.disableYellowBox = true; 
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>ID</Text>
+    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>ID</Text>
     <Text style={[styles.tableCell, { flex: 3 }, { fontWeight: 'bold' }]}>Name</Text>
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Taluka</Text>
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Specialization</Text>
@@ -60,7 +61,7 @@ const DoctorScreen = ({ navigation, districtId }) => {
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.empId}</Text>
           <Text style={[styles.tableCell, { flex: 3 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.taluka.name}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.specialisation.name}</Text>
@@ -102,6 +103,29 @@ const DoctorScreen = ({ navigation, districtId }) => {
       console.error('Error fetching data:', error);
     });
   }, [authToken]);
+
+  const refreshListofdoctor = () => {
+    console.log("Refreshing doctor list");
+    const getdoclist = API_PATHS.GET_DOCTORS_BY_DISTRICTS.replace(':districtId', districtId)
+    axios.get(getdoclist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      console.log("response", response);
+      console.log("response.data", response.data);
+  
+      setData(response.data);
+      setSelectedUser(response.data[0]);      
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+
+  useEffect(() => {
+    refreshListofdoctor();
+  }, [authToken]);}
 
   return (
     <View style={styles.container}>
@@ -161,7 +185,7 @@ const DoctorScreen = ({ navigation, districtId }) => {
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddUser saveModal={saveModal} districtId={districtId}/>
+        <AddUser saveModal={saveModal} districtId={districtId} onRefresh={refreshListofdoctor}/>
       </Modal>
     </View>
   );

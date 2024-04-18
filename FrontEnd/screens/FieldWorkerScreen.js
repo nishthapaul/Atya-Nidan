@@ -70,7 +70,7 @@ const FieldWorkerScreen = ({ navigation, districtId }) => {
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data}/></Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data} onRefresh={refreshListofFW}/></Text>
         </View>
       </Pressable>
     )
@@ -111,6 +111,26 @@ const FieldWorkerScreen = ({ navigation, districtId }) => {
     });
   }, [authToken]); // Add authToken as a dependency to re-run the effect if it changes
   
+  const refreshListofFW = () => {
+    console.log("Refreshing fw list");
+    const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', districtId)    
+    axios.get(getfwlist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      setData(response.data);
+      setSelectedUser(response.data[0]);      
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+
+  useEffect(() => {
+    refreshListofFW();
+  }, [authToken]);}
+/////
 
   return (
     <View style={styles.container}>
@@ -171,7 +191,7 @@ const FieldWorkerScreen = ({ navigation, districtId }) => {
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddFieldWorker saveModal={saveModal} districtId={districtId}/>
+        <AddFieldWorker saveModal={saveModal} districtId={districtId} onRefresh={refreshListofFW}/>
       </Modal>
     </View>
   );

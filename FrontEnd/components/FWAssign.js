@@ -6,7 +6,7 @@ import { useAuth } from '../Context/AuthContext'; // Adjust the import path as n
 import { API_PATHS } from '../constants/apiConstants';
 
 
-export default  CustomSwitch = ({newdata , data}) => {
+export default  CustomSwitch = ({newdata , data, onRefresh}) => {
   const { authToken } = useAuth(); // Accessing the authToken
   const {available, id, name, talukaName} = newdata;
   console.log("InsideSwitch data" , data);
@@ -42,29 +42,30 @@ const handleDeassign = () => {
       setShowModal(true);
   }
   const handleAssign = () => {
-    // console.log("API PAth" , API_PATHS.PUT_FIELDWORKER_ASSIGN);
-    // const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', id);
-    // console.log("url" , url);
-    // axios.put(url, {
-    //   "available": true
-    // }, {
-    //   headers: {
-    //     Authorization: `Bearer ${authToken}`, // Include the token here
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    // .then(response => {
-    //   // Update state with API data
-    //   console.log("response", response);
-    //   console.log("response status", response.status);
-    //   if(response.status === 200) {
-    //     setValue(true);
-    //   }
-      
-    // })
-    // .catch(error => {
-    //   console.error('Error in assign request :', error);
-    // });
+    console.log("API PAth" , API_PATHS.PUT_FIELDWORKER_ASSIGN);
+    const url = API_PATHS.PUT_FIELDWORKER_ASSIGN.replace(':fieldworkerId', id);
+    console.log("url" , url);
+    axios.put(url, {
+      "available": true
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Include the token here
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      // Update state with API data
+      console.log("response", response);
+      console.log("response status", response.status);
+      if(response.status === 200) {
+        setValue(true);
+      }
+      //
+      onRefresh();
+    })
+    .catch(error => {
+      console.error('Error in assign request :', error);
+    });
     setValue(true);
   }
  
