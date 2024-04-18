@@ -4,10 +4,11 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Alert } fro
 import axios from 'axios';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; 
-
+import PatientDetails from './PatientDetails'
 const AddPatient = ({ saveModal }) => {
     const { authToken } = useAuth(); 
     const [abhaNumber, setAbhaNumber] = useState(''); // State variable to store ABHA number
+    const [navigate, setNavigate] = useState(false);
 
     const handleSubmit = async () => {
         console.log("handleSubmit called"); // Add this line
@@ -22,40 +23,73 @@ const AddPatient = ({ saveModal }) => {
             .then(response => {
                 console.log('Response:', response.data);
                 Alert.alert('Success', 'Redirecting...!');
-                saveModal();
+                // saveModal();
+                setNavigate(true);
             })
             .catch(error => {
               if (error.response) {
                 const message = error.response.data.message || "Our Server is down. Please try again later";
                 Alert.alert('Error', message);
+                setNavigate(true);
+                // saveModal();
+               
+
               } else {
                 console.error('Error:', error);
                 Alert.alert('Error', 'Failed to add Doctor. Please try again later.');
+                setNavigate(true);
+                // saveModal();
+                
+
               }
             });
             
     };
-  return (
+    return (
+      <View style={styles.centeredView}>
+        {navigate ? (
+          <PatientDetails onBack={() => setNavigate(false)} />
+        ) : (
+          <>
+            <View style={styles.modalView}>
+              <Text style={styles.label}>Enter ABHA Number:</Text>
+              <TextInput
+                style={styles.input}
+                placeholder=""
+                value={abhaNumber} 
+                onChangeText={text => setAbhaNumber(text)} 
+              />
+              <TouchableOpacity style={[styles.button, styles.buttonClose]}>
+                <Text style={styles.textStyle} onPress={handleSubmit}>Add</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+    );
+};
+
+//   return (
 
     
-      <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-          <Text style={styles.label}>Enter ABHA Number:</Text>
-          <TextInput
-          style={styles.input}
-          placeholder=""
-          value={abhaNumber} 
-          onChangeText={text => setAbhaNumber(text)} 
-        />
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-            >
-              <Text style={styles.textStyle} onPress={handleSubmit}>Add</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-  );
-};
+//       // <View style={styles.centeredView}>
+//       //     <View style={styles.modalView}>
+//       //     <Text style={styles.label}>Enter ABHA Number:</Text>
+//       //     <TextInput
+//       //     style={styles.input}
+//       //     placeholder=""
+//       //     value={abhaNumber} 
+//       //     onChangeText={text => setAbhaNumber(text)} 
+//       //   />
+//       //       <TouchableOpacity
+//       //         style={[styles.button, styles.buttonClose]}
+//       //       >
+//       //         <Text style={styles.textStyle} onPress={handleSubmit}>Add</Text>
+//       //       </TouchableOpacity>
+//       //     </View>
+//       //   </View>
+//   );
+// };
 
 const styles = StyleSheet.create({
   profileImage: {
