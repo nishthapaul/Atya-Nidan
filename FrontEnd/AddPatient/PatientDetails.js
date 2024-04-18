@@ -1,40 +1,28 @@
-// ProfilePhotoModal.js
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Alert, Button } from 'react-native';
-import axios from 'axios';
-import { API_PATHS } from '../constants/apiConstants';
-import { useAuth } from '../Context/AuthContext'; 
-
-// const PatientDetails = () => {
-    
-//   return (
-//       <View style={styles.centeredView}>
-//          <Text>Hello</Text>
-//         </View>
-//   );
-// };
+import React from 'react';
+import { View, Button, StyleSheet, Image, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Import SafeAreaView
+import AppHeader from '../components/AppHeader';
 
 const PatientDetails = ({ onBack }) => {
-    // PatientDetails implementation
     console.log("Inside patient details");
     return (
-      <View style={styles.centeredView}>
-        <Text>Patient Details Here</Text>
-        <Button title="Back" onPress={onBack} />
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+
+        <AppHeader/>
+        {/* <View style={styles.contentContainer}> */}
+          {/* <Text>Patient Details Here</Text> */}
+          <Button title="Back" onPress={onBack} />
+        {/* </View> */}
+      </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    width: 2000,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 0,
-    backgroundColor: 'white', 
+  safeArea: {
+    flex: 1, // SafeAreaView should take up the whole screen
+    backgroundColor: 'white',
+    width: '100%', // Set the background color to match the rest of the content
   },
-
 });
 
 export default PatientDetails;
