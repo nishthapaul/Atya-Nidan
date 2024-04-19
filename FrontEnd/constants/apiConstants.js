@@ -15,8 +15,11 @@ export const API_PATHS = {
     PUT_FIELDWORKER_ASSIGN: `${BASE_URL}/${HEALTH_BASE_PATH}/fieldworkers/:fieldworkerId`,
     GET_ADMINS_BY_STATES: `${BASE_URL}/${HEALTH_BASE_PATH}/states/:stateId/admins`,
     GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
+
+
     POST_ABHAID_OF_PATIENT: `${BASE_URL}/${FORM_BASE_PATH}/abha/demographics`,
     GET_FORM_CARD_DETAILS: `${BASE_URL}/${FORM_BASE_PATH}/form-definitions/:form-definition-id`,
     PUT_FORM_DEFAULT: `${BASE_URL}/${FORM_BASE_PATH}/forms/default/:formId`,
     POST_FORM_SKELETON: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
+    GET_MEDICAL_HISTORY: `${BASE_URL}/${HEALTH_BASE_PATH}/patients/:patientNumber/health-records`,
 };

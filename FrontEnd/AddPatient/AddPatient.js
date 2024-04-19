@@ -17,6 +17,7 @@ const AddPatient = ({ saveModal }) => {
   const { authToken } = useAuth();
   const [abhaNumber, setAbhaNumber] = useState(""); // State variable to store ABHA number
   const [navigate, setNavigate] = useState(false);
+  const [patientData, setPatientData] = useState(null); // State to store API response
 
   const handleSubmit = async () => {
     console.log("handleSubmit called"); // Add this line
@@ -31,8 +32,9 @@ const AddPatient = ({ saveModal }) => {
       })
       .then((response) => {
         console.log("Response:", response.data);
-        Alert.alert("Success", "Redirecting...!");
+        // Alert.alert("Success", "Redirecting...!");
         // saveModal();
+        setPatientData(response.data); 
         setNavigate(true);
       })
       .catch((error) => {
@@ -42,19 +44,22 @@ const AddPatient = ({ saveModal }) => {
             "Our Server is down. Please try again later";
           Alert.alert("Error", message);
           setNavigate(true);
-          // saveModal();
+          saveModal();
         } else {
           console.error("Error:", error);
           Alert.alert("Error", "Failed to add Doctor. Please try again later.");
           setNavigate(true);
-          // saveModal();
+          saveModal();
         }
       });
   };
   return (
     <View style={styles.centeredView}>
       {navigate ? (
-        <PatientDetails onBack={() => setNavigate(false)} />
+        <PatientDetails patientData={patientData} onBack={() => {
+          setNavigate(false);
+          saveModal(); // Call saveModal here
+        }} />
       ) : (
         <>
           <View style={styles.modalView}>

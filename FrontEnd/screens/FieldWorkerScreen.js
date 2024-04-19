@@ -27,7 +27,6 @@ const FieldWorkerScreen = ({ navigation, districtId }) => {
   const [valueFromRadio, setValueFromRadio] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [admin, setAdmin] = useState([]);
 
   const handleSearch = (text) => {
     console.log(valueFromRadio);

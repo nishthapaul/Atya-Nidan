@@ -5,6 +5,7 @@ import { SearchBar, Icon } from 'react-native-elements';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; 
 import AddPatient from '../AddPatient/AddPatient';
+//for showing list of patients
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -112,15 +113,15 @@ const PatientScreen = () => {
                 <Icon name="plus" type="font-awesome" color="black" />
               </View>
             </TouchableOpacity>
-            <View style={styles.flatlist}>
-              {/* <FlatList
+            {/* <View style={styles.flatlist}>
+              <FlatList
                 data={searchQuery ? filteredData : data}
                 ListHeaderComponent={<TableHeader />}
                 renderItem={({ item }) => <TableRow item={item} />}
                 keyExtractor={item => item.empId}
                 showsVerticalScrollIndicator={false}
-              /> */}
-            </View>
+              />
+            </View> */}
           </View>
         </View>
       </View>

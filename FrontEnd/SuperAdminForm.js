@@ -120,7 +120,7 @@ const FormCard = () => {
                             autoFocus={true} />
                     </View>
                     <View>
-                        <Button title="ADD Question" onPress={() => setIsModalVisible(true)}></Button>
+                        <Button title="Add Question" onPress={() => setIsModalVisible(true)}></Button>
                     </View>
                 </View>
                 {quesList && quesList.map((item, index) => (

@@ -31,8 +31,9 @@ export default function LoginScreen({ onLoginSuccess }) {
 
       // Send OTP request to server
       const data = {
-        "phoneNumber": phoneNumber,
+        "userCredential": phoneNumber,
         "otp": random_otp,
+        "type": "PHONE_NUMBER",
       };
       const loginauthorizationtoken = API_PATHS.POST_AUTH_TOKEN_IN_LOGIN;
       axios.post(loginauthorizationtoken, data)
