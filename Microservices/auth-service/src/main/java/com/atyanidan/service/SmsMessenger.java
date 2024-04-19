@@ -15,9 +15,10 @@ public class SmsMessenger {
     @Value("${twilio.sms.auth_token}")
     private String AUTH_TOKEN;
 
-    public static final String otpSmsMessage = "Your AtyaNidan Verification Code is ";
+    @Value("${twilio.sms.phone_number}")
+    private String TWILIO_NUMBER;
 
-    public static final String TWILIO_NUMBER = "+12176002422";
+    public static final String otpSmsMessage = "Your AtyaNidan Verification Code is ";
 
     public void sendSms(String toPhoneNumber, String otp) {
         System.out.println(ACCOUNT_SID);
