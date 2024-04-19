@@ -13,7 +13,7 @@ import axios from "axios";
 import { API_PATHS } from "../constants/apiConstants";
 import { useAuth } from "../Context/AuthContext";
 import PatientDetails from "./PatientDetails";
-const AddPatient = ({ saveModal }) => {
+const AddPatient = ({ saveModal, doctorId }) => {
   const { authToken } = useAuth();
   const [abhaNumber, setAbhaNumber] = useState(""); // State variable to store ABHA number
   const [navigate, setNavigate] = useState(false);
@@ -56,7 +56,7 @@ const AddPatient = ({ saveModal }) => {
   return (
     <View style={styles.centeredView}>
       {navigate ? (
-        <PatientDetails patientData={patientData} onBack={() => {
+        <PatientDetails patientData={patientData} doctorId={doctorId} onBack={() => {
           setNavigate(false);
           saveModal(); // Call saveModal here
         }} />

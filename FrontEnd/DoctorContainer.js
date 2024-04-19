@@ -45,7 +45,7 @@ function MainContainer(props) {
     } 
 
   return(
-        <PatientScreen/>
+        <PatientScreen doctorId={admin.empId}/>
   );
 }
 

@@ -19,7 +19,7 @@ const TableHeader = () => (
 );
 
 
-const PatientScreen = () => {
+const PatientScreen = ({ doctorId }) => {
   const { authToken } = useAuth(); // Accessing the authToken
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -126,7 +126,7 @@ const PatientScreen = () => {
         </View>
       </View>
       <Modal visible={isModalVisible} transparent animationType="none">
-        <AddPatient saveModal={saveModal}/>
+        <AddPatient saveModal={saveModal} doctorId={doctorId}/>
       </Modal>
     </View>
   );

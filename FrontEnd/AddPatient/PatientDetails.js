@@ -1,6 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
-
+import {
+  FlatList,
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+  Modal,
+  Button,
+} from "react-native";
+import AddPatient from "./AddPatient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
 import PatientCard from "../components/PatientCard";
@@ -12,16 +21,22 @@ const TableHeader = () => (
     {/* <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: "bold" }]}>
       Id
     </Text> */}
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: "bold" }]}>
+    <Text style={[styles.tableCell, { flex: 3 }, { fontWeight: "bold" }]}>
       Medical History
     </Text>
-    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: "bold" }]}>
+    <Text
+      style={[
+        styles.tableCell,
+        { flex: 2 },
+        { fontWeight: "bold", marginLeft: 60 },
+      ]}
+    >
       Date
     </Text>
   </View>
 );
 
-const PatientDetails = ({ onBack, patientData }) => {
+const PatientDetails = ({ onBack, patientData, doctorId }) => {
   console.log("Inside patient details");
   const [data, setData] = useState([]);
   const { authToken } = useAuth();
@@ -32,36 +47,41 @@ const PatientDetails = ({ onBack, patientData }) => {
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          {/* <Text style={[styles.tableCell, { flex: 1 }]}>{item.responseId}</Text> */}
-          <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.title} ${item.type}`}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}>
-          {item.submittedOn.slice(0, 10)}
+          <View style={styles.tableCellContainer}>
+            <Text style={styles.tableCell}>{`${item.title} ${item.type}`}</Text>
+          </View>
+          <Text style={[styles.tableCell, { flex: 2, marginLeft: 60 }]}>
+            {item.submittedOn.slice(0, 10)}
           </Text>
         </View>
       </Pressable>
     );
   };
-//api calls
+  //api calls
 
-useEffect(() => {
-  console.log("Inside medical forms get");
-  const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(':patientNumber', patientData.patientNumber)
-  axios.get(getmedicalhistorylist, {
-    headers: {
-      Authorization: `Bearer ${authToken}` // Include the authToken in the request
-    }
-  })
-  .then(response => {
-    // console.log("response", response);
-    // console.log("response.data", response.data);
+  useEffect(() => {
+    console.log("Inside medical forms get");
+    const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+      ":patientNumber",
+      patientData.patientNumber
+    );
+    axios
+      .get(getmedicalhistorylist, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+        },
+      })
+      .then((response) => {
+        // console.log("response", response);
+        // console.log("response.data", response.data);
 
-    setData(response.data);
-    // setSelectedUser(response.data[0]);      
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
-  });
-}, [authToken]);
+        setData(response.data);
+        // setSelectedUser(response.data[0]);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [authToken]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -71,7 +91,7 @@ useEffect(() => {
       {/* <Button title="Back" onPress={onBack} style={styles.backbutton}/> */}
       <View style={styles.container}>
         <View style={styles.list}>
-          <View style={{ marginTop: 20, marginBottom: 20, height: 110 }}>
+          <View style={{ marginTop: 20, marginBottom: 20, height: 10 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -84,6 +104,11 @@ useEffect(() => {
             ></View>
           </View>
           <View style={styles.flatlist}>
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity style={styles.addbutton} onPress={showModal}>
+                <Text style={styles.backbuttonText}>Add Prescription</Text>
+              </TouchableOpacity>
+            </View>
             <FlatList
               data={data}
               ListHeaderComponent={<TableHeader />}
@@ -96,19 +121,22 @@ useEffect(() => {
         </View>
         <View style={styles.card}>
           <PatientCard user={patientData} />
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.backbutton} onPress={onBack}>
+              <Text style={styles.backbuttonText}>Back</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         {/* Modal */}
-        {/* <Modal visible={isModalVisible} transparent animationType="slide">
-          <AddFieldWorker
+        <Modal visible={isModalVisible} transparent animationType="slide">
+          <AddPatient
             saveModal={saveModal}
-            districtId={districtId}
-            onRefresh={refreshListofFW}
+            doctorId={doctorId}
+            user={patientData}
           />
-        </Modal> */}
+        </Modal>
       </View>
-      <TouchableOpacity style={styles.backbutton} onPress={onBack}>
-        <Text style={styles.backbuttonText}>Back</Text>
-      </TouchableOpacity>
+
       {/* </View> */}
     </SafeAreaView>
   );
@@ -129,31 +157,32 @@ const styles = StyleSheet.create({
   },
   backbuttonText: {
     color: "black",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
+    justifyContent: "space-between",
+    backgroundColor: "white",
   },
   tableRow: {
-    flexDirection: 'row',
-    borderColor: 'white',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    borderColor: "white",
+    backgroundColor: "white",
     paddingVertical: 10,
     marginEnd: 30,
+    paddingLeft: 50,
   },
   tableCell: {
-    textAlign: 'center',
-    fontSize: 18,
-    fontStyle: 'bold',
+    textAlign: "left",
+    fontSize: 23,
+    fontStyle: "bold",
   },
   flatlist: {
     marginTop: 0,
     flex: 2,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   list: {
     flex: 0.55,
@@ -161,7 +190,7 @@ const styles = StyleSheet.create({
   card: {
     paddingTop: 50,
     flex: 0.45,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   circle: {
     width: 50,
@@ -170,7 +199,39 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgrey",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20
+    marginTop: 20,
+  },
+  tableCellContainer: {
+    flex: 3, // Maintain the same width proportion as the date column
+    alignItems: "flex-start", // Align text to the left by default
+    backgroundColor: "#D9D9D9", // Example background color
+    padding: 5, // Example padding
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Distribute buttons horizontally
+    paddingHorizontal: 30, // Add space on both sides of the container
+    marginTop: 20,
+  },
+  backbutton: {
+    flex: 1, // Make buttons occupy equal width
+    paddingHorizontal: 15, // Add horizontal space between buttons and text
+    backgroundColor: "#FFA62B",
+    borderRadius: 5, // Maintain button corner rounding
+    borderWidth: 1,
+    alignItems: "center",
+    marginHorizontal: 20, // Add space between buttons (margin on each side)
+    height: 40,
+  },
+  addbutton: {
+    flex: 1, // Make buttons occupy equal width
+    paddingHorizontal: 15, // Add horizontal space between buttons and text
+    backgroundColor: "#B8D4D8",
+    borderRadius: 5, // Maintain button corner rounding
+    borderWidth: 1,
+    alignItems: "center",
+    marginHorizontal: 20, // Add space between buttons (margin on each side)
+    height: 40,
   },
 });
 

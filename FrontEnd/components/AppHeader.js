@@ -11,7 +11,7 @@ const AppHeader = () => {
     <View style={styles.header}>
       <Image source={require('../assets/appandname.png')} style={styles.appLogo} />
       <TouchableOpacity onPress={handleImagePress}>
-      <Image source={require('../assets/icons/HomeIcon.png')} style={styles.homeIcon} />
+      {/* <Image source={require('../assets/icons/HomeIcon.png')} style={styles.homeIcon} /> */}
       </TouchableOpacity>
     </View>
   );
