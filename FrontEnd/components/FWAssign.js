@@ -9,7 +9,7 @@ import { API_PATHS } from '../constants/apiConstants';
 export default  CustomSwitch = ({newdata , data, onRefresh}) => {
   const { authToken } = useAuth(); // Accessing the authToken
   const {available, id, name, talukaName} = newdata;
-  console.log("InsideSwitch data" , data);
+  // console.log("InsideSwitch data" , data);
   console.log("taluka" , talukaName);
   const[Value, setValue] = React.useState(available);
   const[showModal, setShowModal] = React.useState(false);
@@ -32,7 +32,7 @@ const handleDeassign = () => {
     const filteredItems = filterItemsByTaluka(data, talukaName);
     console.log("filteredItems" ,filteredItems);
    const filteredItemsWithSelectedProperties = filteredItems.map(fieldworker => ({
-        id: fieldworker.id,
+        id: fieldworker.empId,
         name:  `${fieldworker.firstName}${fieldworker.middleName ? ' ' + fieldworker.middleName : ''} ${fieldworker.lastName}`,
         talukaName: fieldworker.taluka.name,
         available:  fieldworker.available,
@@ -80,7 +80,7 @@ const handleDeassign = () => {
         onValueChange = { Value ? handleDeassign : handleAssign}      
       />
        </View>
-       {showModal && <FWDeassign mainid = {id} filteredData={FWList} visibleModal={showModal} closeModal={closeModal} talukaName = {talukaName} AssignDeassign={AssignDeassign}/>}
+       {showModal && <FWDeassign mainid = {id} filteredData={FWList} visibleModal={showModal} closeModal={closeModal} talukaName = {talukaName} AssignDeassign={AssignDeassign} onRefresh={onRefresh}/>}
        </View>
     );
 };

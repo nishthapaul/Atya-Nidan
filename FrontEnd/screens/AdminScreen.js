@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 import AdminCard from '../components/AdminCard';
-import RadioButton from '../components/RadioButton';
+import RadioButton from '../components/RadioButtonSA';
 import { API_PATHS } from '../constants/apiConstants';
 import { useAuth } from '../Context/AuthContext'; 
 

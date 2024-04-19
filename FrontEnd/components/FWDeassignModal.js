@@ -12,6 +12,7 @@ export default FWDeassign = ({
   closeModal,
   talukaName,
   AssignDeassign,
+  onRefresh,
 }) => {
   console.log("Inside Modal");
   console.log("filteredData", filteredData);
@@ -46,6 +47,8 @@ export default FWDeassign = ({
         // Update state with API data
         console.log("response", response);
         console.log("response", response.status);
+        console.log("Refreshing deassign")
+        onRefresh();
       })
       .catch((error) => {
         console.error("Error in deassign request :", error);
@@ -54,7 +57,7 @@ export default FWDeassign = ({
 
   const handlePress = () => {
     closeModal();
-    // handleAssignPutCall();
+    handleAssignPutCall();
   };
 
   const DropdownReturnValue = ({ id, available }) => {

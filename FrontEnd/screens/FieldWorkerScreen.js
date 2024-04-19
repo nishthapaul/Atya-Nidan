@@ -63,14 +63,15 @@ const FieldWorkerScreen = ({ navigation, districtId }) => {
   const TableRow = ({ item }) => {
     console.log("item", item.empId);
     const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
-    const newDataObject = { available: item.available, empId: item.empId, name: name, talukaName: item.taluka.name};
+    const newDataObject = { available: item.available, id: item.empId, name: name, talukaName: item.taluka.name};
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}><CustomSwitch newdata = {newDataObject} data = {data} onRefresh={refreshListofFW}/></Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}>
+            <CustomSwitch newdata = {newDataObject} data = {data} onRefresh={refreshListofFW}/></Text>
         </View>
       </Pressable>
     )

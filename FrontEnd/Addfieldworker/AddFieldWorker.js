@@ -195,7 +195,7 @@ const AddFieldWorker = ({ saveModal, districtId, onRefresh }) => {
               Alert.alert('Error', message);
             } else {
               console.error('Error:', error);
-              Alert.alert('Error', 'Failed to add Field Worker. Please try again later.');
+              // Alert.alert('Error', 'Failed to add Field Worker. Please try again later.');
             }
           });
           
