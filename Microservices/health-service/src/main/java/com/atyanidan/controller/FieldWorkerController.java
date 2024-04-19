@@ -88,13 +88,13 @@ public class FieldWorkerController {
             @ApiResponse(responseCode = "500", description = "Could not update field worker availability",
                     content = @Content)
     })
-    @PutMapping(path = "/fieldworkers/{fieldWorkerId}", produces = "application/json", consumes = "application/json")
+    @PutMapping(path = "/fieldworkers/{fieldWorkerEmpId}", produces = "application/json", consumes = "application/json")
     public ResponseEntity<FieldWorker> updateFieldWorkerAvailability(
-            @Parameter(name = "fieldWorkerId", description = "Fieldworker ID", required = true)@PathVariable int fieldWorkerId,
+            @Parameter(name = "fieldWorkerEmpId", description = "Fieldworker Emp ID", required = true)@PathVariable String fieldWorkerEmpId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Fieldworker availability status and substitute", required = true, content = @Content(schema=@Schema(implementation = FieldWorkerAvailabilityRequest.class)))
             @Valid @RequestBody FieldWorkerAvailabilityRequest requestBody) {
-        FieldWorker dbFieldWorker = fieldWorkerService.updateAvailability(fieldWorkerId, requestBody);
+        FieldWorker dbFieldWorker = fieldWorkerService.updateAvailability(fieldWorkerEmpId, requestBody);
         return ResponseEntity.status(HttpStatus.OK).body(dbFieldWorker);
     }
 

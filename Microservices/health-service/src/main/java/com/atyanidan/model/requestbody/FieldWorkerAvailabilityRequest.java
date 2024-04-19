@@ -3,14 +3,14 @@ package com.atyanidan.model.requestbody;
 public class FieldWorkerAvailabilityRequest {
     private Boolean isAvailable;
 
-    private int substituteFieldWorkerId;
+    private String substituteFieldWorkerEmpId;
 
     public FieldWorkerAvailabilityRequest() {
     }
 
-    public FieldWorkerAvailabilityRequest(Boolean isAvailable, int substituteFieldWorkerId) {
+    public FieldWorkerAvailabilityRequest(Boolean isAvailable, String substituteFieldWorkerEmpId) {
         this.isAvailable = isAvailable;
-        this.substituteFieldWorkerId = substituteFieldWorkerId;
+        this.substituteFieldWorkerEmpId = substituteFieldWorkerEmpId;
     }
 
     public Boolean getAvailable() {
@@ -21,19 +21,19 @@ public class FieldWorkerAvailabilityRequest {
         isAvailable = available;
     }
 
-    public int getSubstituteFieldWorkerId() {
-        return substituteFieldWorkerId;
+    public String getSubstituteFieldWorkerEmpId() {
+        return substituteFieldWorkerEmpId;
     }
 
-    public void setSubstituteFieldWorkerId(int substituteFieldWorkerId) {
-        this.substituteFieldWorkerId = substituteFieldWorkerId;
+    public void setSubstituteFieldWorkerEmpId(String substituteFieldWorkerEmpId) {
+        this.substituteFieldWorkerEmpId = substituteFieldWorkerEmpId;
     }
 
     @Override
     public String toString() {
         return "FieldWorkerAvailabilityRequest{" +
                 "isAvailable=" + isAvailable +
-                ", substituteFieldWorkerId=" + substituteFieldWorkerId +
+                ", substituteFieldWorkerId=" + substituteFieldWorkerEmpId +
                 '}';
     }
 }

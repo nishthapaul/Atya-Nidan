@@ -14,5 +14,7 @@ public interface FieldWorkerService {
 
     FieldWorker addFieldWorker(int talukaId, FieldWorker fieldWorker) throws Exception;
 
-    FieldWorker updateAvailability(int fieldWorkerId, FieldWorkerAvailabilityRequest requestBody);
+//    FieldWorker updateAvailability(int fieldWorkerId, FieldWorkerAvailabilityRequest requestBody);
+
+    FieldWorker updateAvailability(String fieldWorkerEmpId, FieldWorkerAvailabilityRequest requestBody);
 }

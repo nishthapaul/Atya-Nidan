@@ -58,7 +58,7 @@ public class FieldWorker extends User {
     @NotEmpty
     private String aadharNumber;
 
-    @Column(name = "available", columnDefinition = "DEFAULT 0")
+    @Column(name = "available", insertable = false, columnDefinition = "DEFAULT 0")
     private Boolean available;
 
     @OneToOne

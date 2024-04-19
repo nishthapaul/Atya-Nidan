@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FieldWorkerRepository extends JpaRepository<FieldWorker, Integer> {
@@ -18,4 +19,6 @@ public interface FieldWorkerRepository extends JpaRepository<FieldWorker, Intege
 
     @Query("SELECT fw FROM FieldWorker fw JOIN fw.taluka t JOIN t.district d WHERE d.id = :districtId")
     List<FieldWorker> getFieldWorkersByDistrictId(int districtId);
+
+    Optional<FieldWorker> findByEmpId(String fieldWorkerEmpId);
 }
