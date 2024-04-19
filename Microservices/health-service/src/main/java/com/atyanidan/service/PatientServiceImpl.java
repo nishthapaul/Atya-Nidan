@@ -4,9 +4,12 @@ import com.atyanidan.dao.OlapFormRepository;
 import com.atyanidan.dao.PatientRepository;
 import com.atyanidan.dao.PrescriptionResponseRepository;
 import com.atyanidan.entity.*;
+import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.entity.elasticsearch.OlapForm;
 import com.atyanidan.exception.NotFoundException;
+import com.atyanidan.model.PatientDataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,13 +24,15 @@ public class PatientServiceImpl implements PatientService {
     private final FormResponseService formResponseService;
     private final PrescriptionResponseRepository prescriptionResponseRepository;
     private final OlapFormRepository olapFormRepository;
+    private final UserService userService;
 
     @Autowired
-    public PatientServiceImpl(PatientRepository patientRepository, FormResponseService formResponseService, PrescriptionResponseRepository prescriptionResponseRepository, OlapFormRepository olapFormRepository) {
+    public PatientServiceImpl(PatientRepository patientRepository, FormResponseService formResponseService, PrescriptionResponseRepository prescriptionResponseRepository, OlapFormRepository olapFormRepository, UserService userService) {
         this.patientRepository = patientRepository;
         this.formResponseService = formResponseService;
         this.prescriptionResponseRepository = prescriptionResponseRepository;
         this.olapFormRepository = olapFormRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -67,6 +72,31 @@ public class PatientServiceImpl implements PatientService {
         System.out.println(records);
 
         return records;
+    }
+
+    @Override
+    public List<PatientDataResponse> getPatientsByDoctorId(String doctorNumber) {
+        List<PatientDataResponse> patientDataResponses = new ArrayList<>();
+        Doctor doctor = (Doctor) userService.getUserFromEmployeeId(doctorNumber);
+        if(doctor == null) {
+            throw new NotFoundException("Doctor doesn't exist");
+        }
+        List<PrescriptionResponse> prescriptionResponses = prescriptionResponseRepository.findByDoctor(doctor, Sort.by(Sort.Direction.DESC, "submittedOn"));
+        for (PrescriptionResponse prescriptionResponse : prescriptionResponses) {
+            PatientDataResponse response = new PatientDataResponse();
+            response.setPatientNumber(prescriptionResponse.getPatient().getPatientNumber());
+            String name = prescriptionResponse.getPatient().getDemographic().getFirstName() + " " + prescriptionResponse.getPatient().getDemographic().getLastName();
+            response.setPatientName(name);
+            response.setTaluka(prescriptionResponse.getPatient().getDemographic().getTaluka().getName());
+            response.setVisitDate(prescriptionResponse.getSubmittedOn());
+            response.setFormName(prescriptionResponse.getForm().getTitle());
+            String fieldworkerName = prescriptionResponse.getFieldWorker().getFirstName() + " " + prescriptionResponse.getFieldWorker().getLastName();
+            response.setFieldWorkerName(fieldworkerName);
+
+            patientDataResponses.add(response);
+        }
+
+        return patientDataResponses;
     }
 
 }
