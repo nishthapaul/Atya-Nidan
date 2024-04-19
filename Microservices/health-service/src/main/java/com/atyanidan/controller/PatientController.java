@@ -1,6 +1,8 @@
 package com.atyanidan.controller;
 
 import com.atyanidan.entity.HealthRecord;
+import com.atyanidan.entity.Patient;
+import com.atyanidan.model.PatientDataResponse;
 import com.atyanidan.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,5 +25,10 @@ public class PatientController {
     @GetMapping("/{patientNumber}")
     public List<HealthRecord> getFormsAndPrescriptionsByPatientNumber(@PathVariable String patientNumber) {
         return patientService.getFormsAndPrescriptionsByPatientNumber(patientNumber);
+    }
+
+    @GetMapping("/doctors/{doctorNumber}/patients")
+    public List<PatientDataResponse> getPatientsByDoctorId(@PathVariable String doctorNumber){
+        return patientService.getPatientsByDoctorId(doctorNumber);
     }
 }

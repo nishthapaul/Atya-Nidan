@@ -3,6 +3,7 @@ package com.atyanidan.service;
 import com.atyanidan.dao.UserRepository;
 import com.atyanidan.dto.AuthenticationRequest;
 import com.atyanidan.dto.AuthenticationResponse;
+import com.atyanidan.dto.AuthenticationType;
 import com.atyanidan.entity.actor.User;
 import com.atyanidan.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final SmsMessenger smsMessenger;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        Optional<User> optionalEntity = userRepository.findByPhoneNumber(request.getPhoneNumber());
+        Optional<User> optionalEntity;
+        if(request.getType() == AuthenticationType.PHONE_NUMBER){
+            optionalEntity = userRepository.findByPhoneNumber(request.getUserCredential());
+        }
+        else{
+            optionalEntity = userRepository.findByEmail(request.getUserCredential());
+        }
+
         if ( optionalEntity.isEmpty() ) {
-            throw new NotFoundException("Invalid Phone Number: " + (request.getPhoneNumber()));
+            throw new NotFoundException("Invalid Email or Phone Number: " + (request.getUserCredential()));
         } else {
             User user = optionalEntity.get();
 
