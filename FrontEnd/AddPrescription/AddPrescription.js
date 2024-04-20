@@ -5,7 +5,7 @@ import { API_PATHS } from "../constants/apiConstants";
 import { useAuth } from "../Context/AuthContext"; // Adjust the import path as needed
 import PrescriptionInformation from "./PrescriptionInformation";
 
-const AddPrescription = ({ saveModal, user, doctorId }) => {
+const AddPrescription = ({ saveModal, user, doctorId, onRefresh }) => {
   console.log("saveModalFw", saveModal);
   const { authToken } = useAuth();
   const [weight, setWeight] = useState("");
@@ -206,7 +206,6 @@ const AddPrescription = ({ saveModal, user, doctorId }) => {
     //   setErrors({});
 
     const data = {
-      "fields": {
       "formTitle": formTitle,
       "patientNumber": user.patientNumber,
       "doctorId" : doctorId,
@@ -222,7 +221,6 @@ const AddPrescription = ({ saveModal, user, doctorId }) => {
       },
       "notes": notes,
       "icdCode": icdCode
-    }
     };
     
     const prescriptionresponse = API_PATHS.POST_PRESCRIPTION_RESPONSE;
@@ -240,7 +238,7 @@ const AddPrescription = ({ saveModal, user, doctorId }) => {
         Alert.alert("Success", "Prescription submitted successfully!");
         // Close the modal or perform any other actions
         saveModal();
-        // onRefresh();
+        onRefresh();
       })
       .catch((error) => {
         if (error.response) {

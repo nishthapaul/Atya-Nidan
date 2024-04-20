@@ -96,6 +96,34 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
       });
   }, [authToken]);
 
+
+  const refreshmedicalhistory = () => {
+    console.log("Refreshing medical history");
+    const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+      ":patientNumber",
+      patientData.patientNumber
+    );
+    axios
+      .get(getmedicalhistorylist, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+        },
+      })
+      .then((response) => {
+        // console.log("response", response);
+        // console.log("response.data", response.data);
+
+        setData(response.data);
+        // setSelectedUser(response.data[0]);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+
+  useEffect(() => {
+    refreshmedicalhistory();
+  }, [authToken]);}
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppHeader />
@@ -146,6 +174,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
             saveModal={saveModal}
             doctorId={doctorId}
             user={patientData}
+            onRefresh={refreshmedicalhistory}
           />
         </Modal>
       </View>

@@ -101,6 +101,7 @@ const FieldWorkerInformation = ({
                 value={weight}
                 onChangeText={setWeight}
               />
+              <Text style={styles.detailLabel}>kg</Text>
             </View>
             <View style={styles.detailInputContainer}>
               <Text style={styles.detailLabel}>Height:</Text>
@@ -109,6 +110,7 @@ const FieldWorkerInformation = ({
                 value={height}
                 onChangeText={setHeight}
               />
+              <Text style={styles.detailLabel}>cm</Text>
             </View>
           </View>
         </View>
@@ -429,8 +431,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   extraNotesContainer: {
-    flex: 1,
-    marginRight: 50, // Add some space between the columns
+    // flex: 1,
+    width: 320,
+    marginRight: 10, // Add some space between the columns
   },
   extraNotesTitle: {
     fontWeight: "bold",
@@ -445,6 +448,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top", // Aligns text to the top for multiline input
     marginBottom: 20,
     backgroundColor: "#f5edeb",
+    fontSize: 18,
   },
   scheduleFollowUpContainer: {
     flex: 1,
