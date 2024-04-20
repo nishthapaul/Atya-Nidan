@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import java.sql.Date;
-import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,8 +26,6 @@ public class OlapPrescription {
 
     private FollowUpDetails followUpDetails;
 
-    private PrescriptionDetails prescriptionDetails;
-
     private String notes;
 
     private String icdCode;
@@ -37,29 +34,9 @@ public class OlapPrescription {
     @NoArgsConstructor
     @Data
     private static class FollowUpDetails {
-        private Date from;
-        private Date to;
+        private int interval;
         private int repeatFrequency;
     }
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
-    private static class PrescriptionDetails {
-        private int age;
-        private double height;
-        private double weight;
-        private List<Dosage> dosages;
-
-        @AllArgsConstructor
-        @NoArgsConstructor
-        @Data
-        private static class Dosage {
-            private int days;
-            private String name;
-            private int morningDose;
-            private int afternoonDose;
-            private int eveningDose;
-        }
-    }
+    private Map<String, Object> prescriptionDetails;
 }

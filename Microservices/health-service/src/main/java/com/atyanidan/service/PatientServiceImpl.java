@@ -87,9 +87,9 @@ public class PatientServiceImpl implements PatientService {
             response.setPatientNumber(prescriptionResponse.getPatient().getPatientNumber());
             String name = prescriptionResponse.getPatient().getDemographic().getFirstName() + " " + prescriptionResponse.getPatient().getDemographic().getLastName();
             response.setPatientName(name);
+            response.setPhoneNumber(prescriptionResponse.getPatient().getDemographic().getPhoneNumber());
             response.setTaluka(prescriptionResponse.getPatient().getDemographic().getTaluka().getName());
             response.setVisitDate(prescriptionResponse.getSubmittedOn());
-            response.setFormName(prescriptionResponse.getForm().getTitle());
             String fieldworkerName = prescriptionResponse.getFieldWorker().getFirstName() + " " + prescriptionResponse.getFieldWorker().getLastName();
             response.setFieldWorkerName(fieldworkerName);
 

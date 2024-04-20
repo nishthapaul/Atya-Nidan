@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/patient")
+@RequestMapping("/api")
 public class PatientController {
     private final PatientService patientService;
 
@@ -22,7 +22,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping("/{patientNumber}")
+    @GetMapping("/patients/{patientNumber}/health-records")
     public List<HealthRecord> getFormsAndPrescriptionsByPatientNumber(@PathVariable String patientNumber) {
         return patientService.getFormsAndPrescriptionsByPatientNumber(patientNumber);
     }
