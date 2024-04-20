@@ -22,4 +22,5 @@ export const API_PATHS = {
     PUT_FORM_DEFAULT: `${BASE_URL}/${FORM_BASE_PATH}/forms/default/:formId`,
     POST_FORM_SKELETON: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
     GET_MEDICAL_HISTORY: `${BASE_URL}/${HEALTH_BASE_PATH}/patients/:patientNumber/health-records`,
+    GET_ICDCODE_LIST: `${BASE_URL}/${HEALTH_BASE_PATH}/icd10Codes`,
 };

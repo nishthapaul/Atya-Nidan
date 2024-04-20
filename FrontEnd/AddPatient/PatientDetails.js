@@ -9,13 +9,14 @@ import {
   Modal,
   Button,
 } from "react-native";
-import AddPatient from "./AddPatient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
 import PatientCard from "../components/PatientCard";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
 import { API_PATHS } from "../constants/apiConstants";
+import AddPrescription from "../AddPrescription/AddPrescription";
+
 const TableHeader = () => (
   <View style={styles.tableRow}>
     {/* <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: "bold" }]}>
@@ -40,6 +41,18 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
   console.log("Inside patient details");
   const [data, setData] = useState([]);
   const { authToken } = useAuth();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+
+  const showModal = () => {
+    console.log("Show Modal");
+    setIsModalVisible(true);
+  };
+
+  const saveModal = () => {
+    console.log("Save Modal");
+    setIsModalVisible(false);
+  };
 
   const TableRow = ({ item }) => {
     console.log("item", item.responseId);
@@ -129,7 +142,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
         </View>
         {/* Modal */}
         <Modal visible={isModalVisible} transparent animationType="slide">
-          <AddPatient
+          <AddPrescription
             saveModal={saveModal}
             doctorId={doctorId}
             user={patientData}
