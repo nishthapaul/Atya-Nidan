@@ -13,6 +13,8 @@ const AddPrescription = ({ saveModal, user, doctorId }) => {
   const [interval, setInterval] = useState('');
   const [repeatFrequency, setRepeatFrequency] = useState('');
   const [notes, setNotes] = useState('');
+  const [icdCode, seticdCode] = useState('');
+  const [formTitle, setformTitle] = useState('');
 
 
   const [errors, setErrors] = useState({});
@@ -278,6 +280,10 @@ const AddPrescription = ({ saveModal, user, doctorId }) => {
           setDosages = {setDosages}
           handleDosageChange = {handleDosageChange}
           addNewRow = {addNewRow}
+          icdCode = {icdCode}
+          seticdCode = {seticdCode}
+          formTitle = {formTitle}
+          setformTitle = {setformTitle}
       />
         </ScrollView>
       </View>

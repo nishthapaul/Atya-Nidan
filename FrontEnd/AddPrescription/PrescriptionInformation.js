@@ -41,8 +41,23 @@ const FieldWorkerInformation = ({
   setDosages,
   handleDosageChange,
   addNewRow,
+  icdCode,
+  seticdCode,
+  formTitle,
+  setformTitle,
 }) => {
   console.log("UserInfo Savemodal", saveModal);
+
+  const formDropdownData = FormList.map((form) => ({
+    label: form.title,
+    value: form.formId,
+  }));
+
+  const icdDropdownData = ICDList.map((icd) => ({
+    label: icd.description,
+    value: icd.codeId,
+  }));
+
   return (
     <View>
       <View style={styles.headerContainer}>
@@ -171,7 +186,7 @@ const FieldWorkerInformation = ({
               Schedule Follow Ups
             </Text>
             <View style={styles.dateInputContainer}>
-              <Text style={styles.detailLabel}>Interval:            </Text>
+              <Text style={styles.detailLabel}>Interval: </Text>
               <TextInput
                 style={styles.dateInput}
                 value={interval}
@@ -180,7 +195,7 @@ const FieldWorkerInformation = ({
               />
             </View>
             <View style={styles.repeatInputContainer}>
-              <Text style={styles.detailLabel}>Repeat Every:  </Text>
+              <Text style={styles.detailLabel}>Repeat Every: </Text>
               <TextInput
                 style={styles.dateInput}
                 value={repeatFrequency}
@@ -189,7 +204,33 @@ const FieldWorkerInformation = ({
               />
             </View>
           </View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.dropdownTitle}>Forms</Text>
+            <Dropdown
+              style={styles.dropdown}
+              data={formDropdownData}
+              labelField="label"
+              valueField="value"
+              placeholder="Select form"
+              value={formTitle}
+              onChange={setformTitle}
+            />
+
+            <Text style={styles.dropdownTitle}>ICD List</Text>
+            <Dropdown
+              style={styles.dropdown}
+              data={icdDropdownData}
+              labelField="label"
+              valueField="value"
+              placeholder="Select ICD"
+              value={icdCode}
+              onChange={seticdCode}
+            />
+          </View>
         </View>
+        <TouchableOpacity onPress={handleSubmit} style={styles.saveButton}>
+            <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -221,8 +262,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 10,
-    marginLeft: 0,
-    marginRight: 20,
+    marginLeft: 20,
+    marginRight: 10,
   },
   saveButtonText: {
     color: "white",
@@ -381,11 +422,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    padding: 30,
+    padding: 20,
   },
   extraNotesContainer: {
     flex: 1,
-    marginRight: 90, // Add some space between the columns
+    marginRight: 50, // Add some space between the columns
   },
   extraNotesTitle: {
     fontWeight: "bold",
@@ -396,15 +437,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#000",
     padding: 10,
-    minHeight: 150, // Set a min-height for the text input
+    minHeight: 200, // Set a min-height for the text input
     textAlignVertical: "top", // Aligns text to the top for multiline input
     marginBottom: 20,
-    backgroundColor: '#f5edeb'
+    backgroundColor: "#f5edeb",
   },
   scheduleFollowUpContainer: {
     flex: 1,
     marginLeft: 100, // Add some space between the columns
-    
   },
   scheduleFollowUpTitle: {
     fontWeight: "bold",
@@ -428,7 +468,24 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 120, // Set a fixed width for date inputs
     marginHorizontal: 5, // Add horizontal margin for spacing
-    borderRadius: 20
+    borderRadius: 20,
+  },
+  dropdownContainer: {
+    flex: 1,
+    marginLeft: 10, // Adjust as needed
+  },
+  dropdownTitle: {
+    fontWeight: "bold",
+    marginBottom: 5,
+    fontSize: 20,
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: "#000",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20, // Space between dropdowns
+    backgroundColor: "#ffffff", // Optional: if you want to change dropdown background color
   },
 });
 
