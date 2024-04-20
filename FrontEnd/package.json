@@ -26,6 +26,7 @@
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.16.0",
     "react-native-image-picker": "^7.1.2",
+    "react-native-table-component": "^1.2.2",
     "react-native-vector-icons": "^10.0.3",
     "typescript": "^5.1.3"
   },

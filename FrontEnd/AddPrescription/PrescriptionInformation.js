@@ -6,7 +6,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from "react-native";
+
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FIcon from "react-native-vector-icons/FontAwesome";
@@ -28,7 +30,7 @@ const FieldWorkerInformation = ({
   weight,
   setHeight,
   setWeight,
-  datetoday,
+  dateFormatted,
   interval,
   setInterval,
   repeatFrequency,
@@ -37,8 +39,8 @@ const FieldWorkerInformation = ({
   setNotes,
   dosages,
   setDosages,
-  handleDosageChangehandleDosageChange,
-  addNewRow
+  handleDosageChange,
+  addNewRow,
 }) => {
   console.log("UserInfo Savemodal", saveModal);
   return (
@@ -52,80 +54,106 @@ const FieldWorkerInformation = ({
         </View>
       </View>
       <ScrollView style={styles.container}>
-        <Text>Doctor ID: {doctorId}</Text>
         <View style={styles.patientInfo}>
-          <Text>Patient's Name: {name}</Text>
-          <Text>Age: {age}</Text>
-          <Text>Sex: {gender}</Text>
-          <Text style={styles.sectionTitle}>Weight:</Text>
-          <TextInput
-            value={weight}
-            onChangeText={(wgt) => {
-              setWeight(wgt);
-            }}
-          />
-          <Text style={styles.sectionTitle}>Height:</Text>
-          <TextInput
-            value={height}
-            onChangeText={(hgt) => {
-              setHeight(hgt);
-            }}
-          />
-          <Text>Date: {dateFormatted}</Text>
+          <View style={styles.patientDetailsRow}>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailLabel}>Doctor ID::</Text>
+              <Text style={styles.detailValue}>{doctorId}</Text>
+            </View>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailLabel}>Date:</Text>
+              <Text style={styles.detailValue}>{dateFormatted}</Text>
+            </View>
+          </View>
+
+          <View style={styles.patientDetailsRow}>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailLabel}>Patient's Name:</Text>
+              <Text style={styles.detailValue}>{name}</Text>
+            </View>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailLabel}>Age:</Text>
+              <Text style={styles.detailValue}>{age}</Text>
+            </View>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailLabel}>Sex:</Text>
+              <Text style={styles.detailValue}>{gender}</Text>
+            </View>
+            <View style={styles.detailInputContainer}>
+              <Text style={styles.detailLabel}>Weight:</Text>
+              <TextInput
+                style={styles.underlineInput}
+                value={weight}
+                onChangeText={setWeight}
+              />
+            </View>
+            <View style={styles.detailInputContainer}>
+              <Text style={styles.detailLabel}>Height:</Text>
+              <TextInput
+                style={styles.underlineInput}
+                value={height}
+                onChangeText={setHeight}
+              />
+            </View>
+          </View>
         </View>
-        <TouchableOpacity style={styles.addButton} onPress={addNewRow}>
-          <Text>Add New Row</Text>
+        <TouchableOpacity style={styles.addbutton} onPress={addNewRow}>
+          <Text style={styles.addLabel}>Add New Row</Text>
         </TouchableOpacity>
-        <Table borderStyle={styles.tableBorder}>
+        <View style={styles.tableContainer}>
+        <Table style={styles.table} borderStyle={styles.tableBorder}>
           <Row
             data={["Days", "Dosage", "M", "A", "N"]}
             style={styles.head}
             textStyle={styles.text}
+            widthArr={[150, 550, 150, 150, 150]}
           />
           {dosages.map((item, index) => (
             <Row
               key={index}
               data={[
                 <TextInput
+                  style={[styles.columnDays, styles.input]} // Combine cell and input styles
                   value={item.days.toString()}
                   onChangeText={(text) =>
                     handleDosageChange(text, index, "days")
                   }
-                  // Other TextInput props
                 />,
                 <TextInput
+                  style={[styles.columnDosage, styles.input]}
                   value={item.name}
                   onChangeText={(text) =>
                     handleDosageChange(text, index, "name")
                   }
-                  // Other TextInput props
                 />,
                 <TextInput
+                  style={[styles.columnDays, styles.input]}
                   value={item.morningDose.toString()}
                   onChangeText={(text) =>
                     handleDosageChange(text, index, "morningDose")
                   }
-                  // Other TextInput props
                 />,
                 <TextInput
+                  style={[styles.columnDays, styles.input]}
                   value={item.afternoonDose.toString()}
                   onChangeText={(text) =>
                     handleDosageChange(text, index, "afternoonDose")
                   }
-                  // Other TextInput props
                 />,
                 <TextInput
+                  style={[styles.columnDays, styles.input]}
                   value={item.eveningDose.toString()}
                   onChangeText={(text) =>
                     handleDosageChange(text, index, "eveningDose")
                   }
-                  // Other TextInput props
                 />,
               ]}
-              // Other Row props
+              style={{ borderWidth: 1, borderColor: "#000" }} // Row border style
+              textStyle={styles.text}
             />
           ))}
         </Table>
+        </View>
       </ScrollView>
     </View>
   );
@@ -456,6 +484,125 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "black", // Slight border for the bottom
   },
+  patientDetailsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+  },
+  detailContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  detailInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  detailLabel: {
+    fontWeight: "bold",
+    marginRight: 5,
+    fontSize: 20,
+  },
+  detailValue: {
+    marginRight: 15, // or any other spacing you want
+    fontSize: 20,
+  },
+  detailInput: {
+    borderWidth: 1,
+    borderColor: "grey",
+    padding: 5,
+    width: 50, // Set the width you want for your input fields
+    marginRight: 15, // Spacing between inputs, adjust as needed
+  },
+  underlineInput: {
+    padding: 5,
+    borderBottomWidth: 1,
+    borderColor: "grey",
+    width: 50, // Set the width as needed
+    marginRight: 15, // Spacing after the input
+    fontSize: 20,
+  },
+  addbutton: {
+    backgroundColor: "#FFA62B",
+    borderWidth: 2,
+    borderColor: "black",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    marginRight: 20,
+    marginLeft: 14,
+    marginBottom: 20,
+    width: 200,
+    borderRadius: 9,
+  },
+  addLabel: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  //Table
+
+  tableContainer: {
+    alignSelf: 'center', // This will center the table container
+    alignItems: 'center',
+    marginLeft: 50,
+  },
+
+  tableBorder: {
+    borderWidth: 1,
+    borderColor: "#000", // Adjust the color as needed
+  },
+
+  // Header row style
+  head: {
+    height: 50,
+    backgroundColor: '#DFF4F3', // Adjust the background color as needed
+    borderWidth: 1,
+    borderColor: "#000", 
+    flexDirection: 'row', 
+  },
+  // row: { 
+  //   // Define flex or width for each row cell
+  //   flexDirection: 'row', // Ensures that the children (row cells) are in a row
+  // },
+  // Header and cell text style
+  text: {
+    // margin: 6,
+    fontSize: 20,
+    textAlign: 'center', // Center the text
+  },
+  tableBorder: {
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+  // Individual cell style
+  cell: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#000", // Adjust the color as needed
+    padding: 10, // Adjust the padding as needed
+  },
+
+  // TextInput within cells
+  input: {
+    borderWidth: 0, // No border for the text input
+    textAlign: 'center',
+    fontSize: 20,
+    height: 40
+  },
+  columnDays: {
+    width: 148,// For example, Days takes 1 part
+    // Set borderRightWidth to 0 to align with the header if needed
+  },
+  columnDosage: {
+    width: 550, // Dosage takes 3 parts, giving it more space
+    // Set borderRightWidth to 0 to align with the header if needed
+  },
+
 });
 
 export default FieldWorkerInformation;
