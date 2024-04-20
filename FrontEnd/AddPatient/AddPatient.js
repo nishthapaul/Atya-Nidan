@@ -70,12 +70,20 @@ const AddPatient = ({ saveModal, doctorId }) => {
               value={abhaNumber}
               onChangeText={(text) => setAbhaNumber(text)}
             />
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.textStyle}>Add</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.textStyle}>Add</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonCancel]}
+                  onPress={saveModal}
+                >
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
           </View>
         </>
       )}
@@ -126,6 +134,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 0,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    flexGrow: 1,
+    justifyContent: 'center',
+    width: '100%', 
+    height: '100%',
+    resizeMode: 'cover',
   },
   modalView: {
     margin: 20,
@@ -147,16 +160,12 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 5,
     padding: 10,
-    width: 200,
+    width: 150,
     elevation: 2,
+    marginHorizontal: 10,
   },
   buttonClose: {
     backgroundColor: "#ADD8E6",
-  },
-  textStyle: {
-    color: "black",
-    fontWeight: "bold",
-    textAlign: "center",
   },
   profileImageModal: {
     width: 250,
@@ -182,6 +191,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',  // This will distribute space evenly around the buttons
+    alignItems: 'center',  // Align items vertically
+    marginTop: 10,  // Add margin at the top if necessary
+  },
+
+  buttonCancel: {
+    backgroundColor: "red",  // Example for a different button color
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+  }
 });
 
 export default AddPatient;

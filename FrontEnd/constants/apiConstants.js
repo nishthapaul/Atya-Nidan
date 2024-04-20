@@ -16,7 +16,7 @@ export const API_PATHS = {
     GET_ADMINS_BY_STATES: `${BASE_URL}/${HEALTH_BASE_PATH}/states/:stateId/admins`,
     GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
 
-
+    GET_PATIENTID_OF_PATIENT: `${BASE_URL}/${HEALTH_BASE_PATH}/patients/:patientNumber/demographics`,
     POST_ABHAID_OF_PATIENT: `${BASE_URL}/${FORM_BASE_PATH}/abha/demographics`,
     GET_FORM_CARD_DETAILS: `${BASE_URL}/${FORM_BASE_PATH}/form-definitions/:form-definition-id`,
     PUT_FORM_DEFAULT: `${BASE_URL}/${FORM_BASE_PATH}/forms/default/:formId`,
@@ -24,4 +24,5 @@ export const API_PATHS = {
     GET_MEDICAL_HISTORY: `${BASE_URL}/${HEALTH_BASE_PATH}/patients/:patientNumber/health-records`,
     GET_ICDCODE_LIST: `${BASE_URL}/${HEALTH_BASE_PATH}/icd10Codes`,
     POST_PRESCRIPTION_RESPONSE: `${BASE_URL}/${HEALTH_BASE_PATH}/prescription-responses`, 
+    GET_LIST_OF_PATIENTS: `${BASE_URL}/${HEALTH_BASE_PATH}/doctors/:DoctorNumber/patients`,
 };
