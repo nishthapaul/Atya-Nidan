@@ -50,12 +50,12 @@ const FieldWorkerInformation = ({
 
   const formDropdownData = FormList.map((form) => ({
     label: form.title,
-    value: form.formId,
+    value: form.title,
   }));
 
   const icdDropdownData = ICDList.map((icd) => ({
     label: icd.description,
-    value: icd.codeId,
+    value: icd.code,
   }));
 
   return (
@@ -186,7 +186,7 @@ const FieldWorkerInformation = ({
               Schedule Follow Ups
             </Text>
             <View style={styles.dateInputContainer}>
-              <Text style={styles.detailLabel}>Interval: </Text>
+              <Text style={styles.detailLabel}>Interval:            </Text>
               <TextInput
                 style={styles.dateInput}
                 value={interval}
@@ -195,7 +195,7 @@ const FieldWorkerInformation = ({
               />
             </View>
             <View style={styles.repeatInputContainer}>
-              <Text style={styles.detailLabel}>Repeat Every: </Text>
+              <Text style={styles.detailLabel}>Repeat Every:  </Text>
               <TextInput
                 style={styles.dateInput}
                 value={repeatFrequency}
@@ -213,7 +213,9 @@ const FieldWorkerInformation = ({
               valueField="value"
               placeholder="Select form"
               value={formTitle}
-              onChange={setformTitle}
+              onChange={item => {
+                setformTitle(item.value);
+            }}
             />
 
             <Text style={styles.dropdownTitle}>ICD List</Text>
@@ -224,7 +226,9 @@ const FieldWorkerInformation = ({
               valueField="value"
               placeholder="Select ICD"
               value={icdCode}
-              onChange={seticdCode}
+              onChange={item => {
+                seticdCode(item.value);
+            }}
             />
           </View>
         </View>
