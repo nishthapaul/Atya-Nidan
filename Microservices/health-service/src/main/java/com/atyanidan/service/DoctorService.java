@@ -8,4 +8,6 @@ public interface DoctorService {
     List<Doctor> getDoctorsFromDistrictId(int districtId);
 
     Doctor addDoctor(int talukaId, Doctor doctor) throws Exception;
+
+    List<Doctor> findBySpecialisation(int specialisationId, int talukaId);
 }

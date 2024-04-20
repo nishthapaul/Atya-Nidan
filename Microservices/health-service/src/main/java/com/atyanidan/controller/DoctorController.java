@@ -1,5 +1,6 @@
 package com.atyanidan.controller;
 
+import com.atyanidan.entity.Specialisation;
 import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,5 +60,10 @@ public class DoctorController {
             @Valid @RequestBody Doctor doctor) throws Exception {
         Doctor dbDoctor = doctorService.addDoctor(talukaId, doctor);
         return ResponseEntity.status(HttpStatus.CREATED).body(dbDoctor);
+    }
+
+    @GetMapping("/doctors/specialisations/{specialisationId}/talukas/{talukaId}")
+    public List<Doctor> getDoctorsBySpecialisation(@PathVariable int specialisationId, @PathVariable int talukaId ) {
+        return doctorService.findBySpecialisation(specialisationId, talukaId);
     }
 }

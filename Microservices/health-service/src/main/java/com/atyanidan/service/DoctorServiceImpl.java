@@ -90,4 +90,10 @@ public class DoctorServiceImpl implements DoctorService {
             throw new Exception(e.getMessage());
         }
     }
+
+    @Override
+    public List<Doctor> findBySpecialisation(int specialisationId, int talukaId) {
+        return doctorRepository.findBySpecialisationIdAndTalukaId(specialisationId, talukaId);
+//        return null;
+    }
 }
