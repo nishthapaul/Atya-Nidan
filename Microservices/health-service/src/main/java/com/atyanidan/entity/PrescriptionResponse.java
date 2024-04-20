@@ -50,11 +50,16 @@ public class PrescriptionResponse {
     @NotEmpty
     private String olapPrescriptionId;
 
-    public PrescriptionResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, @NotNull Doctor doctor, String olapPrescriptionId) {
+    @JoinColumn(name = "code_id")
+    @ManyToOne
+    private ICDCode icdCode;
+
+    public PrescriptionResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, @NotNull Doctor doctor, String olapPrescriptionId, ICDCode icdCode) {
         this.form = form;
         this.fieldWorker = fieldWorker;
         this.patient = patient;
         this.doctor = doctor;
         this.olapPrescriptionId = olapPrescriptionId;
+        this.icdCode = icdCode;
     }
 }

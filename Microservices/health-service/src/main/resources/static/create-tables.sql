@@ -148,9 +148,9 @@ ADD FOREIGN KEY (taluka_id) REFERENCES Taluka(taluka_id);
 ALTER TABLE Doctor
 ADD FOREIGN KEY (specialisation_id) REFERENCES Specialisation(specialisation_id);
 
-CREATE TABLE IF NOT EXISTS ICD10_Code (
+CREATE TABLE IF NOT EXISTS ICD_Code (
     code_id int AUTO_INCREMENT,
-    code varchar(100) NOT NULL,
+    code varchar(10) NOT NULL,
     description varchar(100),
     primary key (code_id)
 );
@@ -173,8 +173,12 @@ CREATE TABLE Prescription_Response (
     doctor_id int NOT NULL,
     submitted_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     olap_prescription_id varchar(100) NOT NULL UNIQUE,
+    code_id int NOT NULL,
     primary key(prescription_response_id)
 );
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (code_id) REFERENCES ICD_Code(code_id);
 
 ALTER TABLE Prescription_Response
 ADD FOREIGN KEY (form_id) REFERENCES Form(form_id);
