@@ -29,6 +29,9 @@ const PatientScreen = ({ doctorId }) => {
   const [navigate, setNavigate] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [apiData, setApiData] = useState(null);
+  const [forceUpdate, setForceUpdate] = useState(0);  // State to force useEffect to run
+  const [valueFromRadio, setValueFromRadio] = useState(1);
+
 
   const showModal = () => {
     console.log("Show Modal");
@@ -41,8 +44,12 @@ const PatientScreen = ({ doctorId }) => {
   };
 
   const onSelectUser = (item) => {
-    // setSelectedPatient(item);  // Set the selected patient
-    setSelectedUserId(item.patientNumber);  
+    if (item.patientNumber === selectedUserId) {
+      // If the same item is clicked, force the useEffect to run
+      setForceUpdate(prev => prev + 1);  // Increment to force re-render
+    } else {
+      setSelectedUserId(item.patientNumber);
+    }
   };
  
   useEffect(() => {
@@ -62,10 +69,17 @@ const PatientScreen = ({ doctorId }) => {
       }
     };
     fetchData();
-  }, [selectedUserId, authToken]);
+  }, [selectedUserId, authToken, forceUpdate]);
 
   const handleSearch = (text) => {
-    // Your search logic here
+    // console.log(valueFromRadio);
+    const filteredSearchData = data.filter((item) => {
+      return valueFromRadio === 1
+        ? item.patientName.toLowerCase().includes(text.toLowerCase())
+        : item.taluka.toLowerCase().includes(text.toLowerCase());
+    });
+    setSearchQuery(text);
+    setFilteredData(filteredSearchData);
   };
 
   useEffect(() => {
@@ -87,16 +101,52 @@ const PatientScreen = ({ doctorId }) => {
     });
   }, [authToken]);
 
+  // const refreshListofpatients = () => {
+  //   console.log("Refreshing patients list");
+  //   const getpatientlist = API_PATHS.GET_LIST_OF_PATIENTS.replace(':DoctorNumber', doctorId)
+  //   axios.get(getpatientlist, {
+  //     headers: {
+  //       Authorization: `Bearer ${authToken}` // Include the authToken in the request
+  //     }
+  //   })
+  //   .then(response => {
+  //     setData(response.data);
+  //   })
+  //   .catch(error => {
+  //     console.error('Error fetching data:', error);
+  //   });
+
+  // useEffect(() => {
+  //   refreshListofpatients();
+  // }, [authToken]);}
+
+  const refreshList = () => {
+    axios.get(API_PATHS.GET_LIST_OF_PATIENTS.replace(':DoctorNumber', doctorId), {
+      headers: { Authorization: `Bearer ${authToken}` }
+    })
+    .then(response => {
+      setData([...response.data]);
+      console.log("Data refreshed");
+    })
+    .catch(error => console.error('Error refreshing data:', error));
+  };
+
+  useEffect(() => {
+    refreshList();  // Initial load and setup refresh mechanism
+  }, [authToken, doctorId]); 
+
 
   if (navigate && apiData) {
     // Navigate to PatientDetails component
     return (
       <PatientDetails 
         patientData={apiData} 
-        doctorId={doctorId} 
+        doctorId={doctorId}
         onBack={() => {
           setNavigate(false);  // Go back to list
+          setSelectedUserId(null);
           saveModal();
+          refreshList();  
         }} 
       />
     );
@@ -171,7 +221,7 @@ const PatientScreen = ({ doctorId }) => {
             </View>
       </View>
       <Modal visible={isModalVisible} transparent animationType="none">
-        <AddPatient saveModal={saveModal} doctorId={doctorId}/>
+        <AddPatient saveModal={saveModal} doctorId={doctorId} onRefresh = {refreshList}/>
       </Modal>
     </View>
   );

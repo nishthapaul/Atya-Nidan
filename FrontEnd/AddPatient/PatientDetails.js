@@ -10,7 +10,7 @@ import {
   Button,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AppHeader from "../components/AppHeader";
+// import AppHeader from "../components/AppHeader";
 import PatientCard from "../components/PatientCard";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
@@ -43,6 +43,9 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
   const { authToken } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const handleBack = () => {
+    onBack();  // Call the onBack function passed as prop which triggers refresh in parent
+  };
 
   const showModal = () => {
     console.log("Show Modal");
@@ -126,7 +129,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <AppHeader />
+      {/* <AppHeader /> */}
       {/* <View style={styles.contentContainer}> */}
       {/* <Text>Patient Details Here</Text> */}
       {/* <Button title="Back" onPress={onBack} style={styles.backbutton}/> */}
@@ -163,7 +166,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
         <View style={styles.card}>
           <PatientCard user={patientData} />
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.backbutton} onPress={onBack}>
+            <TouchableOpacity style={styles.backbutton} onPress={handleBack}>
               <Text style={styles.backbuttonText}>Back</Text>
             </TouchableOpacity>
           </View>

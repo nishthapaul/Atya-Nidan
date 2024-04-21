@@ -8,16 +8,34 @@ import {
   Image,
   TextInput,
   Alert,
+  SafeAreaView
 } from "react-native";
 import axios from "axios";
 import { API_PATHS } from "../constants/apiConstants";
 import { useAuth } from "../Context/AuthContext";
 import PatientDetails from "./PatientDetails";
-const AddPatient = ({ saveModal, doctorId }) => {
+import AppHeader from "../components/AppHeader";
+
+const AddPatient = ({ saveModal, doctorId , onRefresh}) => {
   const { authToken } = useAuth();
   const [abhaNumber, setAbhaNumber] = useState(""); // State variable to store ABHA number
   const [navigate, setNavigate] = useState(false);
   const [patientData, setPatientData] = useState(null); // State to store API response
+
+  // const refreshList = () => {
+  //   axios.get(API_PATHS.GET_LIST_OF_PATIENTS.replace(':DoctorNumber', doctorId), {
+  //     headers: { Authorization: `Bearer ${authToken}` }
+  //   })
+  //   .then(response => {
+  //     setData(response.data);
+  //     console.log("Data refreshed");
+  //   })
+  //   .catch(error => console.error('Error refreshing data:', error));
+  // };
+
+  // useEffect(() => {
+  //   refreshList();  // Initial load and setup refresh mechanism
+  // }, [authToken, doctorId]); 
 
   const handleSubmit = async () => {
     console.log("handleSubmit called"); // Add this line
@@ -56,10 +74,14 @@ const AddPatient = ({ saveModal, doctorId }) => {
   return (
     <View style={styles.centeredView}>
       {navigate ? (
+        <SafeAreaView style={styles.safeArea}>
+        <AppHeader />
         <PatientDetails patientData={patientData} doctorId={doctorId} onBack={() => {
           setNavigate(false);
           saveModal(); // Call saveModal here
+          onRefresh();
         }} />
+        </SafeAreaView>
       ) : (
         <>
           <View style={styles.modalView}>
@@ -206,7 +228,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 18,
-  }
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+    width: "100%",
+  },
 });
 
 export default AddPatient;
