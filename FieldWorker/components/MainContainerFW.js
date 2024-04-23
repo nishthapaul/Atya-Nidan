@@ -5,6 +5,9 @@ import { SearchBar, Icon } from 'react-native-elements';
 import PatientCard from './PatientCard';
 import MainContainer from '../../MainContainer';
 import AppHeader from '../../components/AppHeader';
+import NetInfo from '@react-native-community/netinfo'; // Import NetInfo
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -34,7 +37,6 @@ const showModal = () => {
   setIsModalVisible(true);
 };
   const TableRow = ({ item }) => {
-    console.log("item", item);
     const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
     return (
       <Pressable onPress={() => setSelectedUser(item)}>
@@ -47,22 +49,71 @@ const showModal = () => {
       </Pressable>
     )
   };
-  useEffect(() => {
-    console.log("Inside get API");
-   //   const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
-     axios.get("http://10.0.2.2:3000/patientDetails")
-     .then(response => {
-       // Handle successful response
-       console.log('Response data:', response.data);
-       setData(response.data);
-       setSelectedUser(response.data[0]); 
+  // useEffect(() => {
+  //   console.log("Inside get API");
+  //  //   const getfwlist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', 2)
+  //    axios.get("http://10.0.2.2:3000/patientDetails")
+  //    .then(response => {
+  //      // Handle successful response
+  //      console.log('Response data:', response.data);
+  //      setData(response.data);
+  //      setSelectedUser(response.data[0]); 
 
-     })
-     .catch(error => {
-       // Handle error
-       console.error('Error:', error);
-     })
-   },[]);
+  //    })
+  //    .catch(error => {
+  //      // Handle error
+  //      console.error('Error:', error);
+  //    })
+  //  },[]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log("Inside get API");
+  
+        // Check network connectivity
+        const netInfoState = await NetInfo.fetch();
+        if (netInfoState.isConnected) {
+          // If online, make API call
+          console.log("Inside is connected")
+          const response = await axios.get("http://10.0.2.2:3000/patientDetails");
+          const newData = response.data;
+  
+          // Update state with new data
+          setData(newData);
+          setSelectedUser(newData[0]);
+  
+          // Store new data in AsyncStorage
+          await AsyncStorage.setItem('patientDetails', JSON.stringify(newData));
+        } else {
+           console.log("Inside else connected")
+          // If offline, fetch data from AsyncStorage
+          const storedData = await AsyncStorage.getItem('patientDetails');
+          console.log("@111 storedData" , storedData);
+          if (storedData) {
+            setData(JSON.parse(storedData));
+            setSelectedUser(JSON.parse(storedData)[0]);
+          }
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    // Call fetchData on initial render
+    fetchData();
+  
+    // Subscribe to network state changes and fetch data accordingly
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (state.isConnected) {
+        fetchData(); // Fetch data if online
+      }
+    });
+  
+    // Clean up subscription on component unmount
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   return (
     <View style={styles.MainContainer}>
     <View style={styles.header}><AppHeader/></View>
