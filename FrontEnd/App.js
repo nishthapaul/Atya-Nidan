@@ -7,7 +7,7 @@ import { AuthProvider } from './Context/AuthContext';
 import { LogBox } from 'react-native';
 import SuperadminContainer from './SuperadminContainer';
 import DoctorContainer from './DoctorContainer';
-
+import FieldWorkerContainer from './FieldWorkerContainer';
 export default function App() {
   LogBox.ignoreAllLogs();
 
@@ -33,9 +33,11 @@ export default function App() {
         <SuperadminContainer authToken={authToken} user={user}/>
       ) : user.role === 'Doctor' ? (
         <DoctorContainer authToken={authToken} user={user}/>
+      ) : user.role === 'FieldWorker' ? (
+        <FieldWorkerContainer authToken={authToken} user={user}/>
       ) : (
         <View style={styles.header}><AppHeader/></View>
-      )}
+      ) }
     </View>
     </AuthProvider>
   );
