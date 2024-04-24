@@ -3,9 +3,7 @@ package com.atyanidan.service;
 import com.atyanidan.dao.PdfStorageRepository;
 import com.atyanidan.entity.PdfStorage;
 import com.atyanidan.exception.NotFoundException;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +20,12 @@ public class PdfStorageServiceImpl implements PdfStorageService {
         this.pdfStorageRepository = pdfStorageRepository;
     }
 
-    public void savePdf() throws DocumentException {
+    public PdfStorage savePdf() throws DocumentException {
         byte[] content = generateFormPdf();
         PdfStorage pdfStorage = new PdfStorage();
         pdfStorage.setContent(content);
-        pdfStorageRepository.save(pdfStorage);
+        PdfStorage savedPDF = pdfStorageRepository.save(pdfStorage);
+        return savedPDF;
     }
 
     @Override
@@ -48,7 +47,15 @@ public class PdfStorageServiceImpl implements PdfStorageService {
         // Add content to the PDF using iTextpdf methods
         Paragraph titleParagraph = new Paragraph("Title");
         document.add(titleParagraph);
-        document.add(new Paragraph("data text sentence"));
+        document.add(new Paragraph("This text doesn't have any fancy font"));
+        Font boldFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD, BaseColor.BLUE);
+        Font regularFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.NORMAL);
+        document.add(new Paragraph("This text is bold", boldFont));
+        document.add(new Paragraph("This text is regular", regularFont));
+
+        Paragraph centeredText = new Paragraph("This text is center", regularFont);
+        centeredText.setAlignment(Element.ALIGN_CENTER);
+        document.add(centeredText);
 
         document.close();
 
