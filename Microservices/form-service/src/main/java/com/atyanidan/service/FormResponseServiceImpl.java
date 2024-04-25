@@ -39,7 +39,7 @@ public class FormResponseServiceImpl implements FormResponseService {
         this.idGenerator = idGenerator;
     }
 
-    public FormResponse createFormResponse(OlapFormRequest olapFormRequest) {
+    public OlapForm createFormResponse(OlapFormRequest olapFormRequest) {
         System.out.println(olapFormRequest);
         FieldWorker fieldWorker = fieldworkerService.getFieldWorkerById(olapFormRequest.getFieldWorkerId());
 
@@ -52,31 +52,35 @@ public class FormResponseServiceImpl implements FormResponseService {
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());
 
-        Patient patient = patientRepository.findByAbhaNumber(olapFormRequest.getAbhaNumber());
-        if (patient == null) {
-            Taluka taluka = talukaRepository.findByName(abha.getTaluka());
-            System.out.println(taluka);
-            Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getPhoneNumber(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
-            Demographic savedDemographic = demographicRepository.save(demographic);
-            System.out.println(savedDemographic);
+        Boolean isUnhealthy = (Boolean) olapForm.getFields().get("unhealthy");
+        if ( isUnhealthy ) {
 
-            patient = new Patient(olapFormRequest.getAbhaNumber(), savedDemographic);
-            Patient savedPatient = patientRepository.save(patient);
-            System.out.println(savedPatient);
+            Patient patient = patientRepository.findByAbhaNumber(olapFormRequest.getAbhaNumber());
+            if ( patient == null ) {
+                Taluka taluka = talukaRepository.findByName(abha.getTaluka());
+                System.out.println(taluka);
+                Demographic demographic = new Demographic(abha.getFirstName(), abha.getMiddleName(), abha.getLastName(), abha.getAddress(), abha.getPhoneNumber(), abha.getDob(), abha.getGender(), abha.getBloodGroup(), taluka);
+                Demographic savedDemographic = demographicRepository.save(demographic);
+                System.out.println(savedDemographic);
 
-            String patientNumber = idGenerator.generate("PT", savedPatient.getId(), abha.getFirstName());
-            savedPatient.setPatientNumber(patientNumber);
-            savedPatient = patientRepository.save(savedPatient);
-            System.out.println(savedPatient);
+                patient = new Patient(olapFormRequest.getAbhaNumber(), savedDemographic);
+                Patient savedPatient = patientRepository.save(patient);
+                System.out.println(savedPatient);
 
-            patient = savedPatient;
+                String patientNumber = idGenerator.generate("PT", savedPatient.getId(), abha.getFirstName());
+                savedPatient.setPatientNumber(patientNumber);
+                savedPatient = patientRepository.save(savedPatient);
+                System.out.println(savedPatient);
+
+                patient = savedPatient;
+            }
+
+            String olapFormId = savedOlapForm.getId();
+            FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType());
+            formResponseRepository.save(formResponse);
         }
 
-        String olapFormId = savedOlapForm.getId();
-        FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType());
-        FormResponse savedFormResponse = formResponseRepository.save(formResponse);
-
-        return savedFormResponse;
+        return savedOlapForm;
     }
 
     @Override

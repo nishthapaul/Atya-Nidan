@@ -1,7 +1,6 @@
 package com.atyanidan.controller;
 
 import com.atyanidan.entity.elasticsearch.OlapForm;
-import com.atyanidan.entity.mysql.FormResponse;
 import com.atyanidan.request.OlapFormRequest;
 import com.atyanidan.response.FormNameTimestampResponse;
 import com.atyanidan.service.FormResponseService;
@@ -24,8 +23,8 @@ public class FormResponseController {
     }
 
     @PostMapping
-    public ResponseEntity<FormResponse> addForm(@RequestBody OlapFormRequest olapFormRequest) {
-        FormResponse savedFormResponse = formResponseService.createFormResponse(olapFormRequest);
+    public ResponseEntity<OlapForm> addForm(@RequestBody OlapFormRequest olapFormRequest) {
+        OlapForm savedFormResponse = formResponseService.createFormResponse(olapFormRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFormResponse);
     }
 
