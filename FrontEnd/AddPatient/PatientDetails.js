@@ -57,12 +57,31 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
     setIsModalVisible(false);
   };
 
+
+
+  useEffect(() => {
+    const getdoclist = API_PATHS.GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS
+    axios.get(getdoclist, {
+      headers: {
+        Authorization: `Bearer ${authToken}` // Include the authToken in the request
+      }
+    })
+    .then(response => {
+      console.log("response pdf", response);
+      console.log("response.data", response.data);    
+    })
+    .catch(error => {
+      console.error('Error fetching data of pdf:', error);
+    });
+  }, [authToken]);
+
+
   const TableRow = ({ item }) => {
     console.log("item", item.responseId);
     // const medicalhistory = `${item.title} ${item.type}`;
     return (
-      <Pressable onPress={() => onSelectUser(item)}>
-        <View style={styles.tableRow}>
+      <Pressable>
+      <View style={styles.tableRow}>
           <View style={styles.tableCellContainer}>
             <Text style={styles.tableCell}>{`${item.title} ${item.type}`}</Text>
           </View>
@@ -73,7 +92,9 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
       </Pressable>
     );
   };
+
   //api calls
+
 
   useEffect(() => {
     console.log("Inside medical forms get");
