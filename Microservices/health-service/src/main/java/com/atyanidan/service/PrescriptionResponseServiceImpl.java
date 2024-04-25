@@ -1,11 +1,14 @@
 package com.atyanidan.service;
 
 import com.atyanidan.dao.OlapPrescriptionRepository;
+import com.atyanidan.dao.PdfStorageRepository;
 import com.atyanidan.dao.PrescriptionResponseRepository;
 import com.atyanidan.entity.*;
 import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.entity.actor.FieldWorker;
 import com.atyanidan.entity.elasticsearch.OlapPrescription;
+import com.atyanidan.utils.PdfGenerator;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +22,10 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
     private final FormService formService;
     private final FormResponseService formResponseService;
     private  final ICD10CodeService icd10CodeService;
-
-
+    private final PdfGenerator pdfGenerator;
+    private final PdfStorageRepository pdfStorageRepository;
     @Autowired
-    public PrescriptionResponseServiceImpl(PrescriptionResponseRepository prescriptionResponseRepository, OlapPrescriptionRepository olapPrescriptionRepository, PatientService patientService, UserService userService, FormService formService, FormResponseService formResponseService, ICD10CodeService icd10CodeService) {
+    public PrescriptionResponseServiceImpl(PrescriptionResponseRepository prescriptionResponseRepository, OlapPrescriptionRepository olapPrescriptionRepository, PatientService patientService, UserService userService, FormService formService, FormResponseService formResponseService, ICD10CodeService icd10CodeService, PdfGenerator pdfGenerator, PdfStorageRepository pdfStorageRepository) {
         this.prescriptionResponseRepository = prescriptionResponseRepository;
         this.olapPrescriptionRepository = olapPrescriptionRepository;
         this.patientService = patientService;
@@ -30,10 +33,12 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
         this.formService = formService;
         this.formResponseService = formResponseService;
         this.icd10CodeService = icd10CodeService;
+        this.pdfGenerator = pdfGenerator;
+        this.pdfStorageRepository = pdfStorageRepository;
     }
 
     @Override
-    public PrescriptionResponse createPrescriptionResponse(OlapPrescription olapPrescription) {
+    public PrescriptionResponse createPrescriptionResponse(OlapPrescription olapPrescription) throws DocumentException {
         System.out.println(olapPrescription);
 
         Patient patient = patientService.findByPatientNumber(olapPrescription.getPatientNumber());
@@ -52,10 +57,15 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
 
         System.out.println("olap prescription");
 
+        byte[] pdfContent = pdfGenerator.generatePrescriptionPdf(doctor, patient, olapPrescription);
+        PdfStorage pdfStorage = new PdfStorage();
+        pdfStorage.setContent(pdfContent);
+        PdfStorage savedPDF = pdfStorageRepository.save(pdfStorage);
+
         OlapPrescription savedOlapPrescription = olapPrescriptionRepository.save(olapPrescription);
         System.out.println(savedOlapPrescription.getId());
 
-        PrescriptionResponse prescriptionResponse = new PrescriptionResponse(form, fieldWorker, patient, doctor, savedOlapPrescription.getId(), icdCode);
+        PrescriptionResponse prescriptionResponse = new PrescriptionResponse(form, fieldWorker, patient, doctor, savedOlapPrescription.getId(), icdCode, savedPDF);
         PrescriptionResponse savedPrescriptionResponse = prescriptionResponseRepository.save(prescriptionResponse);
 
         return savedPrescriptionResponse;

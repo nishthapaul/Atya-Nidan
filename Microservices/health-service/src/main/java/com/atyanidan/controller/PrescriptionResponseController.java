@@ -3,6 +3,7 @@ package com.atyanidan.controller;
 import com.atyanidan.entity.PrescriptionResponse;
 import com.atyanidan.entity.elasticsearch.OlapPrescription;
 import com.atyanidan.service.PrescriptionResponseService;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class PrescriptionResponseController {
     }
 
     @PostMapping
-    public ResponseEntity<PrescriptionResponse> addPrescription(@RequestBody OlapPrescription olapPrescription) {
+    public ResponseEntity<PrescriptionResponse> addPrescription(@RequestBody OlapPrescription olapPrescription) throws DocumentException {
         PrescriptionResponse savedPrescriptionResponse = prescriptionResponseService.createPrescriptionResponse(olapPrescription);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPrescriptionResponse);
     }

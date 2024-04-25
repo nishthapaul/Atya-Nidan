@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class PdfStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pdf_storage_id")
     private int id;
 
     @Column(name = "content")

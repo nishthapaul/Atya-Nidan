@@ -56,11 +56,11 @@ public class PatientServiceImpl implements PatientService {
             if ( olapForm.getFormType() == FormType.FollowUp ) {
                 suffix = " Follow Up";
             }
-            records.add(new HealthRecord(formResponse.getFormResponseId(), formResponse.getForm().getTitle() + suffix, formResponse.getSubmittedOn(), "Form"));
+            records.add(new HealthRecord(formResponse.getFormResponseId(), formResponse.getForm().getTitle() + suffix, formResponse.getSubmittedOn(), 1,"Form"));
         }
 
         for (PrescriptionResponse prescriptionResponse : prescriptionResponses) {
-            records.add(new HealthRecord(prescriptionResponse.getPrescriptionResponseId(), prescriptionResponse.getForm().getTitle(), prescriptionResponse.getSubmittedOn(), "Prescription"));
+            records.add(new HealthRecord(prescriptionResponse.getPrescriptionResponseId(), prescriptionResponse.getForm().getTitle(), prescriptionResponse.getSubmittedOn(), prescriptionResponse.getPdfStorage().getId(), "Prescription"));
         }
 
         records = records.stream()

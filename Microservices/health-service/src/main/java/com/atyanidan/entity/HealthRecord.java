@@ -13,5 +13,6 @@ public class HealthRecord {
     private int responseId;
     private String title;
     private Timestamp submittedOn;
+    private int pdfStorageId;
     private String type;
 }

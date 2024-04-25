@@ -54,12 +54,17 @@ public class PrescriptionResponse {
     @ManyToOne
     private ICDCode icdCode;
 
-    public PrescriptionResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, @NotNull Doctor doctor, String olapPrescriptionId, ICDCode icdCode) {
+    @JoinColumn(name = "pdf_storage_id")
+    @OneToOne
+    private PdfStorage pdfStorage;
+
+    public PrescriptionResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, @NotNull Doctor doctor, String olapPrescriptionId, ICDCode icdCode, PdfStorage pdfStorage) {
         this.form = form;
         this.fieldWorker = fieldWorker;
         this.patient = patient;
         this.doctor = doctor;
         this.olapPrescriptionId = olapPrescriptionId;
         this.icdCode = icdCode;
+        this.pdfStorage = pdfStorage;
     }
 }

@@ -1,7 +1,6 @@
 package com.atyanidan.controller;
 
 import com.atyanidan.entity.PdfStorage;
-import com.atyanidan.service.DoctorService;
 import com.atyanidan.service.PdfStorageService;
 import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/response/pdf")
+@RequestMapping("/api/pdfwriter")
 @RequiredArgsConstructor
-public class PdfController {
+public class PdfStorageController {
 
     private final PdfStorageService pdfStorageService;
 
     @PostMapping
-    public void generatePdf() throws DocumentException {
-        pdfStorageService.savePdf();
+    public PdfStorage generatePdf() throws DocumentException {
+        return pdfStorageService.savePdf();
     }
 
     @GetMapping("/{pdfId}")
