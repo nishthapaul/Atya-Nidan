@@ -21,7 +21,7 @@ public class PdfStorageServiceImpl implements PdfStorageService {
     }
 
     public PdfStorage savePdf() throws DocumentException {
-        byte[] content = generateFormPdf();
+        String content = generateFormPdf();
         PdfStorage pdfStorage = new PdfStorage();
         pdfStorage.setContent(content);
         PdfStorage savedPDF = pdfStorageRepository.save(pdfStorage);
@@ -37,28 +37,14 @@ public class PdfStorageServiceImpl implements PdfStorageService {
         return optional.get();
     }
 
-    byte[] generateFormPdf() throws DocumentException {
-        Document document = new Document();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PdfWriter.getInstance(document, baos);
-
-        document.open();
-
-        // Add content to the PDF using iTextpdf methods
-        Paragraph titleParagraph = new Paragraph("Title");
-        document.add(titleParagraph);
-        document.add(new Paragraph("This text doesn't have any fancy font"));
-        Font boldFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD, BaseColor.BLUE);
-        Font regularFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.NORMAL);
-        document.add(new Paragraph("This text is bold", boldFont));
-        document.add(new Paragraph("This text is regular", regularFont));
-
-        Paragraph centeredText = new Paragraph("This text is center", regularFont);
-        centeredText.setAlignment(Element.ALIGN_CENTER);
-        document.add(centeredText);
-
-        document.close();
-
-        return baos.toByteArray();
+    String generateFormPdf() throws DocumentException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append("<head><title>Prescription Details</title></head>");
+        sb.append("<body>");
+        sb.append("<p>This text is bold</p>");
+        sb.append("</body>");
+        sb.append("</html>");
+        return sb.toString();
     }
 }

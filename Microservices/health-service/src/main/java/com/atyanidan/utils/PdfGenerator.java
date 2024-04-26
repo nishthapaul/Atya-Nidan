@@ -15,83 +15,64 @@ import java.util.List;
 
 @Component
 public class PdfGenerator {
-    Font boldBlackFont;
-    Font regularBlackFont;
-    Font regularBlueFont;
-
-    public PdfGenerator() {
-        regularBlueFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.NORMAL, BaseColor.BLUE);
-        boldBlackFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
-        regularBlackFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.NORMAL);
-    }
-
-    public byte[] generatePrescriptionPdf(Doctor doctor, Patient patient, OlapPrescription olapPrescription) throws DocumentException {
-        Document document = new Document();
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        PdfWriter.getInstance(document, output);
-
-        document.open();
+    public String generatePrescriptionPdf(Doctor doctor, Patient patient, OlapPrescription olapPrescription) throws DocumentException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append("<head><title>Prescription Details</title></head>");
+        sb.append("<body>");
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
-        Paragraph datePara = new Paragraph(formatter.format(date));
-        datePara.setAlignment(Element.ALIGN_RIGHT);
-        document.add(datePara);
+        sb.append("<p style='text-align: right'>" + formatter.format(date) + "</p>");
 
-        Paragraph docTitle = new Paragraph(patient.getDemographic().getFirstName() + " " + patient.getDemographic().getLastName(), boldBlackFont);
-        docTitle.setAlignment(Element.ALIGN_CENTER);
-        document.add(docTitle);
-        docTitle = new Paragraph(olapPrescription.getFormTitle() + " Prescription", boldBlackFont);
-        docTitle.setAlignment(Element.ALIGN_CENTER);
-        document.add(docTitle);
+        sb.append("<center><h1>" + patient.getDemographic().getFirstName() + " " + patient.getDemographic().getLastName() + "</h1></center>");
+        sb.append("<center><h1>" + olapPrescription.getFormTitle() + " Prescription" + "</h1></center>");
 
-        document.add(new Paragraph("Dr. " + doctor.getFirstName() + " " + doctor.getLastName(), regularBlueFont));
-        document.add(new Paragraph(doctor.getSpecialisation().getName(), regularBlueFont));
-        document.add(new Paragraph(doctor.getHospitalAddress(), regularBlueFont));
-        document.add(new Paragraph(doctor.getNearestRailwayStation(), regularBlueFont));
-        document.add(new Paragraph(doctor.getPhoneNumber(), regularBlueFont));
+        sb.append("<p style='color: blue'>" + "Dr. " + doctor.getFirstName() + " " + doctor.getLastName() + "</p>");
+        sb.append("<p style='color: blue'>" + doctor.getSpecialisation().getName() + "</p>");
+        sb.append("<p style='color: blue'>" + doctor.getHospitalAddress() + "</p>");
+        sb.append("<p style='color: blue'>" + doctor.getNearestRailwayStation() + "</p>");
+        sb.append("<p style='color: blue'>" + doctor.getPhoneNumber() + "</p>");
 
-        document.add(new Paragraph(" "));
+        sb.append("<h2>Patient Details</h2>");
 
-        document.add(new Paragraph("Patient Details", boldBlackFont));
-        document.add(new Paragraph("Name: " + patient.getDemographic().getFirstName() + " " + patient.getDemographic().getLastName(), regularBlackFont));
-        document.add(new Paragraph("Phone Number: " + patient.getDemographic().getPhoneNumber(), regularBlackFont));
+        sb.append("<p>Name: " + patient.getDemographic().getFirstName() + " " + patient.getDemographic().getLastName() + "</p>");
+        sb.append("<p>Phone Number: " + patient.getDemographic().getPhoneNumber() + "</p>");
+
         if ( patient.getDemographic().getBloodGroup() != null ) {
-            document.add(new Paragraph("Blood Group: " + patient.getDemographic().getBloodGroup(), regularBlackFont));
+            sb.append("<p>Blood Group: " + patient.getDemographic().getBloodGroup() + "</p>");
         }
         if ( olapPrescription.getPrescriptionDetails().getAge() != null ) {
-            document.add(new Paragraph("Age: " + olapPrescription.getPrescriptionDetails().getAge(), regularBlackFont));
+            sb.append("<p>Age: " + olapPrescription.getPrescriptionDetails().getAge() + "</p>");
         }
         if ( olapPrescription.getPrescriptionDetails().getWeight() != null ) {
-            document.add(new Paragraph("Weight: " + olapPrescription.getPrescriptionDetails().getWeight(), regularBlackFont));
+            sb.append("<p>Weight: " + olapPrescription.getPrescriptionDetails().getWeight() + "</p>");
         }
         if ( olapPrescription.getPrescriptionDetails().getHeight() != null ) {
-            document.add(new Paragraph("Height: " + olapPrescription.getPrescriptionDetails().getHeight(), regularBlackFont));
+            sb.append("<p>Height: " + olapPrescription.getPrescriptionDetails().getHeight() + "</p>");
         }
 
-        document.add(new Paragraph(" "));
-
-        document.add(new Paragraph("Dosage", boldBlackFont));
+        sb.append("<h2>Dosage</h2>");
         List<Dosage> dosages = olapPrescription.getPrescriptionDetails().getDosages();
         for (Dosage dosage : dosages) {
-            document.add(new Paragraph("Name of the medicine: " + dosage.getName(), regularBlackFont));
-            document.add(new Paragraph("Days: " + dosage.getDays(), regularBlackFont));
-            document.add(new Paragraph("Morning Dose: " + dosage.getMorningDose(), regularBlackFont));
-            document.add(new Paragraph("Afternoon Dose: " + dosage.getAfternoonDose(), regularBlackFont));
-            document.add(new Paragraph("Evening Dose: " + dosage.getEveningDose(), regularBlackFont));
-            document.add(new Paragraph(" "));
+            sb.append("<p>Name of the medicine: " + dosage.getName() + "</p>");
+            sb.append("<p>Days: " + dosage.getDays() + "</p>");
+            sb.append("<p>Morning Dose: " + dosage.getMorningDose() + "</p>");
+            sb.append("<p>Afternoon Dose: " + dosage.getAfternoonDose() + "</p>");
+            sb.append("<p>Evening Dose: " + dosage.getEveningDose() + "</p>");
+            sb.append("<br />");
         }
 
-        document.add(new Paragraph("Notes: ", boldBlackFont));
+        sb.append("<h2>Notes: </h2>");
         if ( olapPrescription.getNotes() != null ) {
-            document.add(new Paragraph(olapPrescription.getNotes(), regularBlackFont));
+            sb.append("<p>" + olapPrescription.getNotes() + "</p>");
         } else {
-            document.add(new Paragraph("None", regularBlackFont));
+            sb.append("<p>None</p>");
         }
 
-        document.close();
-
-        return output.toByteArray();
+        sb.append("</body>");
+        sb.append("</html>");
+        return sb.toString();
     }
 
 }

@@ -84,7 +84,7 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
             isFollowUpCompleted = true;
         }
 
-        byte[] pdfContent = pdfGenerator.generatePrescriptionPdf(doctor, patient, olapPrescription);
+        String pdfContent = pdfGenerator.generatePrescriptionPdf(doctor, patient, olapPrescription);
         PdfStorage pdfStorage = new PdfStorage();
         pdfStorage.setContent(pdfContent);
         PdfStorage savedPDF = pdfStorageRepository.save(pdfStorage);
