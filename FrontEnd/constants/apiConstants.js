@@ -31,7 +31,7 @@ export const API_PATHS = {
     GET_ICDCODE_LIST: `${BASE_URL}/${HEALTH_BASE_PATH}/icd10Codes`,
     POST_PRESCRIPTION_RESPONSE: `${BASE_URL}/${HEALTH_BASE_PATH}/prescription-responses`, 
     GET_LIST_OF_PATIENTS: `${BASE_URL}/${HEALTH_BASE_PATH}/doctors/:DoctorNumber/patients`,
-    GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS: `${BASE_URL}/${HEALTH_BASE_PATH}/pdfwriter/23`,
+    GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS: `${BASE_URL}/${HEALTH_BASE_PATH}/pdfwriter/30`,
 
     //Field worker
 };

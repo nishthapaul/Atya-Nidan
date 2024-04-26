@@ -98,25 +98,26 @@ const showModal = () => {
 //     };
 //   }, []);
 
-useEffect(() => {
-    console.log("Inside Followups get");
-    const getfollowuplist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', districtId)
-    axios.get(getfollowuplist, {
-      headers: {
-        Authorization: `Bearer ${authToken}` 
-      }
-    })
-    .then(response => {
-      // console.log("response", response);
-      // console.log("response.data", response.data);
+// useEffect(() => {
+//     console.log("Inside Followups get");
+//     const getfollowuplist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', districtId)
+//     axios.get(getfollowuplist, {
+//       headers: {
+//         Authorization: `Bearer ${authToken}` 
+//       }
+//     })
+//     .then(response => {
+
+//       // console.log("response", response);
+//       // console.log("response.data", response.data);
   
-      setData(response.data);
-      setSelectedUser(response.data[0]);      
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
-  }, [authToken]);
+//       setData(response.data);
+//       setSelectedUser(response.data[0]);      
+//     })
+//     .catch(error => {
+//       console.error('Error fetching data:', error);
+//     });
+//   }, [authToken]);
 
 
   return (
