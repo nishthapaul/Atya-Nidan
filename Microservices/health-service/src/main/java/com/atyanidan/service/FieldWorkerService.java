@@ -17,4 +17,6 @@ public interface FieldWorkerService {
 //    FieldWorker updateAvailability(int fieldWorkerId, FieldWorkerAvailabilityRequest requestBody);
 
     FieldWorker updateAvailability(String fieldWorkerEmpId, FieldWorkerAvailabilityRequest requestBody);
+
+    FieldWorker getFieldWorkerByEmpId(String fieldWorkerEmpId);
 }

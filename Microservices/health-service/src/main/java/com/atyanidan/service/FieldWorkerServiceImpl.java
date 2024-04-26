@@ -125,7 +125,7 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
         return optionalFieldWorkerId.get();
     }
 
-    private FieldWorker getFieldWorkerByEmpId(String fieldWorkerEmpId) throws NotFoundException {
+    public FieldWorker getFieldWorkerByEmpId(String fieldWorkerEmpId) throws NotFoundException {
         Optional<FieldWorker> optionalFieldWorkerId = fieldWorkerRepository.findByEmpId(fieldWorkerEmpId);
         if ( optionalFieldWorkerId.isEmpty() ) {
             throw new NotFoundException("Field Worker id not found: " + fieldWorkerEmpId);

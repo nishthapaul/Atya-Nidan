@@ -1,16 +1,25 @@
 package com.atyanidan.service;
 
+import com.atyanidan.dao.FormDefinitionRepository;
 import com.atyanidan.dao.OlapPrescriptionRepository;
 import com.atyanidan.dao.PdfStorageRepository;
 import com.atyanidan.dao.PrescriptionResponseRepository;
 import com.atyanidan.entity.*;
 import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.entity.actor.FieldWorker;
+import com.atyanidan.entity.elasticsearch.FormDefinition;
 import com.atyanidan.entity.elasticsearch.OlapPrescription;
 import com.atyanidan.utils.PdfGenerator;
 import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PrescriptionResponseServiceImpl implements PrescriptionResponseService {
@@ -24,8 +33,11 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
     private  final ICD10CodeService icd10CodeService;
     private final PdfGenerator pdfGenerator;
     private final PdfStorageRepository pdfStorageRepository;
+    private final FieldWorkerService fieldWorkerService;
+    private final FollowUpService followUpService;
+    private final FormDefinitionRepository formDefinitionRepository;
     @Autowired
-    public PrescriptionResponseServiceImpl(PrescriptionResponseRepository prescriptionResponseRepository, OlapPrescriptionRepository olapPrescriptionRepository, PatientService patientService, UserService userService, FormService formService, FormResponseService formResponseService, ICD10CodeService icd10CodeService, PdfGenerator pdfGenerator, PdfStorageRepository pdfStorageRepository) {
+    public PrescriptionResponseServiceImpl(PrescriptionResponseRepository prescriptionResponseRepository, OlapPrescriptionRepository olapPrescriptionRepository, PatientService patientService, UserService userService, FormService formService, FormResponseService formResponseService, ICD10CodeService icd10CodeService, PdfGenerator pdfGenerator, PdfStorageRepository pdfStorageRepository, FieldWorkerService fieldWorkerService, FollowUpService followUpService, FormDefinitionRepository formDefinitionRepository) {
         this.prescriptionResponseRepository = prescriptionResponseRepository;
         this.olapPrescriptionRepository = olapPrescriptionRepository;
         this.patientService = patientService;
@@ -35,6 +47,9 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
         this.icd10CodeService = icd10CodeService;
         this.pdfGenerator = pdfGenerator;
         this.pdfStorageRepository = pdfStorageRepository;
+        this.fieldWorkerService = fieldWorkerService;
+        this.followUpService = followUpService;
+        this.formDefinitionRepository = formDefinitionRepository;
     }
 
     @Override
@@ -53,9 +68,21 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
         ICDCode icdCode = icd10CodeService.findByCode(olapPrescription.getIcdCode());
         System.out.println(icdCode);
 
-        // TODO: Save Follow Up Details
-
-        System.out.println("olap prescription");
+        int interval = olapPrescription.getFollowUpDetails().getInterval();
+        int repeatFrequency = olapPrescription.getFollowUpDetails().getRepeatFrequency();
+        boolean isFollowUpCompleted = false;
+        FollowUp followUp = null;
+        if ( interval != 0 && repeatFrequency != 0 ) {
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = formatter.format(date);
+            Timestamp timestamp = Timestamp.valueOf(formattedDate);
+            followUp = new FollowUp(repeatFrequency, interval, timestamp, 0);
+            FollowUp savedFollowUp = followUpService.saveFollowUp(followUp);
+            followUp = savedFollowUp;
+        } else {
+            isFollowUpCompleted = true;
+        }
 
         byte[] pdfContent = pdfGenerator.generatePrescriptionPdf(doctor, patient, olapPrescription);
         PdfStorage pdfStorage = new PdfStorage();
@@ -65,10 +92,60 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
         OlapPrescription savedOlapPrescription = olapPrescriptionRepository.save(olapPrescription);
         System.out.println(savedOlapPrescription.getId());
 
-        PrescriptionResponse prescriptionResponse = new PrescriptionResponse(form, fieldWorker, patient, doctor, savedOlapPrescription.getId(), icdCode, savedPDF);
+        PrescriptionResponse prescriptionResponse = new PrescriptionResponse(form, fieldWorker, patient, doctor, savedOlapPrescription.getId(), icdCode, savedPDF, followUp, isFollowUpCompleted);
         PrescriptionResponse savedPrescriptionResponse = prescriptionResponseRepository.save(prescriptionResponse);
 
         return savedPrescriptionResponse;
 
+    }
+
+    @Override
+    public List<FieldWorkerFollowUp> getFollowUpsOfFieldWorker(String fieldworkerEmpId) {
+        FieldWorker fieldWorker = fieldWorkerService.getFieldWorkerByEmpId(fieldworkerEmpId);
+        List<PrescriptionResponse> prescriptions = prescriptionResponseRepository.findByFieldWorkerAndFollowUpCompleteIsFalse(fieldWorker);
+        // remove findByFieldWorkerAndFollowUpCompleteIsTrue from repository
+
+        System.out.println(prescriptions.size());
+
+        List<FieldWorkerFollowUp> fieldWorkerFollowUps = new ArrayList<>();
+        for (PrescriptionResponse prescriptionResponse : prescriptions) {
+            FollowUp followUp = prescriptionResponse.getFollowUp();
+
+            LocalDate today = LocalDate.now();
+            Timestamp mrfdTimestamp = followUp.getMostRecentFollowUpDate();
+            LocalDate mrfd = mrfdTimestamp.toLocalDateTime().toLocalDate();
+
+            System.out.println(today);
+            System.out.println(mrfd);
+
+            long daysBetween = ChronoUnit.DAYS.between(mrfd, today);
+            System.out.println(daysBetween);
+
+            if (daysBetween >= followUp.getIntervalInDays()) {
+                Patient patient = prescriptionResponse.getPatient();
+                Demographic demographic = patient.getDemographic();
+                String fieldworkerFollowUpType = "";
+                String currentFollowUpDate = mrfd.plusDays(followUp.getIntervalInDays()).toString();
+                if ( daysBetween > followUp.getIntervalInDays() ) {
+                    fieldworkerFollowUpType = "Pending";
+                    System.out.println("pending");
+                } else if ( daysBetween == followUp.getIntervalInDays() ) {
+                    fieldworkerFollowUpType = "Today";
+                    System.out.println("do it today");
+                }
+
+                String formTitle = prescriptionResponse.getForm().getTitle();
+                FormDefinition formDefinition = formDefinitionRepository.findById(prescriptionResponse.getForm().getFormDefinitionId()).get();
+
+                // send pdf also
+                FieldWorkerFollowUp fieldWorkerFollowUp = new FieldWorkerFollowUp(patient.getPatientNumber(), demographic, currentFollowUpDate, fieldworkerFollowUpType, formTitle, formDefinition, prescriptionResponse.getSubmittedOn());
+                fieldWorkerFollowUps.add(fieldWorkerFollowUp);
+            }
+
+        }
+        fieldWorkerFollowUps = fieldWorkerFollowUps.stream()
+                .sorted(Comparator.comparing(FieldWorkerFollowUp::getSubmittedOn).reversed())
+                .collect(Collectors.toList());
+        return fieldWorkerFollowUps;
     }
 }
