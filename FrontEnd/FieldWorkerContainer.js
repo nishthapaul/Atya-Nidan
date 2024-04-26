@@ -2,7 +2,8 @@ import * as React from "react";
 import { View, Text } from "react-native";
 import axios from "axios";
 import { API_PATHS } from "./constants/apiConstants";
-import { init, db } from './Database/database';  // Make sure to import db here
+import { init, db } from './Database/database';  
+import FollowupScreen from "./screens/FollowupScreen";
 
 const FieldWorkerContainer = (props) => {
   const [admin, setAdmin] = React.useState([]);
@@ -21,12 +22,14 @@ const FieldWorkerContainer = (props) => {
         "Content-Type": "application/json",
       },
     }).then((response) => {
+      console.log("____________________________SQLite table______________________________");
       console.log("response", response);
+      console.log("______________________________________________________________________");
       setAdmin(response.data);
       db.transaction(tx => {
         tx.executeSql(
-          'INSERT INTO field_worker (empId) VALUES (?);',
-          [response.data.empId],
+          'INSERT INTO field_worker (empId, talukaId, districtId) VALUES (?, ?, ?);',
+          [response.data.empId, response.data.taluka.id, response.data.taluka.district.id],
           () => { console.log('Field worker saved successfully!'); },
           (_, err) => { console.log('Failed to save field worker:', err); }
         );

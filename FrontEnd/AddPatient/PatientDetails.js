@@ -7,15 +7,17 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
-  Button,
+  Button
 } from "react-native";
+import { WebView } from 'react-native-webview';
+import * as FileSystem from 'expo-file-system';
 import { SafeAreaView } from "react-native-safe-area-context";
-// import AppHeader from "../components/AppHeader";
 import PatientCard from "../components/PatientCard";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
 import { API_PATHS } from "../constants/apiConstants";
 import AddPrescription from "../AddPrescription/AddPrescription";
+// import { encode } from 'base64-arraybuffer';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -42,6 +44,8 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
   const [data, setData] = useState([]);
   const { authToken } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [pdfUri, setPdfUri] = useState('');
+  const [pdfBase64, setPdfBase64] = useState('');
 
   const handleBack = () => {
     onBack();  // Call the onBack function passed as prop which triggers refresh in parent
@@ -57,11 +61,54 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
     setIsModalVisible(false);
   };
 
+//   const downloadAndSavePdf = async (base64) => {
+//     const filePath = FileSystem.documentDirectory + 'patient_pdf.pdf';
+//     await FileSystem.writeAsStringAsync(filePath, base64, { encoding: FileSystem.EncodingType.Base64 });
+//     setPdfUri(filePath);
+//     console.log("---------------------------------");
+//     console.log('PDF saved to:', filePath);
+// };
+
+  useEffect(() => {
+    const getPDF = async () => {
+        try {
+            const response = await axios.get(API_PATHS.GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS, {
+                headers: { Authorization: `Bearer ${authToken}` }
+            });
+            const base64 = response.data.content; // assuming the base64 string is directly sent
+            console.log("----------------------");
+            console.log("PDf reponse: ", base64);
+            setPdfBase64(base64);
+        } catch (error) {
+            console.error('Error fetching PDF data:', error);
+        }
+    };
+
+    getPDF();
+}, [authToken]);
+
+// const testBase64PDF = "<html><head><title>Hello</title></head><body><h1>Hello World</h1></body></html>";
+// useEffect(() => {
+//   setPdfContent(testBase64PDF);
+// }, []);
+//  useEffect(() => {
+//         if (pdfContent) {
+//             downloadAndSavePdf(pdfContent);
+//         }
+//     }, [pdfContent]); 
+  
+
+/////////////////////////////////////////
+
+
+
   const TableRow = ({ item }) => {
-    console.log("item", item.responseId);
-    // const medicalhistory = `${item.title} ${item.type}`;
+    const [showPDF, setShowPDF] = useState(false);
+    const openPDFModal = () => setShowPDF(true);
+    const closePDFModal = () => setShowPDF(false);
+
     return (
-      <Pressable onPress={() => onSelectUser(item)}>
+      <Pressable onPress={openPDFModal}>
         <View style={styles.tableRow}>
           <View style={styles.tableCellContainer}>
             <Text style={styles.tableCell}>{`${item.title} ${item.type}`}</Text>
@@ -70,10 +117,36 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
             {item.submittedOn.slice(0, 10)}
           </Text>
         </View>
+        {/* <Button title="View PDF" onPress={openPDFModal} /> */}
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={showPDF}
+          onRequestClose={closePDFModal}
+        >
+          {/* <WebView
+            originWhitelist={['*']}
+            source={{ html: `<html><body><embed src="data:application/pdf;base64,${pdfContent}" type="application/pdf" style="width:100%;height:100%;"></embed></body></html>` }}
+            style={{ flex: 1 }}
+          /> */}
+           <WebView
+            originWhitelist={['*']}
+            source={{ html: pdfBase64 }}
+            style={{ marginTop: 20, height: 300 }}
+          />
+          {/* <WebView
+          originWhitelist={['*']}
+          source={{ html: `<html><body><embed src="data:application/pdf;base64,${pdfBase64}" type="application/pdf" width="100%" height="100%"></embed></body></html>` }}
+          style={{ flex: 1 }}
+        /> */}
+          <Button title="Close" onPress={closePDFModal} />
+        </Modal>
       </Pressable>
     );
   };
+
   //api calls
+
 
   useEffect(() => {
     console.log("Inside medical forms get");
@@ -88,11 +161,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
         },
       })
       .then((response) => {
-        // console.log("response", response);
-        // console.log("response.data", response.data);
-
         setData(response.data);
-        // setSelectedUser(response.data[0]);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -113,11 +182,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
         },
       })
       .then((response) => {
-        // console.log("response", response);
-        // console.log("response.data", response.data);
-
         setData(response.data);
-        // setSelectedUser(response.data[0]);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -131,7 +196,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
     <SafeAreaView style={styles.safeArea}>
       {/* <AppHeader /> */}
       {/* <View style={styles.contentContainer}> */}
-      {/* <Text>Patient Details Here</Text> */}
+      {/* <Text>Patient Details Here {pdfUri}</Text> */}
       {/* <Button title="Back" onPress={onBack} style={styles.backbutton}/> */}
       <View style={styles.container}>
         <View style={styles.list}>
@@ -147,6 +212,7 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
               }}
             ></View>
           </View>
+          
           <View style={styles.flatlist}>
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.addbutton} onPress={showModal}>
