@@ -16,7 +16,7 @@ public class OlapFormRequest {
 
     private int formId;
 
-    private String abhaNumber;
+    private String patientIdNumber;
 
     private int fieldWorkerId;
 
