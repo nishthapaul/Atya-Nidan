@@ -1,0 +1,258 @@
+[
+    {
+        "phoneNumber": "8762556080",
+        "email": "anarghyagupta@gmail.com",
+        "role": "Doctor",
+        "empId": "DCd50cfe",
+        "firstName": "Anarghya",
+        "middleName": "H",
+        "lastName": "Gupta",
+        "homeAddress": "House No. 346, Sector 23, Sunflower Colony",
+        "hospitalAddress": "Asian Hospital",
+        "nearestRailwayStation": "Basai Dhankot (bdxt) Railway Station, Sector 9B",
+        "gender": "Female",
+        "specialisation": {
+            "id": 22,
+            "name": "Orthologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 10,
+            "name": "Kiraoli",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1980-12-24",
+        "bloodGroup": "B+",
+        "aadharNumber": "987654321007",
+        "languageKnown1": "Hindi",
+        "languageKnown2": null,
+        "languageKnown3": null
+    },
+    {
+        "phoneNumber": "9650644225",
+        "email": "ShrutiHasan@gmail.com",
+        "role": "Doctor",
+        "empId": "DC6a6f79",
+        "firstName": "Shruti",
+        "middleName": "S",
+        "lastName": "Hasan",
+        "homeAddress": "House No. 346, Sector 23, Sunflower Colony",
+        "hospitalAddress": "Asian Hospital",
+        "nearestRailwayStation": "Basai Dhankot (bdxt) Railway Station, Sector 9B",
+        "gender": "Male",
+        "specialisation": {
+            "id": 22,
+            "name": "cardiologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 6,
+            "name": "Kheragarh",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1980-12-24",
+        "bloodGroup": "B+",
+        "aadharNumber": "987654321014",
+        "languageKnown1": "Haryanvi",
+        "languageKnown2": null,
+        "languageKnown3": null
+    },
+    {
+        "phoneNumber": "9650644324",
+        "email": "maheshmehta@gmail.com",
+        "role": "Doctor",
+        "empId": "DCb10e4e",
+        "firstName": "Mahesh",
+        "middleName": "Malhotra",
+        "lastName": "Mehta",
+        "homeAddress": "MIG -5, opposite Anand Nath Shiv Mandir, Colony, Patna, Bihar 800020, India",
+        "hospitalAddress": "Rd Number 2, above Bank Of India, East Patel Nagar, Patna, Bihar 800023, India",
+        "nearestRailwayStation": "Adarsh Colony",
+        "gender": "Male",
+        "specialisation": {
+            "id": 22,
+            "name": "Orthologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 4,
+            "name": "Etmadpur",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1988-04-06",
+        "bloodGroup": "A-",
+        "aadharNumber": "987654321020",
+        "languageKnown1": "English",
+        "languageKnown2": "Hindi",
+        "languageKnown3": ""
+    },
+    {
+        "phoneNumber": "9650644329",
+        "email": "aditimehta@gmail.com",
+        "role": "Doctor",
+        "empId": "DCcb523f",
+        "firstName": "Aditi",
+        "middleName": "A",
+        "lastName": "Mehta",
+        "homeAddress": "House No. 351, Sector 22, Lily Apartments",
+        "hospitalAddress": "QRG Hospital",
+        "nearestRailwayStation": "Basai Dhankot (bdxt) Railway Station, Sector 9B",
+        "gender": "Female",
+        "specialisation": {
+            "id": 22,
+            "name": "cardiologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 6,
+            "name": "Kheragarh",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1980-12-24",
+        "bloodGroup": "B+",
+        "aadharNumber": "987654321024",
+        "languageKnown1": "Hindi",
+        "languageKnown2": "English",
+        "languageKnown3": null
+    },
+    {
+        "phoneNumber": "9650644315",
+        "email": "viratgill@gmail.com",
+        "role": "Doctor",
+        "empId": "DCc64981",
+        "firstName": "Virat",
+        "middleName": "E",
+        "lastName": "Gill",
+        "homeAddress": "House No. 355, Sector 22, Lily Apartments",
+        "hospitalAddress": "QRG Hospital",
+        "nearestRailwayStation": "Basai Dhankot (bdxt) Railway Station, Sector 9B",
+        "gender": "Male",
+        "specialisation": {
+            "id": 22,
+            "name": "Orthologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 6,
+            "name": "Kheragarh",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1980-12-24",
+        "bloodGroup": "B+",
+        "aadharNumber": "987654321028",
+        "languageKnown1": "Hindi",
+        "languageKnown2": "English",
+        "languageKnown3": null
+    },
+    {
+        "phoneNumber": "9650644400",
+        "email": "aksharadesai@gmail.com",
+        "role": "Doctor",
+        "empId": "DC7c59b4",
+        "firstName": "Akshara",
+        "middleName": "P",
+        "lastName": "Desai",
+        "homeAddress": "House No. 349, Sector 22, Lily Apartments",
+        "hospitalAddress": "QRG Hospital",
+        "nearestRailwayStation": "Basai Dhankot (bdxt) Railway Station, Sector 9B",
+        "gender": "Female",
+        "specialisation": {
+            "id": 22,
+            "name": "Infectious Disease Specialist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 5,
+            "name": "Fatehabad",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1980-12-24",
+        "bloodGroup": "B+",
+        "aadharNumber": "987654321030",
+        "languageKnown1": "Hindi",
+        "languageKnown2": "English",
+        "languageKnown3": null
+    },
+    {
+        "phoneNumber": "7658903567",
+        "email": "yaadav1198@gmail.com",
+        "role": "Doctor",
+        "empId": "DC12b2f8",
+        "firstName": "Yaadav",
+        "middleName": "Mahendra",
+        "lastName": "Jha",
+        "homeAddress": "Sco 21 3rd floor Phase 1 Mohali, Sahibzada Ajit Singh Nagar, 160055, India\n",
+        "hospitalAddress": "Main Road, 6th Ln Arundelpet, opp head postoffice, near tirumala dresses, Guntur, India",
+        "nearestRailwayStation": "Guntur",
+        "gender": "Male",
+        "specialisation": {
+            "id": 22,
+            "name": "Orthologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 10,
+            "name": "Kiraoli",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1998-10-20",
+        "bloodGroup": "B-",
+        "aadharNumber": "456765234509",
+        "languageKnown1": "English",
+        "languageKnown2": "Hindi",
+        "languageKnown3": "Bhojpuri"
+    },
+    {
+        "phoneNumber": "7658903568",
+        "email": "jayreddy@gmail.com",
+        "role": "Doctor",
+        "empId": "DC30579c",
+        "firstName": "Jay",
+        "middleName": "H",
+        "lastName": "Reddy",
+        "homeAddress": "House No. 346, Sector 23, Rose Colony",
+        "hospitalAddress": "Sarvodya Hospital",
+        "nearestRailwayStation": "Basai Dhankot (bdxt) Railway Station, Sector 9B",
+        "gender": "Male",
+        "specialisation": {
+            "id": 22,
+            "name": "Orthologist",
+            "description": "One who diagnoses and treats infectious diseases"
+        },
+        "taluka": {
+            "id": 10,
+            "name": "Kiraoli",
+            "district": {
+                "id": 2,
+                "name": "Agra"
+            }
+        },
+        "dob": "1980-12-24",
+        "bloodGroup": "B+",
+        "aadharNumber": "123456789990",
+        "languageKnown1": "English",
+        "languageKnown2": null,
+        "languageKnown3": null
+    }
+]
