@@ -10,6 +10,7 @@ const FieldWorkerContainer = (props) => {
   const [demographics, setDemographics] = React.useState([]);
   const [forms, setForms] = React.useState([]); 
   const [recommendations, setRecommendations] = React.useState([]); 
+  const [selectedSpecialisationId, setSelectedSpecialisationId] = React.useState(null); 
 
 
 
@@ -57,7 +58,6 @@ const FieldWorkerContainer = (props) => {
 
 
   //Demographics table stuff
-
   React.useEffect(() => {
   const getuserinfo = API_PATHS.GET_USER_ALL_DETAILS.replace(":fieldworkerNumber", props.user.empId);
   axios.get(getuserinfo, {
@@ -113,13 +113,21 @@ React.useEffect(() => {
     console.log("____________________________Forms table______________________________");
     setForms(response.data);
     const fetchedForms = response.data; 
+    //specialisation id of default form extraction code
+    let foundSelected = false;
+    fetchedForms.forEach(form => {
+      if (form.selected && !foundSelected) { // ensures we only trigger once for the selected form
+        console.log("SELECTED ID: ", form.specialisation.id);
+        setSelectedSpecialisationId(form.specialisation.id);
+        foundSelected = true;
+      }
+    });
     db.transaction((tx) => {
       fetchedForms.forEach(worker => {
-        console.log("Form response", worker)
+        // console.log("Form response", worker)
         const { formId, title, selected, formDefinition, specialisation } = worker; 
         const { id: specialisationId } = specialisation;
         const formDefJsonString = JSON.stringify(formDefinition);
-        console.log("forId: " , formId)
         tx.executeSql(
           'INSERT INTO forms (formId, title, selected, formdefinition, specialisationId) VALUES (?, ?, ?, ?, ?);',
           // 'INSERT INTO forms (title) VALUES (?);',
@@ -146,40 +154,58 @@ React.useEffect(() => {
 }, [props.authToken]);
 
 
-
-
-// Recommendation table stuff
 // React.useEffect(() => {
-//   const getuserinfo = API_PATHS.GET_DOCTOR_RECOMMENDATION.replace(":specialisationId", 22).replace(":talukaId", 10);
-//   axios.get(getuserinfo, {
-//     headers: {
-//       Authorization: `Bearer ${props.authToken}`,
-//       "Content-Type": "application/json",
-//     },
-//   }).then((response) => {
-//     console.log("____________________________Recommendation table______________________________");
-//     setRecommendations(response.data);
-//     db.transaction((tx) => {
-//       tx.executeSql(
-//         'INSERT INTO field_worker (empId, talukaId, districtId) VALUES (?, ?, ?);',
-//         [response.data.empId, response.data.taluka.id, response.data.taluka.district.id],
-//         () => { console.log('Recommendation table saved successfully!'); },
-//         (_, err) => { console.log('Failed to save recommendations:', err); }
-//       );
-//       tx.executeSql(
-//         'SELECT * FROM field_worker',
-//         [],
-//         (_, result) => {   
-//         console.log('Recommendation table fetched from SQLite:', result.rows._array);    
-//         console.log("______________________________________________________________________");
-//          },
-//         (_, err) => { console.log('Failed to fetch recommendations:', err); }
-//       );
-//     });
-//   }).catch((error) => {
-//     console.error("Error fetching data:", error);
+//   forms.forEach(form => {
+//     if (form.selected) {
+//       console.log("SELECTED ID: ", form.specialisation.id);
+//       setSelectedSpecialisationId(form.specialisation.id);
+//       console.log("Selected Form Specialisation ID:", selectedSpecialisationId);
+//     }
 //   });
-// }, [props.authToken]);
+// });
+
+  //Reccomendation table stuff
+  React.useEffect(() => {
+    if (selectedSpecialisationId) {
+    const getuserinfo = API_PATHS.GET_DOCTOR_RECOMMENDATION.replace(":specialisationId", selectedSpecialisationId).replace(":talukaId", props.user.taluka.id);
+    axios.get(getuserinfo, {
+      headers: {
+        Authorization: `Bearer ${props.authToken}`,
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      console.log("____________________________Reccomendation table______________________________");
+      const fetchedRecommendations = response.data; 
+      db.transaction((tx) => {
+        fetchedRecommendations.forEach(worker => {
+          const { phoneNumber, email, empId, firstName, specialisation, hospitalAddress, gender, taluka, dob, languageKnown1, languageKnown2, languageKnown3  } = worker; // Destructuring for clarity
+          const { id: talukaId } = taluka
+          const { id: specialisationId } = specialisation
+          console.log("HERE", talukaId);
+  
+          tx.executeSql(
+            'INSERT INTO recommendations (phoneNumber, email, empId, firstName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+            [phoneNumber, email, empId, firstName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3 ],
+            () => { console.log('Recommendations saved successfully!'); },
+            (_, err) => { console.error('Failed to save recommendations:', err); }
+          );
+        });
+        tx.executeSql(
+          'SELECT * FROM recommendations',
+          [],
+          (_, result) => {   
+          console.log('Recommendations fetched from SQLite:', result.rows._array);    
+          console.log("______________________________________________________________________");
+           },
+          (_, err) => { console.log('Failed to fetch recommendations:', err); }
+        );
+      });
+      setRecommendations(fetchedRecommendations);
+    }).catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+  }
+  }, [selectedSpecialisationId, props.authToken]);
       
 
 

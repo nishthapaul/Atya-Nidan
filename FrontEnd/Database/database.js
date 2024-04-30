@@ -23,7 +23,7 @@ export const init = () => {
           dob DATE NOT NULL,
           gender TEXT NOT NULL,
           bloodGroup TEXT NOT NULL,
-          talukaid INT NOT NULL,
+          talukaId INT NOT NULL,
           phonenumber TEXT NOT NULL
         );`, [], null, (_, err) => reject(err)
       );
@@ -36,6 +36,24 @@ export const init = () => {
           selected INT NOT NULL,
           formDefinition TEXT NOT NULL,
           specialisationId INT NOT NULL
+        );`, [], null, (_, err) => reject(err)
+      );
+
+      tx.executeSql('DROP TABLE IF EXISTS recommendations;', [], null, (_, err) => reject(err));
+      tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS recommendations (
+          phoneNumber TEXT PRIMARY KEY NOT NULL,
+          email TEXT,
+          empId TEXT NOT NULL,
+          firstName TEXT NOT NULL,
+          specialisationId INT NOT NULL,
+          hospitalAddress TEXT NOT NULL,
+          gender TEXT,
+          talukaId INT NOT NULL,
+          dob DATE,
+          languageKnown1 TEXT,
+          languageKnown2 TEXT,
+          languageKnown3 TEXT
         );`, [], 
         () => resolve(), // Resolve after all tables are assured to be created
         (_, err) => reject(err)
