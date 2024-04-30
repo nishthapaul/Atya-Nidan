@@ -1,4 +1,4 @@
-const BASE_URL = 'https://bd3b-119-161-98-68.ngrok-free.app';
+const BASE_URL = 'https://01f6-119-161-98-68.ngrok-free.app';
 
 const HEALTH_BASE_PATH = "atyanidan/health/api";
 const AUTH_BASE_PATH = "atyanidan/auth/api";
@@ -31,7 +31,10 @@ export const API_PATHS = {
     GET_ICDCODE_LIST: `${BASE_URL}/${HEALTH_BASE_PATH}/icd10Codes`,
     POST_PRESCRIPTION_RESPONSE: `${BASE_URL}/${HEALTH_BASE_PATH}/prescription-responses`, 
     GET_LIST_OF_PATIENTS: `${BASE_URL}/${HEALTH_BASE_PATH}/doctors/:DoctorNumber/patients`,
-    GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS: `${BASE_URL}/${HEALTH_BASE_PATH}/pdfwriter/30`,
-
+    GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS: `${BASE_URL}/${HEALTH_BASE_PATH}/pdfwriter/33`,
+    
     //Field worker
+    GET_USER_ALL_DETAILS: `${BASE_URL}/${HEALTH_BASE_PATH}/fieldworkers/:fieldworkerNumber/followups`,
+    GET_DOCTOR_RECOMMENDATION: `${BASE_URL}/${HEALTH_BASE_PATH}/doctors/specialisations/:specialisationId/talukas/:talukaId`,
+    GET_FORMS_FOR_PATIENTS: `${BASE_URL}/${FORM_BASE_PATH}/forms/form-definitions`,
 };

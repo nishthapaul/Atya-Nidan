@@ -124,22 +124,15 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
           visible={showPDF}
           onRequestClose={closePDFModal}
         >
-          {/* <WebView
-            originWhitelist={['*']}
-            source={{ html: `<html><body><embed src="data:application/pdf;base64,${pdfContent}" type="application/pdf" style="width:100%;height:100%;"></embed></body></html>` }}
-            style={{ flex: 1 }}
-          /> */}
            <WebView
             originWhitelist={['*']}
             source={{ html: pdfBase64 }}
             style={{ marginTop: 20, height: 300 }}
           />
-          {/* <WebView
-          originWhitelist={['*']}
-          source={{ html: `<html><body><embed src="data:application/pdf;base64,${pdfBase64}" type="application/pdf" width="100%" height="100%"></embed></body></html>` }}
-          style={{ flex: 1 }}
-        /> */}
-          <Button title="Close" onPress={closePDFModal} />
+          {/* <Button title="Close" onPress={closePDFModal} /> */}
+          <TouchableOpacity style={styles.closebutton} onPress={closePDFModal}>
+              <Text style={styles.backbuttonText}>Close</Text>
+            </TouchableOpacity>
         </Modal>
       </Pressable>
     );
@@ -342,6 +335,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: "center",
     marginHorizontal: 20, // Add space between buttons (margin on each side)
+    height: 40,
+  },
+  closebutton: {
+    paddingHorizontal: 15, // Add horizontal space between buttons and text
+    backgroundColor: "#FFA62B",
+    borderRadius: 5, // Maintain button corner rounding
+    borderWidth: 1,
+    alignItems: "center",
+    marginHorizontal: 50,
     height: 40,
   },
 });
