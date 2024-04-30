@@ -96,6 +96,8 @@ export default FWForm = ({ saveModal }) => {
   const [responseList , setResponseList] = useState({}); 
   const [healthStatus, setHealthStatus] = useState('');
   const [consent , setConsent] = useState(false);
+  const [taluka, setTaluka] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
@@ -308,7 +310,7 @@ export default FWForm = ({ saveModal }) => {
             style={styles.textInput}
             placeholder="Enter Taluka"
             value={address}
-            onChangeText={(text) => setAddress(text)}
+            onChangeText={(text) => setTaluka(text)}
           />
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}> PhoneNumber:</Text>
@@ -317,7 +319,7 @@ export default FWForm = ({ saveModal }) => {
             style={styles.textInput}
             placeholder="Enter PhoneNumber"
             value={address}
-            onChangeText={(text) => setAddress(text)}
+            onChangeText={(text) => setPhoneNumber(text)}
           />
         </View>
         <View style={[styles.section, {marginTop:10}]}>
