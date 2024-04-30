@@ -1,26 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 
-const CustomCheckbox = ({ labelValue, index, initialSelected = false }) => {
-    const [isChecked, setIsChecked] = useState(initialSelected); // Manage checked state
+const CustomCheckbox = ({ labelValue, index, question, responseList, setResponseList }) => {
+    const [isChecked, setIsChecked] = useState(false); // Manage checked state
   
-    const handleCheckboxChange = () => setIsChecked(!isChecked); // Update state on click
+    
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+
+    // Update responseList based on checked status
+    const updatedResponses = { ...responseList };
+    const key = question;
+    if (updatedResponses.hasOwnProperty(key)) {
+      // Question already exists in responseList, update the value
+      updatedResponses[key] = isChecked ? null : labelValue; // Toggle labelValue based on isChecked
+    } else {
+      // Question is not in responseList, add a new entry
+      updatedResponses[key] = isChecked ? null : labelValue;
+    }
+    // updatedResponses[question] = isChecked ? null : labelValue;
+    setResponseList(updatedResponses);
+  }; // Update state on click
   
+    isChecked && console.log("someting is checked");
+
     // Function to retrieve selected values (if needed)
     const getSelectedData = () => isChecked ? labelValue : null; // Return label if checked
   
     return (
       <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
         <CheckBox
-          value={isChecked} // Bind current checked state
+          checked={isChecked}
           iconRight
           iconType="material"
           checkedIcon="check-box"
           uncheckedIcon="check-box-outline-blank"
+          checkedColor="green" 
           uncheckedColor="black"
           containerStyle={styles.checkbox}
-          onPress={handleCheckboxChange} // Attach onPress handler
+          onPress={handleCheckboxChange}
         />
         <Text style={styles.label}>{labelValue}</Text>
       </View>
@@ -50,10 +69,13 @@ export default FWForm = ({ saveModal }) => {
   const [selectedFormType, setSelectedFormType] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [address, setAddress] = useState('');
+  const [responseList , setResponseList] = useState({}); 
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
   };
+  
+  console.log("responseList" , responseList);
 
   const questions = [
     {
@@ -278,7 +300,10 @@ export default FWForm = ({ saveModal }) => {
                             </View>
                             {item?.values && item.values.map((value, idx) => (
                                 item.optionType == 'CheckBox' ?
-                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />:
+                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} 
+                                question = {item.question}
+                                responseList={responseList}
+                                setResponseList={setResponseList}/>:
                                 <CustomRadioButton labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />
 
                             ))}
@@ -367,18 +392,18 @@ section: {
     fontSize: 20,
 },
 checkboxContainer: {
-    flexDirection: 'row',
-    // backgroundColor: 'blue',
-},
-label: {
-    alignSelf: 'center',
-    width: 300,
-    fontSize: 16,
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 10,
 },
 checkbox: {
-    backgroundColor: 'transparent',
-    borderWidth: 0, // Remove default border
-    padding: 4, // Adjust padding as needed
-    margin: 0, // Adjust margin as needed
-  },
+  backgroundColor: 'transparent',
+  borderWidth: 0, 
+  padding: 0, 
+  marginLeft: 0, 
+},
+label: {
+  marginLeft: 10,
+  fontSize: 16,
+}
 });
