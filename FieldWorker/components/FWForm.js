@@ -70,9 +70,13 @@ export default FWForm = ({ saveModal }) => {
   const [bloodGroup, setBloodGroup] = useState('');
   const [address, setAddress] = useState('');
   const [responseList , setResponseList] = useState({}); 
+  const [healthStatus, setHealthStatus] = useState('');
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
+  };
+  const handleHealthStatus = (labelValue) => {
+    setHealthStatus(labelValue);
   };
   const handleOnSubmitForm = () => {
     saveModal();
@@ -312,6 +316,26 @@ export default FWForm = ({ saveModal }) => {
                         </View>
                     </View>
                 ))}
+                <View>
+                </View>
+                <View style={[styles.formId , {backgroundColor: '#f2f2f2'}]}>
+          <Text style={styles.text}>
+            <Text style={{ fontWeight: 'bold' }}>Health Status:</Text>
+          </Text>
+          <CustomRadioButton
+            labelValue="Healthy"
+            key={1}
+            isSelected={healthStatus === 'Healthy'} // Set based on state
+            onPress={() => handleHealthStatus('Healthy')}
+          />
+          <CustomRadioButton
+            labelValue="UnHealthy"
+            key={2}
+            isSelected={healthStatus === 'UnHealthy'} // Set based on state
+            onPress={() => handleHealthStatus('UnHealthy')}
+          />
+          {/* {selectedFormType && <Text>Selected Form Type: {selectedFormType}</Text>} */}
+        </View>
                 <View>
                   <Button title = "submit" onPress = {handleOnSubmitForm}/>
                 </View>
