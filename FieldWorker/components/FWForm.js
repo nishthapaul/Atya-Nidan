@@ -46,6 +46,30 @@ const CustomCheckbox = ({ labelValue, index, question, responseList, setResponse
     );
   };
 
+  const ConsentCheckbox = ({ labelValue, index, consent, setConsent }) => {
+
+    
+  const handleConsentChange = () => {
+    setConsent(!consent);
+  }  
+    return (
+      <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
+        <CheckBox
+          checked={consent}
+          iconRight
+          iconType="material"
+          checkedIcon="check-box"
+          uncheckedIcon="check-box-outline-blank"
+          checkedColor="green" 
+          uncheckedColor="black"
+          containerStyle={styles.checkbox}
+          onPress={handleConsentChange}
+        />
+        <Text style={styles.label}>{labelValue}</Text>
+      </View>
+    );
+  };
+
 const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   return (
     <Pressable onPress = {onPress} key={`${labelValue}-${index}`}>
@@ -71,6 +95,7 @@ export default FWForm = ({ saveModal }) => {
   const [address, setAddress] = useState('');
   const [responseList , setResponseList] = useState({}); 
   const [healthStatus, setHealthStatus] = useState('');
+  const [consent , setConsent] = useState(false);
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
@@ -206,7 +231,7 @@ export default FWForm = ({ saveModal }) => {
             onChangeText={(text) => setpNumber(text)}
           />
         </View>
-        <View style = {styles.formId}>
+        <View style = {[styles.formId, {gap:20}]}>
         <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>First Name:</Text>
           </Text>
@@ -235,7 +260,7 @@ export default FWForm = ({ saveModal }) => {
             onChangeText={(text) => setLName(text)}
           />
         </View>
-        <View style={styles.formId}>
+        <View style={[styles.formId, {gap:90}]}>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Age:</Text>
           </Text>
@@ -336,6 +361,13 @@ export default FWForm = ({ saveModal }) => {
           />
           {/* {selectedFormType && <Text>Selected Form Type: {selectedFormType}</Text>} */}
         </View>
+        <View style={[styles.formId , {margin : 10}]}>
+               <ConsentCheckbox
+               labelValue= "Do you want to share your health details?"
+               key={1}
+               consent={consent}
+              setConsent={setConsent}/>
+          </View>
                 <View>
                   <Button title = "submit" onPress = {handleOnSubmitForm}/>
                 </View>
@@ -385,7 +417,7 @@ const styles = StyleSheet.create({
   formId: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   radioText: {
     fontSize:16,
