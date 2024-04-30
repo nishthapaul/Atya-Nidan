@@ -74,7 +74,9 @@ export default FWForm = ({ saveModal }) => {
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
   };
-  
+  const handleOnSubmitForm = () => {
+    saveModal();
+  }
   console.log("responseList" , responseList);
 
   const questions = [
@@ -310,6 +312,9 @@ export default FWForm = ({ saveModal }) => {
                         </View>
                     </View>
                 ))}
+                <View>
+                  <Button title = "submit" onPress = {handleOnSubmitForm}/>
+                </View>
             </View>
             </ScrollView>
             </View>
