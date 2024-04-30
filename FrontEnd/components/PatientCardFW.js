@@ -10,19 +10,19 @@ export default PatientCardFW = ({ user }) => {
         <View style={styles.leftColumn}>
           <Text style={styles.userName}>{name}</Text>
           <View style={styles.userDetailRow}>
-            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Age: </Text>{user.age}</Text>
-            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Sex: </Text>{user.sex}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>D.O.B: </Text>{user.dob}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Sex: </Text>{user.gender}</Text>
           </View>
-          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Contact No.: </Text>{user.phone} </Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Contact No.: </Text>{user.phoneNumber} </Text>
+          {/* <Text style={styles.userDetail}> */}
+          {/* <Text style={{fontWeight: 'bold'}}>Email Id.: </Text>{user.EmailId}
+          </Text> */}
           <Text style={styles.userDetail}>
-          <Text style={{fontWeight: 'bold'}}>Email Id.: </Text>{user.EmailId}
+          <Text style={{fontWeight: 'bold'}}>Address: </Text>{user.address}
           </Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka: </Text>{user.taluka}</Text>
           <Text style={styles.userDetail}>
-          <Text style={{fontWeight: 'bold'}}>Address: </Text>{user.Address}
-          </Text>
-          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka Assigned: </Text>{user.Taluka}</Text>
-          <Text style={styles.userDetail}>
-          <Text style={{fontWeight: 'bold'}}>Blood Group: </Text>{user.bloodgroup}
+          <Text style={{fontWeight: 'bold'}}>Blood Group: </Text>{user.bloodGroup}
           </Text>
         </View>
         <View style={styles.rightColumn}>

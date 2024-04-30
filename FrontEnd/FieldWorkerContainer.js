@@ -70,14 +70,13 @@ const FieldWorkerContainer = (props) => {
     const fetchedWorkers = response.data; // Replace with actual field name
     db.transaction((tx) => {
       fetchedWorkers.forEach(worker => {
-        const { patientNumber, demographic } = worker; // Destructuring for clarity
-        const { firstName, address, dob, gender, bloodGroup, taluka, phoneNumber } = demographic;// Handle potential nullish values in demographic object
+        const { patientNumber, demographic, currentFollowUpDate, fieldworkerFollowUpType, formTitle } = worker; // Destructuring for clarity
+        const { firstName, middleName, lastName, address, dob, gender, bloodGroup, taluka, phoneNumber } = demographic;// Handle potential nullish values in demographic object
         const { id: talukaId } = taluka
-        console.log("HERE", talukaId);
 
         tx.executeSql(
-          'INSERT INTO demographics (patientNumber,firstName, address, dob, gender, bloodGroup, talukaId, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
-          [patientNumber, firstName, address, dob, gender, bloodGroup, talukaId, phoneNumber],
+          'INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+          [patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle],
           () => { console.log('Patient demographics saved successfully!'); },
           (_, err) => { console.error('Failed to save patient demographics:', err); }
         );
@@ -124,15 +123,12 @@ React.useEffect(() => {
     });
     db.transaction((tx) => {
       fetchedForms.forEach(worker => {
-        // console.log("Form response", worker)
         const { formId, title, selected, formDefinition, specialisation } = worker; 
         const { id: specialisationId } = specialisation;
         const formDefJsonString = JSON.stringify(formDefinition);
         tx.executeSql(
           'INSERT INTO forms (formId, title, selected, formdefinition, specialisationId) VALUES (?, ?, ?, ?, ?);',
-          // 'INSERT INTO forms (title) VALUES (?);',
           [formId, title, selected, formDefJsonString, specialisationId],
-          // [title],
 
           () => { console.log('Forms saved successfully!'); },
           (_, err) => { console.error('Failed to save Forms:', err); }
@@ -153,17 +149,6 @@ React.useEffect(() => {
   });
 }, [props.authToken]);
 
-
-// React.useEffect(() => {
-//   forms.forEach(form => {
-//     if (form.selected) {
-//       console.log("SELECTED ID: ", form.specialisation.id);
-//       setSelectedSpecialisationId(form.specialisation.id);
-//       console.log("Selected Form Specialisation ID:", selectedSpecialisationId);
-//     }
-//   });
-// });
-
   //Reccomendation table stuff
   React.useEffect(() => {
     if (selectedSpecialisationId) {
@@ -181,7 +166,6 @@ React.useEffect(() => {
           const { phoneNumber, email, empId, firstName, specialisation, hospitalAddress, gender, taluka, dob, languageKnown1, languageKnown2, languageKnown3  } = worker; // Destructuring for clarity
           const { id: talukaId } = taluka
           const { id: specialisationId } = specialisation
-          console.log("HERE", talukaId);
   
           tx.executeSql(
             'INSERT INTO recommendations (phoneNumber, email, empId, firstName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
@@ -211,8 +195,8 @@ React.useEffect(() => {
 
 
   if (!fieldWorkers || fieldWorkers.length === 0) {
-    return <View><Text>Loading...</Text></View>;
-    // <FollowupScreen/>
+    // return <View><Text>Loading...</Text></View>;
+    <FollowupScreen/>
   }
 
   return <View><Text>Inside FW</Text></View>;

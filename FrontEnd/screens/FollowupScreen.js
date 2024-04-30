@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
-import PatientCardFW from '../components/PatientCardFW';
-import { API_PATHS } from '../constants/apiConstants';
-import { useAuth } from '../Context/AuthContext';
+// import PatientCardFW from '../components/PatientCardFW';
+import AddPatientForm from '../AddFollowup/AddPatientForm';
+// import { API_PATHS } from '../constants/apiConstants';
+// import { useAuth } from '../Context/AuthContext';
+import { db } from './Database/database';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -15,109 +17,124 @@ const TableHeader = () => (
   </View>
 );
 export default FollowupScreen = () => {
-  const { authToken } = useAuth();
+  // const { authToken } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
+  const [navigate, setNavigate] = useState(false);
+  const [apiData, setApiData] = useState(null);
+  const [formType, setFormType] = useState('');
+
+
+  // Function to fetch data from the demographics table
+  const fetchData = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM demographics',
+        [],
+        (_, result) => {
+          // Extract rows from the result
+          const fetchedData = result.rows._array;
+          setData(fetchedData);
+          setFilteredData(fetchedData); // Initialize filtered data with fetched data
+        },
+        (_, err) => {
+          console.log('Failed to fetch data from demographics table:', err);
+        }
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchData(); // Fetch data from the demographics table on component mount
+  }, []);
 
   const handleSearch = (text) => {
+    setSearchQuery(text);
     const filteredSearchData = data.filter((item) => 
-    item.firstName.toLowerCase().includes(text.toLowerCase()))
-   setSearchQuery(text);
+      item.firstName.toLowerCase().includes(text.toLowerCase())
+    );
     setFilteredData(filteredSearchData);
+  };
 
-};
 
-const showModal = () => {
-  console.log("Show Modal");
-  setIsModalVisible(true);
-};
+  const showModal = () => {
+    console.log("Show Modal");
+    setIsModalVisible(true);
+  };
+
+  const saveModal = () => {
+    console.log("Save Modal");
+    setIsModalVisible(false);
+  };
+
+  const onSelectUser = (item) => {
+    if (item.patientNumber === selectedUser) {
+      // If the same item is clicked, force the useEffect to run
+      setForceUpdate(prev => prev + 1);  // Increment to force re-render
+    } else {
+      setSelectedUser(item.patientNumber);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedUser) {
+        try {
+          db.transaction((tx) => {
+            tx.executeSql(
+              'SELECT * FROM demographics WHERE patientNumber <> selectedUser',
+              [],
+              (_, result) => {
+                // Extract rows from the result
+                const fetchedData = result.rows._array;
+                setApiData(fetchedData);
+                setNavigate(true);
+              },
+              (_, err) => {
+                console.log('Failed to fetch selected user data from demographics table:', err);
+              }
+            );
+          });
+        } catch (error) {
+          console.error("Error fetching selected user details:", error);
+          alert('Failed to fetch patient details.');
+        }
+      }
+    };
+    fetchData();
+  }, [selectedUser]);
+
+  if (navigate && apiData) {
+    // Navigate to PatientDetailsFW component
+    return (
+      <PatientDetailsFW 
+        patientData={apiData} 
+        onBack={() => {
+          setFormType('new');
+          setNavigate(false);  // Go back to list
+          setSelectedUser(null);
+          saveModal();
+        }} 
+      />
+    );
+  }
+
   const TableRow = ({ item }) => {
     const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
     return (
-      <Pressable onPress={() => setSelectedUser(item)}>
+      <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.id}</Text>
+          <Text style={[styles.tableCell, { flex: 1 }]}>{item.patientNumber}</Text>
           <Text style={[styles.tableCell, { flex: 3 }]}>{name}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.disease}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.followUp}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.formTitle}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.currentFollowUpDate}</Text>
         </View>
       </Pressable>
     )
   };
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         console.log("Inside get API");
-  
-//         // Check network connectivity
-//         const netInfoState = await NetInfo.fetch();
-//         if (netInfoState.isConnected) {
-//           // If online, make API call
-//           console.log("Inside is connected")
-//           const response = await axios.get("http://10.0.2.2:3000/patientDetails");
-//           const newData = response.data;
-  
-//           // Update state with new data
-//           setData(newData);
-//           setSelectedUser(newData[0]);
-  
-//           // Store new data in AsyncStorage
-//           await AsyncStorage.setItem('patientDetails', JSON.stringify(newData));
-//         } else {
-//            console.log("Inside else connected")
-//           // If offline, fetch data from AsyncStorage
-//           const storedData = await AsyncStorage.getItem('patientDetails');
-//           console.log("@111 storedData" , storedData);
-//           if (storedData) {
-//             setData(JSON.parse(storedData));
-//             setSelectedUser(JSON.parse(storedData)[0]);
-//           }
-//         }
-//       } catch (error) {
-//         console.error('Error:', error);
-//       }
-//     };
-  
-//     // Call fetchData on initial render
-//     fetchData();
-  
-//     // Subscribe to network state changes and fetch data accordingly
-//     const unsubscribe = NetInfo.addEventListener(state => {
-//       if (state.isConnected) {
-//         fetchData(); // Fetch data if online
-//       }
-//     });
-  
-//     // Clean up subscription on component unmount
-//     return () => {
-//       unsubscribe();
-//     };
-//   }, []);
-
-// useEffect(() => {
-//     console.log("Inside Followups get");
-//     const getfollowuplist = API_PATHS.GET_FIELDWORKERS_BY_DISTRICTS.replace(':districtId', districtId)
-//     axios.get(getfollowuplist, {
-//       headers: {
-//         Authorization: `Bearer ${authToken}` 
-//       }
-//     })
-//     .then(response => {
-
-//       // console.log("response", response);
-//       // console.log("response.data", response.data);
-  
-//       setData(response.data);
-//       setSelectedUser(response.data[0]);      
-//     })
-//     .catch(error => {
-//       console.error('Error fetching data:', error);
-//     });
-//   }, [authToken]);
 
 
   return (
@@ -179,7 +196,7 @@ const showModal = () => {
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <View><Text>Hello</Text></View>
+        <AddPatientForm saveModal={saveModal} formType={formType} setFormType={setFormType}/>
       </Modal>
     </View>
     </View>

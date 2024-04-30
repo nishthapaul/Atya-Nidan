@@ -19,12 +19,17 @@ export const init = () => {
         `CREATE TABLE IF NOT EXISTS demographics (
           patientNumber TEXT PRIMARY KEY NOT NULL,
           firstName TEXT NOT NULL,
+          middleName TEXT,
+          lastName TEXT NOT NULL,
           address TEXT NOT NULL,
           dob DATE NOT NULL,
           gender TEXT NOT NULL,
           bloodGroup TEXT NOT NULL,
           talukaId INT NOT NULL,
-          phonenumber TEXT NOT NULL
+          phoneNumber TEXT NOT NULL,
+          currentFollowUpDate DATE,
+          fieldworkerFollowUpType TEXT,
+          formTitle TEXT NOT NULL,
         );`, [], null, (_, err) => reject(err)
       );
 
