@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
-// import PatientCardFW from '../components/PatientCardFW';
+import PatientCardFW from '../AddFollowup/PatientDetailsFW';
 import AddPatientDefaultForm from '../AddFollowup/AddPatientDefaultForm';
 // import { API_PATHS } from '../constants/apiConstants';
 // import { useAuth } from '../Context/AuthContext';
 import { db } from '../Database/database';
+import PatientDetailsFW from '../AddFollowup/PatientDetailsFW';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -110,10 +111,10 @@ export default FollowupScreen = () => {
   };
 
   const onSelectUser = (item) => {
-    if (item.patientNumber === selectedUser) {
+    if (item.patientNumber) {
       // If the same item is clicked, force the useEffect to run
-      setForceUpdate(prev => prev + 1);  // Increment to force re-render
-    } else {
+    //   setForceUpdate(prev => prev + 1);  // Increment to force re-render
+    // } else {
       setSelectedUser(item.patientNumber);
     }
   };
@@ -121,6 +122,7 @@ export default FollowupScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (selectedUser) {
+        console.log("selected user" , selectedUser);
         try {
           db.transaction((tx) => {
             tx.executeSql(
@@ -128,9 +130,13 @@ export default FollowupScreen = () => {
               [selectedUser], // Bind the selectedUser value to the query
               (_, result) => {
                 // Extract rows from the result
+               
+                console.log("Result" , result);
                 const fetchedData = result.rows._array;
-                if (fetchedData.length > 0) {
-                  setApiData(fetchedData[0]); // Assuming you want the first match or there's only one match
+                console.log("array" , fetchedData);
+                if (result.rows.length > 0) {
+                  console.log("fetchedData" , fetchedData);
+                  setApiData(fetchedData); // Assuming you want the first match or there's only one match
                   setNavigate(true);
                 } else {
                   console.log('No data found for the selected user');
@@ -236,9 +242,9 @@ export default FollowupScreen = () => {
           />
         </View>
       </View>
-      <View style={styles.card}>
+      {/* <View style={styles.card}>
         {selectedUser && <PatientCardFW user={selectedUser} />}
-      </View>
+      </View> */}
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
         <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType}/>

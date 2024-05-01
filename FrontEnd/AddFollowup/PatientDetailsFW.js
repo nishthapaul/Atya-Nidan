@@ -58,10 +58,17 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
 
 
 useEffect(() => {
-  const base64 = patientData.content;
-  setPdfBase64(base64);
+  // const base64 = patientData.pdfStorageContent;
+  console.log("patientdata" , patientData);
+  console.log("base64" , patientData[0].pdfStorageContent);
+  setPdfBase64(patientData[0].pdfStorageContent);
 }, []);
 
+useEffect(() => {
+  // const base64 = patientData.pdfStorageContent;
+   console.log("pdfbase64" , pdfBase64);
+  // setPdfBase64(patientData.pdfStorageContent);
+}, [pdfBase64]);
 
 
   const TableRow = ({ item }) => {
@@ -73,7 +80,7 @@ useEffect(() => {
       <Pressable onPress={openPDFModal}>
         <View style={styles.tableRow}>
           <View style={styles.tableCellContainer}>
-            <Text style={styles.tableCell}>{`${item.formTitle} ${item.type}`}</Text>
+            <Text style={styles.tableCell}>{`${item.formTitle}`}</Text>
           </View>
           <Text style={[styles.tableCell, { flex: 2, marginLeft: 60 }]}>
             {item.submittedOn.slice(0, 10)}
@@ -129,7 +136,7 @@ useEffect(() => {
               </TouchableOpacity>
             </View>
             <FlatList
-              data={data}
+              data={patientData}
               ListHeaderComponent={<TableHeader />}
               renderItem={({ item }) => <TableRow item={item} />}
               // keyExtractor={item => item.empId.toString()}
@@ -139,7 +146,7 @@ useEffect(() => {
           </View>
         </View>
         <View style={styles.card}>
-          <PatientCardFW user={patientData} />
+          <PatientCardFW user={patientData[0]} />
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={styles.backbutton} onPress={handleBack}>
               <Text style={styles.backbuttonText}>Back</Text>
