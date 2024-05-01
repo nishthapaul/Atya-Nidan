@@ -155,11 +155,10 @@ useEffect(() => {
         </View>
         {/* Modal */}
         <Modal visible={isModalVisible} transparent animationType="slide">
-          {/* <AddPatientForm
+          <AddPatientForm
             saveModal={saveModal}
-            doctorId={doctorId}
-            user={patientData}
-          /> */}
+            patientData={patientData[0]}
+          />
         </Modal>
       </View>
 

@@ -60,7 +60,9 @@ const FieldWorkerContainer = (props) => {
       await db.transaction(async(tx) => {
         demographicsResponse.data.forEach(worker => {
           console.log("Adding patient: ", worker.demographic.firstName);
-          tx.executeSql('INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle, pdfStorageContent, submittedOn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle, worker.pdfStorage.content, worker.submittedOn], (tx, results) => {
+          tx.executeSql('INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, talukaName, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle, pdfStorageContent, submittedOn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
+          [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.taluka.name, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle, worker.pdfStorage.content, worker.submittedOn], (tx, results) => {
+            console.log("hereeee")
             console.log('Results', results.rowsAffected);
             if (results.rowsAffected > 0) {
               console.log('Data Inserted Successfully!');

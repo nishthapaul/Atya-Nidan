@@ -26,6 +26,7 @@ export const init = () => {
           gender TEXT NOT NULL,
           bloodGroup TEXT NOT NULL,
           talukaId INT NOT NULL,
+          talukaName TEXT NOT NULL,
           phoneNumber TEXT NOT NULL,
           currentFollowUpDate DATE,
           fieldworkerFollowUpType TEXT,
@@ -58,18 +59,16 @@ export const init = () => {
           mName TEXT,
           lName TEXT,
           age INTEGER,
+          unhealthy INTEGER,
           gender TEXT,
-          selectedFormType TEXT,
           bloodGroup TEXT,
           address TEXT,
-          description TEXT,
-          specialisation TEXT,
           responseList TEXT,
-          healthStatus TEXT,
           consent INTEGER,
-          taluka TEXT,
+          talukaName TEXT,
           phoneNumber TEXT,
-          formType TEXT NOT NULL
+          formType TEXT NOT NULL,
+          aabhaNumber TEXT
         );
         `, [], null, (_, err) => reject(err)
       );

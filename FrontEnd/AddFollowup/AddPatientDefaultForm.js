@@ -90,6 +90,7 @@ export default FWForm = ({ saveModal }) => {
   const [formId, setFormId] = useState('');
   const [fwNumber, setFWNumber] = useState('');
   const [pNumber, setpNumber] = useState('');
+  const [aabhaNumber, setAabhaNumber] = useState('');
   const [fName, setFName] = useState('');
   const [mName, setMName] = useState('');
   const [lName, setLName] = useState('');
@@ -100,12 +101,23 @@ export default FWForm = ({ saveModal }) => {
   const [address, setAddress] = useState('');
   const [responseList , setResponseList] = useState({}); 
   const [healthStatus, setHealthStatus] = useState('');
+  const [unhealthy , setUnhealthy] = useState(false);
   const [consent , setConsent] = useState(false);
   const [taluka, setTaluka] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  // const [isModalVisible, setIsModalVisible] = useState(false);
 
   console.log("responselist" , responseList);
 
+  // const showModal = () => {
+  //   console.log("Show Modal");
+  //   setIsModalVisible(true);
+  // };
+
+  // const saveModal = () => {
+  //   console.log("Save Modal");
+  //   setIsModalVisible(false);
+  // };
 
   useEffect(() => {
     const fetchFormDetails = async () => {
@@ -141,85 +153,100 @@ export default FWForm = ({ saveModal }) => {
     fetchFormDetails();
   }, []);
 
+  // useEffect(() => {
+  //   const recdoctors = async () => {
+  //     console.log("in");
+  //     try {
+  //       db.transaction((tx) => {
+  //         tx.executeSql(
+  //           'SELECT * FROM recommendations',
+  //           [],
+  //           (_, result) => { // Corrected to include the transaction object "_"
+  //             console.log("inside results"); // Now this should correctly log
+  //             const fetchedRec = result.rows._array;
+  //             console.log('_______________________________________________');    
+  //             console.log("Recommendations Data: ", fetchedRec);
+  //             if (fetchedRec) {
+  //               setData(fetchedRec[0]); // Assuming you want the first match or there's only one match
+  //             } else {
+  //               console.log('No data recommendations');
+  //             }
+  //             // const formObject = JSON.parse(fetchedRec[0].formDefinition);
+  //             // setFormDefinition(formObject);
+  //           },
+  //           (_, err) => {
+  //             console.log('Failed to fetch selected user data from Form table:', err);
+  //           }
+  //         );
+  //       });
+  //     } catch (error) {
+  //       console.error("Error fetching Form details:", error);
+  //       alert('Failed to fetch Form details.');
+  //     }
+  //   };
+  //   recdoctors();
+  // }, []);
+
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
   };
   const handleHealthStatus = (labelValue) => {
     setHealthStatus(labelValue);
+    if(labelValue === "Healthy")
+        setUnhealthy(false);
+    else
+        setUnhealthy(true);
   };
-  // const handleOnSubmitForm = () => {
-  //   const saveData = {
-  //     title:  data.title,
-  //     description: formDefinition.description,
-  //    specialisation: data.specialisationName,
-  //      formId,
-  //      fwNumber,
-  //      pNumber,
-  //      fName,
-  //      mName,
-  //      lName,
-  //      age,
-  //      gender,
-  //      selectedFormType,
-  //      bloodGroup,
-  //      address,
-  //      healthStatus,
-  //      consent: consent ? 1 : 0,
-  //      taluka,
-  //      phoneNumber,
-  //      formType: "FollowUp"
-  //    };
-     
-  //   saveModal();
-  // }
-  //console.log(formDefinitionJson.questions[0].values);
+
 
   const handleOnSubmitForm = async () => {
-    // Collect all state values into an object, converting consent to 0 or 1
     const formData = {
       formId,
       fwNumber,
-      pNumber,
+      pNumber: null,
       fName,
       mName,
       lName,
       age,
+      unhealthy: unhealthy ? 1 : 0, 
       gender,
-      selectedFormType,
       bloodGroup,
       address,
       responseList: JSON.stringify(responseList),
-      healthStatus,
       consent: consent ? 1 : 0, // Convert boolean to integer
       taluka,
       phoneNumber,
-      formType: "FollowUp"
+      formType: "Regular",
+      aabhaNumber
     };
 
           try {
             await db.transaction(async (tx) => {
               await tx.executeSql(
-          `INSERT INTO formResponseforPatient (formId, fwNumber, pNumber, fName, mName, lName, age, gender, selectedFormType, bloodGroup, address, description, specialisation, responseList, healthStatus, consent, taluka, phoneNumber, formType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,// Ensure the SQL matches the fields
+          `INSERT INTO formResponseforPatient (formId, fwNumber, pNumber, fName, mName, lName, age,unhealthy, gender, bloodGroup, address, responseList, consent, talukaName, phoneNumber, formType, aabhaNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,// Ensure the SQL matches the fields
           [
           formData.formId,
           formData.fwNumber,
           formData.pNumber,
+
           formData.fName,
           formData.mName,
           formData.lName,
+
           formData.age,
+          formData.unhealthy,
           formData.gender,
-          formData.selectedFormType,
           formData.bloodGroup,
+
           formData.address,
-          formData.description,
-          formData.specialisation,
           formData.responseList,
-          formData.healthStatus,
+
           formData.consent,
           formData.taluka,
           formData.phoneNumber,
-          formData.formType
+
+          formData.formType,
+          formData.aabhaNumber
 
           ],
           (_, result) => console.log('patient form inserted successfully'),
@@ -229,6 +256,7 @@ export default FWForm = ({ saveModal }) => {
     } catch (error) {
       console.error('Error while inserting data:', error);
     }
+    saveModal();
   };
 
   const questions =  formDefinition.questions;
@@ -254,7 +282,8 @@ export default FWForm = ({ saveModal }) => {
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Form Type:</Text>
           </Text>
-          <CustomRadioButton
+          <Text>Regular</Text>
+          {/* <CustomRadioButton
             labelValue="Regular"
             key={1}
             isSelected={selectedFormType === 'Regular'} // Set based on state
@@ -265,7 +294,7 @@ export default FWForm = ({ saveModal }) => {
             key={2}
             isSelected={selectedFormType === 'Follow-Up'} // Set based on state
             onPress={() => handleRadioSelection('Follow-Up')}
-          />
+          /> */}
           {/* {selectedFormType && <Text>Selected Form Type: {selectedFormType}</Text>} */}
         </View>
         <View style={styles.formId}>
@@ -284,13 +313,13 @@ export default FWForm = ({ saveModal }) => {
     </View>
     <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}>Patient Number:</Text>
+            <Text style={{ fontWeight: 'bold' }}>Aabha Number:</Text>
           </Text>
           <TextInput
             style={styles.textInput}
-            placeholder="Enter Patient Id Number"
-            value={pNumber}
-            onChangeText={(text) => setpNumber(text)}
+            placeholder="Enter Aabha Number"
+            value={aabhaNumber}
+            onChangeText={(text) => setAabhaNumber(text)}
           />
         </View>
         <View style = {[styles.formId, {gap:20}]}>
@@ -323,7 +352,7 @@ export default FWForm = ({ saveModal }) => {
           />
         </View>
         <View style={[styles.formId, {gap:90}]}>
-          <Text style={styles.text}>
+          <Text style={styles.text}>  
             <Text style={{ fontWeight: 'bold' }}>Age:</Text>
           </Text>
           <TextInput
@@ -433,6 +462,13 @@ export default FWForm = ({ saveModal }) => {
                 <View>
                   <Button title = "submit" onPress = {handleOnSubmitForm}/>
                 </View>
+                <View>
+                  <Button title = "Recommend Doctors" onPress = {showModal}/>
+                </View>
+                <Modal visible={isModalVisible} transparent animationType="slide">
+                  {/* <DoctorsRecommendation saveModal={saveModal} formType={formType}/> */}
+                  <View><Text>Hey</Text></View>
+                </Modal>
             </View>
             </ScrollView>
             </View>

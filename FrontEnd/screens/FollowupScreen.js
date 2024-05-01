@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
-import PatientCardFW from '../AddFollowup/PatientDetailsFW';
+// import PatientCardFW from '../AddFollowup/PatientDetailsFW';
 import AddPatientDefaultForm from '../AddFollowup/AddPatientDefaultForm';
 // import { API_PATHS } from '../constants/apiConstants';
 // import { useAuth } from '../Context/AuthContext';

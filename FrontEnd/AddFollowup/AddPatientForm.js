@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button} from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import { init, db } from '../Database/database';  
 
 const CustomCheckbox = ({ labelValue, index, question, responseList, setResponseList }) => {
     const [isChecked, setIsChecked] = useState(false); // Manage checked state
-  
+
     
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -28,6 +29,8 @@ const CustomCheckbox = ({ labelValue, index, question, responseList, setResponse
     // Function to retrieve selected values (if needed)
     const getSelectedData = () => isChecked ? labelValue : null; // Return label if checked
   
+    
+
     return (
       <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
         <CheckBox
@@ -81,120 +84,154 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   );
 };
 
-export default FWForm = ({ saveModal }) => {
+export default FWForm = ({ saveModal, patientData }) => {
+  const [data, setData] = useState([]);
+  const [formDefinition, setFormDefinition] = useState({});
   const [formId, setFormId] = useState('');
   const [fwNumber, setFWNumber] = useState('');
-  const [pNumber, setpNumber] = useState('');
-  const [fName, setFName] = useState('');
-  const [mName, setMName] = useState('');
-  const [lName, setLName] = useState('');
   const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [selectedFormType, setSelectedFormType] = useState('');
-  const [bloodGroup, setBloodGroup] = useState('');
-  const [address, setAddress] = useState('');
   const [responseList , setResponseList] = useState({}); 
   const [healthStatus, setHealthStatus] = useState('');
+  const [unhealthy , setUnhealthy] = useState(false);
   const [consent , setConsent] = useState(false);
-  const [taluka, setTaluka] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+ 
+
+  console.log("responselist" , responseList);
+
+
+  useEffect(() => {
+    const fetchFormDetails = async () => {
+      console.log("in");
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT * FROM forms WHERE selected = 1',
+            [],
+            (_, result) => { // Corrected to include the transaction object "_"
+              console.log("inside results"); // Now this should correctly log
+              const fetchedData = result.rows._array;
+              console.log('_______________________________________________');    
+              console.log("Form Data: ", fetchedData);
+              if (fetchedData) {
+                setData(fetchedData[0]); // Assuming you want the first match or there's only one match
+              } else {
+                console.log('No data Form');
+              }
+              const formObject = JSON.parse(fetchedData[0].formDefinition);
+              setFormDefinition(formObject);
+            },
+            (_, err) => {
+              console.log('Failed to fetch selected user data from Form table:', err);
+            }
+          );
+        });
+      } catch (error) {
+        console.error("Error fetching Form details:", error);
+        alert('Failed to fetch Form details.');
+      }
+    };
+    fetchFormDetails();
+  }, []);
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
   };
   const handleHealthStatus = (labelValue) => {
-    setHealthStatus(labelValue);
-  };
-  const handleOnSubmitForm = () => {
-    saveModal();
-  }
-  console.log("responseList" , responseList);
+    setHealthStatus(labelValue); 
+    if(labelValue === "Healthy")
+    setUnhealthy(false);
+else
+    setUnhealthy(true);
 
-  const questions = [
-    {
-        "number": "Question1",
-        "question": "Is a person coughing up blood or mucus?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question2",
-        "question": "Does a person have chest pain?",
-        "optionType": "CheckBox",
-        "values": [
-            "Moderate",
-            "Severe"
-        ]
-    },
-    {
-        "number": "Question3",
-        "question": "Are they experiencing pain with breathing or coughing?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question4",
-        "question": "Are they having fever, chills and night sweats?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question5",
-        "question": "Are they experiencing weight and appetite loss?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question6",
-        "question": "Are they feeling tired and not well in general?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
+
+  };
+
+  const handleOnSubmitForm = async () => {
+    // Collect all state values into an object, converting consent to 0 or 1
+    const formData = {
+      formId,
+      fwNumber,
+      pNumber: patientData.patientNumber,
+      fName: patientData.firstName,
+      mName: patientData.middleName,
+      lName: patientData.lastName,
+      age,
+      unhealthy: unhealthy ? 1 : 0, 
+      gender: patientData.gender,
+      bloodGroup: patientData.bloodGroup,
+      address: patientData.address,
+      responseList: JSON.stringify(responseList),
+      consent: consent ? 1 : 0, // Convert boolean to integer
+      taluka: patientData.talukaName,
+      phoneNumber: patientData.phoneNumber,
+      formType: "FollowUp",
+      aabhaNumber: null
+    };
+
+          try {
+            await db.transaction(async (tx) => {
+              await tx.executeSql(
+          `INSERT INTO formResponseforPatient (formId, fwNumber, pNumber, fName, mName, lName, age, unhealthy, gender, bloodGroup, address, responseList, consent, talukaName, phoneNumber, formType, aabhaNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,// Ensure the SQL matches the fields
+          [
+          formData.formId,
+          formData.fwNumber,
+          formData.pNumber,
+
+          formData.fName,
+          formData.mName,
+          formData.lName,
+
+          formData.age,
+          formData.unhealthy,
+          formData.gender,
+
+          formData.bloodGroup,
+          formData.address,
+
+          formData.responseList,
+          formData.consent,
+          formData.taluka,
+
+          formData.phoneNumber,
+          formData.formType,
+          formData.aabhaNumber
+
+          ],
+          (_, result) => console.log('patient form inserted successfully'),
+          (_, err) => console.log('Failed to insert data', err)
+        );
+      });
+    } catch (error) {
+      console.error('Error while inserting data:', error);
     }
-]
+    saveModal();
+  };
+
+  const questions =  formDefinition.questions;
   return (
     <View style={styles.container}>
       <View style={styles.quesCard}>
-        <Text style={styles.title}>Title: Tuberculosis</Text>
+        <Text style={styles.title}>Title: {data.title}</Text>
         <Text style={styles.description}>
-          <Text style={{ fontWeight: 'bold' }}>Description:</Text> Tuberculosis (TB) is a disease caused by germs that are spread from person to person through the air. TB usually affects the lungs, but it can also affect other parts of the body, such as the brain, the kidneys, or the spine.
+          <Text style={{ fontWeight: 'bold' }}>Description:</Text> {formDefinition.description}
         </Text>
         <Text style={styles.specialisation}>
-          <Text style={{ fontWeight: 'bold' }}>Specialisation:</Text> Pulmonologist
+          <Text style={{ fontWeight: 'bold' }}>Specialisation:</Text> {data.specialisationName}
         </Text>
       </View>
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="never" showsVerticalScrollIndicator={false}>
       <View style={styles.quesCard}>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}>Form Id:</Text>
+            <Text style={{ fontWeight: 'bold' }}>Form Id:</Text> {data.formId}
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Form Id"
-            value={formId}
-            onChangeText={(text) => setFormId(text)}
-          />
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Form Type:</Text>
           </Text>
-          <CustomRadioButton
+          <Text>FollowUp</Text>
+          {/* <CustomRadioButton
             labelValue="Regular"
             key={1}
             isSelected={selectedFormType === 'Regular'} // Set based on state
@@ -205,7 +242,7 @@ export default FWForm = ({ saveModal }) => {
             key={2}
             isSelected={selectedFormType === 'Follow-Up'} // Set based on state
             onPress={() => handleRadioSelection('Follow-Up')}
-          />
+          /> */}
           {/* {selectedFormType && <Text>Selected Form Type: {selectedFormType}</Text>} */}
         </View>
         <View style={styles.formId}>
@@ -226,41 +263,26 @@ export default FWForm = ({ saveModal }) => {
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Patient Number:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Patient Id Number"
-            value={pNumber}
-            onChangeText={(text) => setpNumber(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.patientNumber}</Text>
         </View>
         <View style = {[styles.formId, {gap:20}]}>
         <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>First Name:</Text>
           </Text>
-        <TextInput
-            style={styles.textInput}
-            placeholder="Enter First Name"
-            value={fName}
-            onChangeText={(text) => setFName(text)}
-          />
+        <Text
+            style={styles.textInput}>{patientData.firstName}</Text>
+          
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Middle Name:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Middle Name"
-            value={mName}
-            onChangeText={(text) => setMName(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.middleName}</Text>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Last Name:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Last Name"
-            value={lName}
-            onChangeText={(text) => setLName(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.lastName}</Text>
         </View>
         <View style={[styles.formId, {gap:90}]}>
           <Text style={styles.text}>
@@ -275,52 +297,32 @@ export default FWForm = ({ saveModal }) => {
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold'}}>Gender:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Gender"
-            value={gender}
-            onChangeText={(text) => setGender(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.gender}</Text>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Blood Group:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Blood Group"
-            value={bloodGroup}
-            onChangeText={(text) => setBloodGroup(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.bloodGroup}</Text>
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}> Address:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Address"
-            value={address}
-            onChangeText={(text) => setAddress(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.address}</Text>
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}> Taluka:</Text>
+            <Text style={{ fontWeight: 'bold' }}> Taluka id:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Taluka"
-            value={address}
-            onChangeText={(text) => setTaluka(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.talukaId}</Text>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}> PhoneNumber:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter PhoneNumber"
-            value={address}
-            onChangeText={(text) => setPhoneNumber(text)}
-          />
+          <Text
+            style={styles.textInput}>{patientData.phoneNumber}</Text>
         </View>
         <View style={[styles.section, {marginTop:10}]}>
       <Text style={[styles.sectionTitle]}> Questions </Text>
