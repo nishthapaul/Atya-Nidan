@@ -1,26 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button} from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import { init, db } from '../Database/database';  
 
-const CustomCheckbox = ({ labelValue, index, initialSelected = false }) => {
-    const [isChecked, setIsChecked] = useState(initialSelected); // Manage checked state
+const CustomCheckbox = ({ labelValue, index, question, responseList, setResponseList }) => {
+    const [isChecked, setIsChecked] = useState(false); // Manage checked state
+
+    
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+
+    // Update responseList based on checked status
+    const updatedResponses = { ...responseList };
+    const key = question;
+    if (updatedResponses.hasOwnProperty(key)) {
+      // Question already exists in responseList, update the value
+      updatedResponses[key] = isChecked ? null : labelValue; // Toggle labelValue based on isChecked
+    } else {
+      // Question is not in responseList, add a new entry
+      updatedResponses[key] = isChecked ? null : labelValue;
+    }
+    // updatedResponses[question] = isChecked ? null : labelValue;
+    setResponseList(updatedResponses);
+  }; // Update state on click
   
-    const handleCheckboxChange = () => setIsChecked(!isChecked); // Update state on click
-  
+    isChecked && console.log("someting is checked");
+
     // Function to retrieve selected values (if needed)
     const getSelectedData = () => isChecked ? labelValue : null; // Return label if checked
   
+    
+
     return (
       <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
         <CheckBox
-          value={isChecked} // Bind current checked state
+          checked={isChecked}
           iconRight
           iconType="material"
           checkedIcon="check-box"
           uncheckedIcon="check-box-outline-blank"
+          checkedColor="green" 
           uncheckedColor="black"
           containerStyle={styles.checkbox}
-          onPress={handleCheckboxChange} // Attach onPress handler
+          onPress={handleCheckboxChange}
+        />
+        <Text style={styles.label}>{labelValue}</Text>
+      </View>
+    );
+  };
+
+  const ConsentCheckbox = ({ labelValue, index, consent, setConsent }) => {
+
+    
+  const handleConsentChange = () => {
+    setConsent(!consent);
+  }  
+    return (
+      <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
+        <CheckBox
+          checked={consent}
+          iconRight
+          iconType="material"
+          checkedIcon="check-box"
+          uncheckedIcon="check-box-outline-blank"
+          checkedColor="green" 
+          uncheckedColor="black"
+          containerStyle={styles.checkbox}
+          onPress={handleConsentChange}
         />
         <Text style={styles.label}>{labelValue}</Text>
       </View>
@@ -38,7 +84,9 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   );
 };
 
-export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
+export default FWForm = ({ saveModal }) => {
+  const [data, setData] = useState([]);
+  const [formDefinition, setFormDefinition] = useState({});
   const [formId, setFormId] = useState('');
   const [fwNumber, setFWNumber] = useState('');
   const [pNumber, setpNumber] = useState('');
@@ -50,90 +98,157 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
   const [selectedFormType, setSelectedFormType] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [address, setAddress] = useState('');
+  const [responseList , setResponseList] = useState({}); 
+  const [healthStatus, setHealthStatus] = useState('');
+  const [consent , setConsent] = useState(false);
+  const [taluka, setTaluka] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  console.log("responselist" , responseList);
+
+
+  useEffect(() => {
+    const fetchFormDetails = async () => {
+      console.log("in");
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT * FROM forms WHERE selected = 1',
+            [],
+            (_, result) => { // Corrected to include the transaction object "_"
+              console.log("inside results"); // Now this should correctly log
+              const fetchedData = result.rows._array;
+              console.log('_______________________________________________');    
+              console.log("Form Data: ", fetchedData);
+              if (fetchedData) {
+                setData(fetchedData[0]); // Assuming you want the first match or there's only one match
+              } else {
+                console.log('No data Form');
+              }
+              const formObject = JSON.parse(fetchedData[0].formDefinition);
+              setFormDefinition(formObject);
+            },
+            (_, err) => {
+              console.log('Failed to fetch selected user data from Form table:', err);
+            }
+          );
+        });
+      } catch (error) {
+        console.error("Error fetching Form details:", error);
+        alert('Failed to fetch Form details.');
+      }
+    };
+    fetchFormDetails();
+  }, []);
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
   };
+  const handleHealthStatus = (labelValue) => {
+    setHealthStatus(labelValue);
+  };
+  // const handleOnSubmitForm = () => {
+  //   const saveData = {
+  //     title:  data.title,
+  //     description: formDefinition.description,
+  //    specialisation: data.specialisationName,
+  //      formId,
+  //      fwNumber,
+  //      pNumber,
+  //      fName,
+  //      mName,
+  //      lName,
+  //      age,
+  //      gender,
+  //      selectedFormType,
+  //      bloodGroup,
+  //      address,
+  //      healthStatus,
+  //      consent: consent ? 1 : 0,
+  //      taluka,
+  //      phoneNumber,
+  //      formType: "FollowUp"
+  //    };
+     
+  //   saveModal();
+  // }
+  //console.log(formDefinitionJson.questions[0].values);
 
-  const questions = [
-    {
-        "number": "Question1",
-        "question": "Is a person coughing up blood or mucus?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question2",
-        "question": "Does a person have chest pain?",
-        "optionType": "CheckBox",
-        "values": [
-            "Moderate",
-            "Severe"
-        ]
-    },
-    {
-        "number": "Question3",
-        "question": "Are they experiencing pain with breathing or coughing?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question4",
-        "question": "Are they having fever, chills and night sweats?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question5",
-        "question": "Are they experiencing weight and appetite loss?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
-    },
-    {
-        "number": "Question6",
-        "question": "Are they feeling tired and not well in general?",
-        "optionType": "CheckBox",
-        "values": [
-            "Yes",
-            "No"
-        ]
+  const handleOnSubmitForm = async () => {
+    // Collect all state values into an object, converting consent to 0 or 1
+    const formData = {
+      formId,
+      fwNumber,
+      pNumber,
+      fName,
+      mName,
+      lName,
+      age,
+      gender,
+      selectedFormType,
+      bloodGroup,
+      address,
+      responseList: JSON.stringify(responseList),
+      healthStatus,
+      consent: consent ? 1 : 0, // Convert boolean to integer
+      taluka,
+      phoneNumber,
+      formType: "FollowUp"
+    };
+
+          try {
+            await db.transaction(async (tx) => {
+              await tx.executeSql(
+          `INSERT INTO formResponseforPatient (formId, fwNumber, pNumber, fName, mName, lName, age, gender, selectedFormType, bloodGroup, address, description, specialisation, responseList, healthStatus, consent, taluka, phoneNumber, formType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,// Ensure the SQL matches the fields
+          [
+          formData.formId,
+          formData.fwNumber,
+          formData.pNumber,
+          formData.fName,
+          formData.mName,
+          formData.lName,
+          formData.age,
+          formData.gender,
+          formData.selectedFormType,
+          formData.bloodGroup,
+          formData.address,
+          formData.description,
+          formData.specialisation,
+          formData.responseList,
+          formData.healthStatus,
+          formData.consent,
+          formData.taluka,
+          formData.phoneNumber,
+          formData.formType
+
+          ],
+          (_, result) => console.log('patient form inserted successfully'),
+          (_, err) => console.log('Failed to insert data', err)
+        );
+      });
+    } catch (error) {
+      console.error('Error while inserting data:', error);
     }
-]
+  };
+
+  const questions =  formDefinition.questions;
   return (
     <View style={styles.container}>
       <View style={styles.quesCard}>
-        <Text style={styles.title}>Title: Tuberculosis</Text>
+        <Text style={styles.title}>Title: {data.title}</Text>
         <Text style={styles.description}>
-          <Text style={{ fontWeight: 'bold' }}>Description:</Text> Tuberculosis (TB) is a disease caused by germs that are spread from person to person through the air. TB usually affects the lungs, but it can also affect other parts of the body, such as the brain, the kidneys, or the spine.
+          <Text style={{ fontWeight: 'bold' }}>Description:</Text> {formDefinition.description}
         </Text>
         <Text style={styles.specialisation}>
-          <Text style={{ fontWeight: 'bold' }}>Specialisation:</Text> Pulmonologist
+          <Text style={{ fontWeight: 'bold' }}>Specialisation:</Text> {data.specialisationName}
         </Text>
       </View>
       <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="never" showsVerticalScrollIndicator={false}>
       <View style={styles.quesCard}>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}>Form Id:</Text>
+            <Text style={{ fontWeight: 'bold' }}>Form Id:</Text> {data.formId}
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Form Id"
-            value={formId}
-            onChangeText={(text) => setFormId(text)}
-          />
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
@@ -178,7 +293,7 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
             onChangeText={(text) => setpNumber(text)}
           />
         </View>
-        <View style = {styles.formId}>
+        <View style = {[styles.formId, {gap:20}]}>
         <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>First Name:</Text>
           </Text>
@@ -207,7 +322,7 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
             onChangeText={(text) => setLName(text)}
           />
         </View>
-        <View style={styles.formId}>
+        <View style={[styles.formId, {gap:90}]}>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Age:</Text>
           </Text>
@@ -254,8 +369,8 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
           <TextInput
             style={styles.textInput}
             placeholder="Enter Taluka"
-            value={address}
-            onChangeText={(text) => setAddress(text)}
+            value={taluka}
+            onChangeText={(text) => setTaluka(text)}
           />
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}> PhoneNumber:</Text>
@@ -263,8 +378,8 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
           <TextInput
             style={styles.textInput}
             placeholder="Enter PhoneNumber"
-            value={address}
-            onChangeText={(text) => setAddress(text)}
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text)}
           />
         </View>
         <View style={[styles.section, {marginTop:10}]}>
@@ -278,13 +393,46 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
                             </View>
                             {item?.values && item.values.map((value, idx) => (
                                 item.optionType == 'CheckBox' ?
-                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />:
+                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} 
+                                question = {item.question}
+                                responseList={responseList}
+                                setResponseList={setResponseList}/>:
                                 <CustomRadioButton labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />
 
                             ))}
                         </View>
                     </View>
                 ))}
+                <View>
+                </View>
+                <View style={[styles.formId , {backgroundColor: '#f2f2f2'}]}>
+          <Text style={styles.text}>
+            <Text style={{ fontWeight: 'bold' }}>Health Status:</Text>
+          </Text>
+          <CustomRadioButton
+            labelValue="Healthy"
+            key={1}
+            isSelected={healthStatus === 'Healthy'} // Set based on state
+            onPress={() => handleHealthStatus('Healthy')}
+          />
+          <CustomRadioButton
+            labelValue="UnHealthy"
+            key={2}
+            isSelected={healthStatus === 'UnHealthy'} // Set based on state
+            onPress={() => handleHealthStatus('UnHealthy')}
+          />
+          {/* {selectedFormType && <Text>Selected Form Type: {selectedFormType}</Text>} */}
+        </View>
+        <View style={[styles.formId , {margin : 10}]}>
+               <ConsentCheckbox
+               labelValue= "Do you want to share your health details?"
+               key={1}
+               consent={consent}
+              setConsent={setConsent}/>
+          </View>
+                <View>
+                  <Button title = "submit" onPress = {handleOnSubmitForm}/>
+                </View>
             </View>
             </ScrollView>
             </View>
@@ -331,7 +479,7 @@ const styles = StyleSheet.create({
   formId: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   radioText: {
     fontSize:16,
@@ -367,18 +515,18 @@ section: {
     fontSize: 20,
 },
 checkboxContainer: {
-    flexDirection: 'row',
-    // backgroundColor: 'blue',
-},
-label: {
-    alignSelf: 'center',
-    width: 300,
-    fontSize: 16,
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 10,
 },
 checkbox: {
-    backgroundColor: 'transparent',
-    borderWidth: 0, // Remove default border
-    padding: 4, // Adjust padding as needed
-    margin: 0, // Adjust margin as needed
-  },
+  backgroundColor: 'transparent',
+  borderWidth: 0, 
+  padding: 0, 
+  marginLeft: 0, 
+},
+label: {
+  marginLeft: 10,
+  fontSize: 16,
+}
 });

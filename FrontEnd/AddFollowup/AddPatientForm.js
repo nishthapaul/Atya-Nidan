@@ -1,26 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 
-const CustomCheckbox = ({ labelValue, index, initialSelected = false }) => {
-    const [isChecked, setIsChecked] = useState(initialSelected); // Manage checked state
+const CustomCheckbox = ({ labelValue, index, question, responseList, setResponseList }) => {
+    const [isChecked, setIsChecked] = useState(false); // Manage checked state
   
-    const handleCheckboxChange = () => setIsChecked(!isChecked); // Update state on click
+    
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+
+    // Update responseList based on checked status
+    const updatedResponses = { ...responseList };
+    const key = question;
+    if (updatedResponses.hasOwnProperty(key)) {
+      // Question already exists in responseList, update the value
+      updatedResponses[key] = isChecked ? null : labelValue; // Toggle labelValue based on isChecked
+    } else {
+      // Question is not in responseList, add a new entry
+      updatedResponses[key] = isChecked ? null : labelValue;
+    }
+    // updatedResponses[question] = isChecked ? null : labelValue;
+    setResponseList(updatedResponses);
+  }; // Update state on click
   
+    isChecked && console.log("someting is checked");
+
     // Function to retrieve selected values (if needed)
     const getSelectedData = () => isChecked ? labelValue : null; // Return label if checked
   
     return (
       <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
         <CheckBox
-          value={isChecked} // Bind current checked state
+          checked={isChecked}
           iconRight
           iconType="material"
           checkedIcon="check-box"
           uncheckedIcon="check-box-outline-blank"
+          checkedColor="green" 
           uncheckedColor="black"
           containerStyle={styles.checkbox}
-          onPress={handleCheckboxChange} // Attach onPress handler
+          onPress={handleCheckboxChange}
+        />
+        <Text style={styles.label}>{labelValue}</Text>
+      </View>
+    );
+  };
+
+  const ConsentCheckbox = ({ labelValue, index, consent, setConsent }) => {
+
+    
+  const handleConsentChange = () => {
+    setConsent(!consent);
+  }  
+    return (
+      <View style={styles.checkboxContainer} key={`${labelValue}-${index}`}>
+        <CheckBox
+          checked={consent}
+          iconRight
+          iconType="material"
+          checkedIcon="check-box"
+          uncheckedIcon="check-box-outline-blank"
+          checkedColor="green" 
+          uncheckedColor="black"
+          containerStyle={styles.checkbox}
+          onPress={handleConsentChange}
         />
         <Text style={styles.label}>{labelValue}</Text>
       </View>
@@ -38,7 +81,7 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   );
 };
 
-export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
+export default FWForm = ({ saveModal }) => {
   const [formId, setFormId] = useState('');
   const [fwNumber, setFWNumber] = useState('');
   const [pNumber, setpNumber] = useState('');
@@ -50,10 +93,22 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
   const [selectedFormType, setSelectedFormType] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [address, setAddress] = useState('');
+  const [responseList , setResponseList] = useState({}); 
+  const [healthStatus, setHealthStatus] = useState('');
+  const [consent , setConsent] = useState(false);
+  const [taluka, setTaluka] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const handleRadioSelection = (labelValue) => {
     setSelectedFormType(labelValue);
   };
+  const handleHealthStatus = (labelValue) => {
+    setHealthStatus(labelValue);
+  };
+  const handleOnSubmitForm = () => {
+    saveModal();
+  }
+  console.log("responseList" , responseList);
 
   const questions = [
     {
@@ -178,7 +233,7 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
             onChangeText={(text) => setpNumber(text)}
           />
         </View>
-        <View style = {styles.formId}>
+        <View style = {[styles.formId, {gap:20}]}>
         <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>First Name:</Text>
           </Text>
@@ -207,7 +262,7 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
             onChangeText={(text) => setLName(text)}
           />
         </View>
-        <View style={styles.formId}>
+        <View style={[styles.formId, {gap:90}]}>
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Age:</Text>
           </Text>
@@ -255,7 +310,7 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
             style={styles.textInput}
             placeholder="Enter Taluka"
             value={address}
-            onChangeText={(text) => setAddress(text)}
+            onChangeText={(text) => setTaluka(text)}
           />
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}> PhoneNumber:</Text>
@@ -264,7 +319,7 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
             style={styles.textInput}
             placeholder="Enter PhoneNumber"
             value={address}
-            onChangeText={(text) => setAddress(text)}
+            onChangeText={(text) => setPhoneNumber(text)}
           />
         </View>
         <View style={[styles.section, {marginTop:10}]}>
@@ -278,13 +333,46 @@ export default AddPatientForm = ({ saveModal, formType, setFormType }) => {
                             </View>
                             {item?.values && item.values.map((value, idx) => (
                                 item.optionType == 'CheckBox' ?
-                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />:
+                                <CustomCheckbox labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} 
+                                question = {item.question}
+                                responseList={responseList}
+                                setResponseList={setResponseList}/>:
                                 <CustomRadioButton labelValue={value} key={`${item.number}-${item.optionType}-${idx}`} />
 
                             ))}
                         </View>
                     </View>
                 ))}
+                <View>
+                </View>
+                <View style={[styles.formId , {backgroundColor: '#f2f2f2'}]}>
+          <Text style={styles.text}>
+            <Text style={{ fontWeight: 'bold' }}>Health Status:</Text>
+          </Text>
+          <CustomRadioButton
+            labelValue="Healthy"
+            key={1}
+            isSelected={healthStatus === 'Healthy'} // Set based on state
+            onPress={() => handleHealthStatus('Healthy')}
+          />
+          <CustomRadioButton
+            labelValue="UnHealthy"
+            key={2}
+            isSelected={healthStatus === 'UnHealthy'} // Set based on state
+            onPress={() => handleHealthStatus('UnHealthy')}
+          />
+          {/* {selectedFormType && <Text>Selected Form Type: {selectedFormType}</Text>} */}
+        </View>
+        <View style={[styles.formId , {margin : 10}]}>
+               <ConsentCheckbox
+               labelValue= "Do you want to share your health details?"
+               key={1}
+               consent={consent}
+              setConsent={setConsent}/>
+          </View>
+                <View>
+                  <Button title = "submit" onPress = {handleOnSubmitForm}/>
+                </View>
             </View>
             </ScrollView>
             </View>
@@ -331,7 +419,7 @@ const styles = StyleSheet.create({
   formId: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   radioText: {
     fontSize:16,
@@ -367,18 +455,18 @@ section: {
     fontSize: 20,
 },
 checkboxContainer: {
-    flexDirection: 'row',
-    // backgroundColor: 'blue',
-},
-label: {
-    alignSelf: 'center',
-    width: 300,
-    fontSize: 16,
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 10,
 },
 checkbox: {
-    backgroundColor: 'transparent',
-    borderWidth: 0, // Remove default border
-    padding: 4, // Adjust padding as needed
-    margin: 0, // Adjust margin as needed
-  },
+  backgroundColor: 'transparent',
+  borderWidth: 0, 
+  padding: 0, 
+  marginLeft: 0, 
+},
+label: {
+  marginLeft: 10,
+  fontSize: 16,
+}
 });

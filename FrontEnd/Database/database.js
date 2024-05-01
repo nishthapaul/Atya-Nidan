@@ -42,8 +42,36 @@ export const init = () => {
           formId INT NOT NULL,
           selected INT NOT NULL,
           formDefinition TEXT NOT NULL,
-          specialisationId INT NOT NULL
+          specialisationId INT NOT NULL,
+          specialisationName TEXT NOT NULL
         );`, [], null, (_, err) => reject(err)
+      );
+
+      tx.executeSql('DROP TABLE IF EXISTS formResponseforPatient;', [], null, (_, err) => reject(err));
+      tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS formResponseforPatient (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          formId TEXT,
+          fwNumber TEXT,
+          pNumber TEXT,
+          fName TEXT,
+          mName TEXT,
+          lName TEXT,
+          age INTEGER,
+          gender TEXT,
+          selectedFormType TEXT,
+          bloodGroup TEXT,
+          address TEXT,
+          description TEXT,
+          specialisation TEXT,
+          responseList TEXT,
+          healthStatus TEXT,
+          consent INTEGER,
+          taluka TEXT,
+          phoneNumber TEXT,
+          formType TEXT NOT NULL
+        );
+        `, [], null, (_, err) => reject(err)
       );
 
       tx.executeSql('DROP TABLE IF EXISTS recommendations;', [], null, (_, err) => reject(err));

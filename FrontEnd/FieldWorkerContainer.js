@@ -77,8 +77,8 @@ const FieldWorkerContainer = (props) => {
         for (const form of formsResponse.data) {
           console.log("form added: ", form.title);
           if (form.selected) setSelectedSpecialisationId(form.specialisation.id);
-          await executeSqlAsync(tx, 'INSERT INTO forms (formId, title, selected, formDefinition, specialisationId) VALUES (?, ?, ?, ?, ?);',
-            [form.formId, form.title, form.selected ? 1 : 0, JSON.stringify(form.formDefinition), form.specialisation.id]);
+          await executeSqlAsync(tx, 'INSERT INTO forms (formId, title, selected, formDefinition, specialisationId, specialisationName) VALUES (?, ?, ?, ?, ?, ?);',
+            [form.formId, form.title, form.selected ? 1 : 0, JSON.stringify(form.formDefinition), form.specialisation.id, form.specialisation.name]);
         }
       });
 
