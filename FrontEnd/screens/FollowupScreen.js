@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 // import PatientCardFW from '../components/PatientCardFW';
-import AddPatientForm from '../AddFollowup/AddPatientForm';
+import AddPatientDefaultForm from '../AddFollowup/AddPatientDefaultForm';
 // import { API_PATHS } from '../constants/apiConstants';
 // import { useAuth } from '../Context/AuthContext';
-import { db } from './Database/database';
+import { db } from '../Database/database';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -27,37 +27,76 @@ export default FollowupScreen = () => {
   const [apiData, setApiData] = useState(null);
   const [formType, setFormType] = useState('');
 
-
-  // Function to fetch data from the demographics table
-  const fetchData = () => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT * FROM demographics',
-        [],
-        (_, result) => {
-          // Extract rows from the result
-          const fetchedData = result.rows._array;
-          setData(fetchedData);
-          setFilteredData(fetchedData); // Initialize filtered data with fetched data
-        },
-        (_, err) => {
-          console.log('Failed to fetch data from demographics table:', err);
-        }
-      );
-    });
-  };
-
   useEffect(() => {
-    fetchData(); // Fetch data from the demographics table on component mount
+    const fetchDataDemographic = async () => {
+      console.log("in");
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT * FROM demographics',
+            [],
+            (_, result) => { // Corrected to include the transaction object "_"
+              console.log("inside results"); // Now this should correctly log
+              const fetchedData = result.rows._array;
+              console.log('_______________________________________________');    
+              console.log("Fetched Data: ", fetchedData);
+              if (fetchedData.length > 0) {
+                setData(fetchedData); // Assuming you want the first match or there's only one match
+              } else {
+                console.log('No data demographic');
+              }
+            },
+            (_, err) => {
+              console.log('Failed to fetch selected user data from demographics table:', err);
+            }
+          );
+        });
+      } catch (error) {
+        console.error("Error fetching demographic details:", error);
+        alert('Failed to fetch demographic details.');
+      }
+    };
+    fetchDataDemographic();
   }, []);
+  
 
-  const handleSearch = (text) => {
-    setSearchQuery(text);
-    const filteredSearchData = data.filter((item) => 
-      item.firstName.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredData(filteredSearchData);
-  };
+  // // Function to fetch data from the demographics table
+  // const fetchData = () => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       'SELECT * FROM demographics',
+  //       [],
+  //       (_, result) => {
+  //         // Extract rows from the result
+  //         console.log('_______________________________________________');    
+  //         console.log('_______________________________________________');  
+  //         console.log('_______________________________________________');    
+  //         console.log('_______________________________________________');    
+  
+  //         console.log('Forms fetched from SQLite:', result.rows._array);    
+
+  //         const fetchedData = result.rows._array;
+  //         setData(fetchedData);
+  //         setFilteredData(fetchedData); // Initialize filtered data with fetched data
+  //       },
+  //       (_, err) => {
+  //         console.log('Failed to fetch data from demographics table:', err);
+  //       }
+  //     );
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   fetchData(); // Fetch data from the demographics table on component mount
+  // }, []);
+
+  // const handleSearch = (text) => {
+  //   setSearchQuery(text);
+  //   const filteredSearchData = data.filter((item) => 
+  //     item.firstName.toLowerCase().includes(text.toLowerCase())
+  //   );
+  //   setFilteredData(filteredSearchData);
+  // };
 
 
   const showModal = () => {
@@ -85,13 +124,18 @@ export default FollowupScreen = () => {
         try {
           db.transaction((tx) => {
             tx.executeSql(
-              'SELECT * FROM demographics WHERE patientNumber <> selectedUser',
-              [],
+              'SELECT * FROM demographics WHERE patientNumber = ?',
+              [selectedUser], // Bind the selectedUser value to the query
               (_, result) => {
                 // Extract rows from the result
                 const fetchedData = result.rows._array;
-                setApiData(fetchedData);
-                setNavigate(true);
+                if (fetchedData.length > 0) {
+                  setApiData(fetchedData[0]); // Assuming you want the first match or there's only one match
+                  setNavigate(true);
+                } else {
+                  console.log('No data found for the selected user');
+                  setNavigate(false);
+                }
               },
               (_, err) => {
                 console.log('Failed to fetch selected user data from demographics table:', err);
@@ -106,6 +150,7 @@ export default FollowupScreen = () => {
     };
     fetchData();
   }, [selectedUser]);
+  
 
   if (navigate && apiData) {
     // Navigate to PatientDetailsFW component
@@ -154,7 +199,7 @@ export default FollowupScreen = () => {
 
             }}
           >
-            <SearchBar
+            {/* <SearchBar
               placeholder="Search"
               onChangeText={handleSearch}
               value={searchQuery}
@@ -173,7 +218,7 @@ export default FollowupScreen = () => {
               inputContainerStyle={{ backgroundColor: 'white', borderRadius: 10, height: 30 }} // Style for the input container
               searchIcon={{ size: 24 }} // Style for the search icon
               clearIcon={{ size: 24 }} // Style for the clear icon
-            />
+            /> */}
             <TouchableOpacity onPress={showModal}>
               <View style={styles.circle}>
                 <Icon name="plus" type="font-awesome" color="black" />
@@ -186,7 +231,7 @@ export default FollowupScreen = () => {
             data={searchQuery ? filteredData : data}
             ListHeaderComponent={<TableHeader />}
             renderItem={({ item }) => <TableRow item={item} />}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
           />
         </View>
@@ -196,7 +241,7 @@ export default FollowupScreen = () => {
       </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddPatientForm saveModal={saveModal} formType={formType} setFormType={setFormType}/>
+        <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType}/>
       </Modal>
     </View>
     </View>

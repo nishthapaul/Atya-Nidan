@@ -85,20 +85,6 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
     getPDF();
 }, [authToken]);
 
-// const testBase64PDF = "<html><head><title>Hello</title></head><body><h1>Hello World</h1></body></html>";
-// useEffect(() => {
-//   setPdfContent(testBase64PDF);
-// }, []);
-//  useEffect(() => {
-//         if (pdfContent) {
-//             downloadAndSavePdf(pdfContent);
-//         }
-//     }, [pdfContent]); 
-  
-
-/////////////////////////////////////////
-
-
 
   const TableRow = ({ item }) => {
     const [showPDF, setShowPDF] = useState(false);
