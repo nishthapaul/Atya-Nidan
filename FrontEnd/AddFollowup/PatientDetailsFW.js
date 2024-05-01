@@ -12,16 +12,11 @@ import {
 import { WebView } from 'react-native-webview';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../Context/AuthContext";
-import axios from "axios";
-import { API_PATHS } from "../constants/apiConstants";
 import AddPatientForm from "../AddFollowup/AddPatientForm";
 import PatientCardFW from "../components/PatientCardFW";
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
-    {/* <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: "bold" }]}>
-      Id
-    </Text> */}
     <Text style={[styles.tableCell, { flex: 3 }, { fontWeight: "bold" }]}>
       Medical History
     </Text>
@@ -45,6 +40,7 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
   // const [pdfUri, setPdfUri] = useState('');
   const [pdfBase64, setPdfBase64] = useState('');
 
+
   const handleBack = () => {
     onBack();  // Call the onBack function passed as prop which triggers refresh in parent
   };
@@ -59,31 +55,13 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
     setIsModalVisible(false);
   };
 
-//   const downloadAndSavePdf = async (base64) => {
-//     const filePath = FileSystem.documentDirectory + 'patient_pdf.pdf';
-//     await FileSystem.writeAsStringAsync(filePath, base64, { encoding: FileSystem.EncodingType.Base64 });
-//     setPdfUri(filePath);
-//     console.log("---------------------------------");
-//     console.log('PDF saved to:', filePath);
-// };
 
-  useEffect(() => {
-    const getPDF = async () => {
-        try {
-            const response = await axios.get(API_PATHS.GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS, {
-                headers: { Authorization: `Bearer ${authToken}` }
-            });
-            const base64 = response.data.content; // assuming the base64 string is directly sent
-            console.log("----------------------");
-            console.log("PDf reponse: ", base64);
-            setPdfBase64(base64);
-        } catch (error) {
-            console.error('Error fetching PDF data:', error);
-        }
-    };
 
-    getPDF();
-}, [authToken]);
+useEffect(() => {
+  const base64 = patientData.content;
+  setPdfBase64(base64);
+}, []);
+
 
 
   const TableRow = ({ item }) => {
@@ -95,7 +73,7 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
       <Pressable onPress={openPDFModal}>
         <View style={styles.tableRow}>
           <View style={styles.tableCellContainer}>
-            <Text style={styles.tableCell}>{`${item.title} ${item.type}`}</Text>
+            <Text style={styles.tableCell}>{`${item.formTitle} ${item.type}`}</Text>
           </View>
           <Text style={[styles.tableCell, { flex: 2, marginLeft: 60 }]}>
             {item.submittedOn.slice(0, 10)}
@@ -122,52 +100,6 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
     );
   };
 
-  //api calls
-
-
-  useEffect(() => {
-    console.log("Inside medical forms get");
-    const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
-      ":patientNumber",
-      patientData.patientNumber
-    );
-    axios
-      .get(getmedicalhistorylist, {
-        headers: {
-          Authorization: `Bearer ${authToken}`, // Include the authToken in the request
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [authToken]);
-
-
-  const refreshmedicalhistory = () => {
-    console.log("Refreshing medical history");
-    const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
-      ":patientNumber",
-      patientData.patientNumber
-    );
-    axios
-      .get(getmedicalhistorylist, {
-        headers: {
-          Authorization: `Bearer ${authToken}`, // Include the authToken in the request
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-  useEffect(() => {
-    refreshmedicalhistory();
-  }, [authToken]);}
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -216,11 +148,11 @@ const PatientDetailsFW = ({ onBack, patientData }) => {
         </View>
         {/* Modal */}
         <Modal visible={isModalVisible} transparent animationType="slide">
-          <AddPatientForm
+          {/* <AddPatientForm
             saveModal={saveModal}
             doctorId={doctorId}
             user={patientData}
-          />
+          /> */}
         </Modal>
       </View>
 
@@ -332,3 +264,51 @@ const styles = StyleSheet.create({
 });
 
 export default PatientDetailsFW;
+
+
+  //api calls
+
+
+  // useEffect(() => {
+  //   console.log("Inside medical forms get");
+  //   const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+  //     ":patientNumber",
+  //     patientData.patientNumber
+  //   );
+  //   axios
+  //     .get(getmedicalhistorylist, {
+  //       headers: {
+  //         Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }, [authToken]);
+
+
+  // const refreshmedicalhistory = () => {
+  //   console.log("Refreshing medical history");
+  //   const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+  //     ":patientNumber",
+  //     patientData.patientNumber
+  //   );
+  //   axios
+  //     .get(getmedicalhistorylist, {
+  //       headers: {
+  //         Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+
+  // useEffect(() => {
+  //   refreshmedicalhistory();
+  // }, [authToken]);}

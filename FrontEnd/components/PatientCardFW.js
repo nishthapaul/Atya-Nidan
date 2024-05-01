@@ -20,7 +20,7 @@ export default PatientCardFW = ({ user }) => {
           <Text style={styles.userDetail}>
           <Text style={{fontWeight: 'bold'}}>Address: </Text>{user.address}
           </Text>
-          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka: </Text>{user.taluka}</Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka: </Text>{user.talukaId}</Text>
           <Text style={styles.userDetail}>
           <Text style={{fontWeight: 'bold'}}>Blood Group: </Text>{user.bloodGroup}
           </Text>

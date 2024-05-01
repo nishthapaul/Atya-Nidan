@@ -48,14 +48,27 @@ const FieldWorkerContainer = (props) => {
 
       // Fetch demographic data
       const demographicsResponse = await axios.get(API_PATHS.GET_USER_ALL_DETAILS.replace(":fieldworkerNumber", props.user.empId), { headers });
-      await db.transaction(async (tx) => {
-        console.log("demographicsResponse.data.len: ", demographicsResponse.data.length)
-        for (const worker of demographicsResponse.data) {
-          console.log("----------------------------")
-          console.log(worker);
-          await executeSqlAsync(tx, 'INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-            [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle]);
-        }
+      // await db.transaction(async (tx) => {
+      //   console.log("demographicsResponse.data.len: ", demographicsResponse.data.length)
+      //   for (const worker of demographicsResponse.data) {
+      //     console.log("----------------------------")
+      //     console.log(worker);
+      //     await executeSqlAsync(tx, 'INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+      //       [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle]);
+      //   }
+      // });
+      await db.transaction(async(tx) => {
+        demographicsResponse.data.forEach(worker => {
+          console.log("Adding patient: ", worker.demographic.firstName);
+          tx.executeSql('INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle, pdfStorageContent, submittedOn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle, worker.pdfStorage.content, worker.submittedOn], (tx, results) => {
+            console.log('Results', results.rowsAffected);
+            if (results.rowsAffected > 0) {
+              console.log('Data Inserted Successfully!');
+            } else {
+              console.log('Failed to Insert Data');
+            }
+          });
+        });
       });
 
       // Fetch form data

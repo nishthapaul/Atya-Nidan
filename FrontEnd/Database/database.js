@@ -29,7 +29,9 @@ export const init = () => {
           phoneNumber TEXT NOT NULL,
           currentFollowUpDate DATE,
           fieldworkerFollowUpType TEXT,
-          formTitle TEXT NOT NULL
+          formTitle TEXT NOT NULL,
+          submittedOn TEXT,
+          pdfStorageContent TEXT
         );`, [], null, (_, err) => reject(err)
       );
 
