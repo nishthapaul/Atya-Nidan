@@ -89,8 +89,8 @@ const FieldWorkerContainer = (props) => {
         const recommendationsResponse = await axios.get(API_PATHS.GET_DOCTOR_RECOMMENDATION.replace(":specialisationId", selectedSpecialisationId).replace(":talukaId", props.user.taluka.id), { headers });
         await db.transaction(async (tx) => {
           for (const recommendation of recommendationsResponse.data) {
-            await executeSqlAsync(tx, 'INSERT INTO recommendations (phoneNumber, email, empId, firstName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-              [recommendation.phoneNumber, recommendation.email, recommendation.empId, recommendation.firstName, recommendation.specialisation.id, recommendation.hospitalAddress, recommendation.gender, recommendation.taluka.id, recommendation.dob, recommendation.languageKnown1, recommendation.languageKnown2, recommendation.languageKnown3]);
+            await executeSqlAsync(tx, 'INSERT INTO recommendations (phoneNumber, email, empId, firstName, middleName, lastName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+              [recommendation.phoneNumber, recommendation.email, recommendation.empId, recommendation.firstName, recommendation.middleName, recommendation.lastName, recommendation.specialisation.id, recommendation.hospitalAddress, recommendation.gender, recommendation.taluka.id, recommendation.dob, recommendation.languageKnown1, recommendation.languageKnown2, recommendation.languageKnown3]);
           }
         });
       }

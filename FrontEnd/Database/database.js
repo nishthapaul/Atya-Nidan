@@ -80,6 +80,8 @@ export const init = () => {
           email TEXT,
           empId TEXT NOT NULL,
           firstName TEXT NOT NULL,
+          middleName TEXT,
+          lastName TEXT NOT NULL,
           specialisationId INT NOT NULL,
           hospitalAddress TEXT NOT NULL,
           gender TEXT,

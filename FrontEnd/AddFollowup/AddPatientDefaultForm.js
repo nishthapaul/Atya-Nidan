@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button, Modal} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { init, db } from '../Database/database';  
-
+import DoctorsRecommendation from './DoctorRecommendation';
 const CustomCheckbox = ({ labelValue, index, question, responseList, setResponseList }) => {
     const [isChecked, setIsChecked] = useState(false); // Manage checked state
 
@@ -105,19 +105,28 @@ export default FWForm = ({ saveModal }) => {
   const [consent , setConsent] = useState(false);
   const [taluka, setTaluka] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  // const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisibledoc, setIsModalVisibledoc] = useState(false);
 
   console.log("responselist" , responseList);
 
-  // const showModal = () => {
-  //   console.log("Show Modal");
-  //   setIsModalVisible(true);
-  // };
+  const showModal = () => {
+    console.log("Show Modal");
+    setIsModalVisible(true);
+  };
 
   // const saveModal = () => {
   //   console.log("Save Modal");
   //   setIsModalVisible(false);
   // };
+  const showModaldoc = () => {
+    console.log("Show Modal");
+    setIsModalVisibledoc(true);
+  };
+  const saveModaldoc = () => {
+    console.log("Save Modal");
+    setIsModalVisibledoc(false);
+  };
 
   useEffect(() => {
     const fetchFormDetails = async () => {
@@ -463,11 +472,11 @@ export default FWForm = ({ saveModal }) => {
                   <Button title = "submit" onPress = {handleOnSubmitForm}/>
                 </View>
                 <View>
-                  <Button title = "Recommend Doctors" onPress = {showModal}/>
+                  <Button title = "Recommend Doctors" onPress = {showModaldoc}/>
                 </View>
-                <Modal visible={isModalVisible} transparent animationType="slide">
-                  {/* <DoctorsRecommendation saveModal={saveModal} formType={formType}/> */}
-                  <View><Text>Hey</Text></View>
+                <Modal visible={isModalVisibledoc} transparent animationType="slide">
+                  <DoctorsRecommendation saveModaldoc={saveModaldoc}/>
+                  {/* <View><Text>Hey</Text></View> */}
                 </Modal>
             </View>
             </ScrollView>

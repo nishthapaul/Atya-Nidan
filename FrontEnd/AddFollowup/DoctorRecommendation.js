@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { init, db } from '../Database/database';  
 
 
 const DoctorCard = ({ item }) => {
   const age = new Date().getFullYear() - new Date(item.dob).getFullYear();
+  const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
 
   return (
     <View style={styles.card}>
       <View style={styles.container}>
-        {/* <Image source={{ uri: item.image }} style={styles.image} /> Add this line to display doctor's image */}
         <View style={styles.leftColumn}>
-          <Text style={styles.userName}>{item.firstName} {item.middleName} {item.lastName}</Text>
+          <Text style={styles.userName}>{name}</Text>
           <Text style={styles.userDetail}>Age: {age}</Text>
           <Text style={styles.userDetail}>Gender: {item.gender}</Text>
           <Text style={styles.userDetail}>Contact No: {item.phoneNumber}</Text>
@@ -23,34 +24,71 @@ const DoctorCard = ({ item }) => {
   );
 };
 
-const DoctorsRecommendation = () => {
+const DoctorsRecommendation = ({ saveModaldoc }) => {
     const [searchText, setSearchText] = useState('');
     const [data, setData] = useState([]);
 
-    const fetchData = () => {
+    // const fetchData = () => {
+    //     db.transaction((tx) => {
+    //       tx.executeSql(
+    //         'SELECT * FROM demographics',
+    //         [],
+    //         (_, result) => {
+    //           // Extract rows from the result
+    //           const fetchedData = result.rows._array;
+    //           setData(fetchedData);
+    //         },
+    //         (_, err) => {
+    //           console.log('Failed to fetch data from demographics table:', err);
+    //         }
+    //       );
+    //     });
+    //   };
+    
+    //   useEffect(() => {
+    //     fetchData(); // Fetch data from the demographics table on component mount
+    //   }, []);
+
+
+    // const [data, setData] = useState([]);
+
+    useEffect(() => {
+    const recdoctors = async () => {
+      console.log("in");
+      try {
         db.transaction((tx) => {
           tx.executeSql(
-            'SELECT * FROM demographics',
+            'SELECT * FROM recommendations',
             [],
-            (_, result) => {
-              // Extract rows from the result
-              const fetchedData = result.rows._array;
-              setData(fetchedData);
+            (_, result) => { // Corrected to include the transaction object "_"
+              console.log("inside results"); // Now this should correctly log
+              const fetchedRec = result.rows._array;
+              console.log('_______________________________________________');    
+              console.log("Recommendations Data: ", fetchedRec);
+              if (fetchedRec) {
+                setData(fetchedRec); // Assuming you want the first match or there's only one match
+              } else {
+                console.log('No data recommendations');
+              }
+              // const formObject = JSON.parse(fetchedRec[0].formDefinition);
+              // setFormDefinition(formObject);
             },
             (_, err) => {
-              console.log('Failed to fetch data from demographics table:', err);
+              console.log('Failed to fetch selected user data from Form table:', err);
             }
           );
         });
-      };
-    
-      useEffect(() => {
-        fetchData(); // Fetch data from the demographics table on component mount
-      }, []);
+      } catch (error) {
+        console.error("Error fetching Form details:", error);
+        alert('Failed to fetch Form details.');
+      }
+    };
+    recdoctors();
+  }, []);
 
-    const filteredData = doctorsData.filter(item =>
-      item.specialisation.name.toLowerCase().includes(searchText.toLowerCase())
-    );
+    // const filteredData = doctorsData.filter(item =>
+    //   item.specialisation.name.toLowerCase().includes(searchText.toLowerCase())
+    // );
   
     return (
       <View style={styles.page}>
@@ -62,7 +100,7 @@ const DoctorsRecommendation = () => {
             value={searchText}
           />
         </View>
-        <TouchableOpacity onPress={handleSubmitOrClose}>
+        <TouchableOpacity onPress={saveModaldoc}>
             <Text style={styles.backbutton}>Close</Text>
         </TouchableOpacity>
         <FlatList
