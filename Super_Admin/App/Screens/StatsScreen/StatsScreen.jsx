@@ -22,26 +22,26 @@ export default class TestChart extends Component {
     this.fetchPatientData();
   }
 
-  fetchPatientData = () => {
-    fetch('https://my-json-server.typicode.com/ume950/api/stats')
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const firstItem = data[0];
-          const { total, healthy, unhealthy } = firstItem;
-          this.setState({
-            totalPatients: total || 0,
-            healthyPatients: healthy || 0,
-            unhealthyPatients: unhealthy || 0,
-          });
-        } else {
-          console.error('Invalid data format:', data);
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  };
+  // fetchPatientData = () => {
+  //   fetch('https://my-json-server.typicode.com/ume950/api/stats')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (Array.isArray(data) && data.length > 0) {
+  //         const firstItem = data[0];
+  //         const { total, healthy, unhealthy } = firstItem;
+  //         this.setState({
+  //           totalPatients: total || 0,
+  //           healthyPatients: healthy || 0,
+  //           unhealthyPatients: unhealthy || 0,
+  //         });
+  //       } else {
+  //         console.error('Invalid data format:', data);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // };
 
   render() {
     const { totalPatients, healthyPatients, unhealthyPatients } = this.state;
@@ -68,7 +68,7 @@ export default class TestChart extends Component {
           <View style={styles.chartContainer}>
             <PieChart
               widthAndHeight={windowWidth / 6}
-              series={[healthyPercentage, unhealthyPercentage]}
+              series={[90, 10]}
               sliceColor={['#303F9F', '#B71C1C']}
               doughnut={false}
               style={styles.pieChart}

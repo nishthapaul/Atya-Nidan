@@ -52,7 +52,7 @@ export const init = () => {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS formResponseforPatient (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          formId TEXT,
+          formId INTEGER,
           fwNumber TEXT,
           pNumber TEXT,
           fName TEXT,

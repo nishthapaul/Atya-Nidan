@@ -30,6 +30,14 @@ export default FollowupScreen = ({ user }) => {
   const [formType, setFormType] = useState('');
   const [sync , setSync] = useState(false);
 
+
+  useEffect(() => {
+    // Handle the transition or action once sync is completed
+    if (sync) {
+      handlePostSyncActions(); // Implement this function to handle actions after sync
+    }
+  }, [sync]);
+
   useEffect(() => {
     const fetchDataDemographic = async () => {
       console.log("in");
@@ -88,7 +96,7 @@ export default FollowupScreen = ({ user }) => {
     return data.map(item => ({
       formId: item.formId,
       fieldWorkerId: item.fwNumber,
-      patientIdNumber: item.pNumber,
+      patientIdNumber: item.formType === "Regular" ? item.aabhaNumber :  item.pNumber,
       fields: {
         firstName: item.fName,
         lastName: item.lName,
@@ -118,7 +126,7 @@ export default FollowupScreen = ({ user }) => {
       console.log("____________________Jai mata di_______________________");
       console.log('POST response:', response.data);
       Alert.alert('Success', 'Data sent successfully!');
-      setSync(true)
+      // setSync(true)
     } catch (error) {
       console.error('Error sending form data:', error);
       if (error.response) {
@@ -136,6 +144,9 @@ export default FollowupScreen = ({ user }) => {
       console.log("____________________Jai mata di_______________________");
       console.log("RAW DATA",rawData);
       const formattedData = transformData(rawData);
+      console.log("____________________Jai mata di_______________________");
+      console.log("FORMATTED DATA",formattedData);
+      setSync(true); // Set sync true only if data send is successful
       await sendFormData(formattedData);
     } catch (error) {
       console.error('Sync error:', error);
@@ -143,11 +154,12 @@ export default FollowupScreen = ({ user }) => {
     }
   };
   
-  if (sync) {
-    return (
-      <FieldWorkerContainer authToken={authToken} user={user} />
-    );
-  }
+  const handlePostSyncActions = () => {
+    // Perform the API fetches or navigation
+    // After actions are completed, reset sync
+    <FieldWorkerContainer authToken={authToken} user={user} />
+    setSync(false);
+  };
 
   const showModal = () => {
     console.log("Show Modal");

@@ -79,6 +79,10 @@ const FieldWorkerContainer = (props) => {
       await db.transaction(async (tx) => {
         for (const form of formsResponse.data) {
           console.log("form added: ", form.title);
+          console.log("_____________________________");
+
+          if(form.selected){
+          console.log("form selected: ", form.title);}
           if (form.selected) setSelectedSpecialisationId(form.specialisation.id);
           await executeSqlAsync(tx, 'INSERT INTO forms (formId, title, selected, formDefinition, specialisationId, specialisationName) VALUES (?, ?, ?, ?, ?, ?);',
             [form.formId, form.title, form.selected ? 1 : 0, JSON.stringify(form.formDefinition), form.specialisation.id, form.specialisation.name]);
@@ -86,13 +90,34 @@ const FieldWorkerContainer = (props) => {
       });
 
       // Fetch recommendation data conditionally
+      // if (selectedSpecialisationId) {
+      //   const recommendationsResponse = await axios.get(API_PATHS.GET_DOCTOR_RECOMMENDATION.replace(":specialisationId", selectedSpecialisationId).replace(":talukaId", props.user.taluka.id), { headers });
+      //   await db.transaction(async (tx) => {
+      //     for (const recommendation of recommendationsResponse.data) {
+      //       console.log("reccomended doctor: ", recommendation.firstName);
+      //       await executeSqlAsync(tx, 'INSERT INTO recommendations (phoneNumber, email, empId, firstName, middleName, lastName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+      //         [recommendation.phoneNumber, recommendation.email, recommendation.empId, recommendation.firstName, recommendation.middleName, recommendation.lastName, recommendation.specialisation.id, recommendation.hospitalAddress, recommendation.gender, recommendation.taluka.id, recommendation.dob, recommendation.languageKnown1, recommendation.languageKnown2, recommendation.languageKnown3]);
+      //     }
+      //     console.log("Recommendations added succesfullyhgk!");
+      //   });
+      // }
       if (selectedSpecialisationId) {
         const recommendationsResponse = await axios.get(API_PATHS.GET_DOCTOR_RECOMMENDATION.replace(":specialisationId", selectedSpecialisationId).replace(":talukaId", props.user.taluka.id), { headers });
-        await db.transaction(async (tx) => {
-          for (const recommendation of recommendationsResponse.data) {
-            await executeSqlAsync(tx, 'INSERT INTO recommendations (phoneNumber, email, empId, firstName, middleName, lastName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-              [recommendation.phoneNumber, recommendation.email, recommendation.empId, recommendation.firstName, recommendation.middleName, recommendation.lastName, recommendation.specialisation.id, recommendation.hospitalAddress, recommendation.gender, recommendation.taluka.id, recommendation.dob, recommendation.languageKnown1, recommendation.languageKnown2, recommendation.languageKnown3]);
-          }
+        await db.transaction(async(tx) => {
+          recommendationsResponse.data.forEach(worker => {
+            console.log("recommendation workers", worker);
+            console.log("_____________________________");
+            tx.executeSql('INSERT INTO recommendations (phoneNumber, email, empId, firstName, middleName, lastName, specialisationId, hospitalAddress, gender, talukaId, dob, languageKnown1, languageKnown2, languageKnown3) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+            [worker.recommendation.phoneNumber, worker.recommendation.email, worker.recommendation.empId, worker.recommendation.firstName, worker.recommendation.middleName, worker.recommendation.lastName, worker.recommendation.specialisation.id, worker.recommendation.hospitalAddress, worker.recommendation.gender, worker.recommendation.taluka.id, worker.recommendation.dob, worker.recommendation.languageKnown1, worker.recommendation.languageKnown2, worker.recommendation.languageKnown3],  (tx, results) => {
+              console.log("hereeee")
+              console.log('Results', results.rowsAffected);
+              if (results.rowsAffected > 0) {
+                console.log('Recommendations Inserted Successfully!');
+              } else {
+                console.log('Failed to Insert Data');
+              }
+            });
+          });
         });
       }
     } catch (error) {

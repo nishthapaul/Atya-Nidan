@@ -211,7 +211,10 @@ else
   return (
     <View style={styles.container}>
       <View style={styles.quesCard}>
+      <View style = {{flexDirection : 'row'}}>
         <Text style={styles.title}>Title: {data.title}</Text>
+        <Button title = "Close" onPress = {saveModal}/>
+          </View>
         <Text style={styles.description}>
           <Text style={{ fontWeight: 'bold' }}>Description:</Text> {formDefinition.description}
         </Text>
