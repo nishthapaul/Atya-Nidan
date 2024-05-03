@@ -62,6 +62,7 @@ const FieldWorkerContainer = (props) => {
           console.log("Adding patient: ", worker.demographic.firstName);
           tx.executeSql('INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, talukaName, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle, pdfStorageContent, submittedOn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
           [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.taluka.name, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle, worker.pdfStorage.content, worker.submittedOn], (tx, results) => {
+            console.log("_____________________________");
             console.log("hereeee")
             console.log('Results', results.rowsAffected);
             if (results.rowsAffected > 0) {
@@ -103,7 +104,7 @@ const FieldWorkerContainer = (props) => {
     return <View><Text>Loading...</Text></View>;
   }
 
-  return <FollowupScreen />;
+  return <FollowupScreen user = {props.user}/>;
 };
 
 export default FieldWorkerContainer;

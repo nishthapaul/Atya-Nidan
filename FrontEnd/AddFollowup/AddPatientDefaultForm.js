@@ -84,10 +84,10 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   );
 };
 
-export default FWForm = ({ saveModal }) => {
+export default FWForm = ({ saveModal, fwId }) => {
   const [data, setData] = useState([]);
   const [formDefinition, setFormDefinition] = useState({});
-  const [formId, setFormId] = useState('');
+//  const [formId, setFormId] = useState('');
   const [fwNumber, setFWNumber] = useState('');
   const [pNumber, setpNumber] = useState('');
   const [aabhaNumber, setAabhaNumber] = useState('');
@@ -210,8 +210,8 @@ export default FWForm = ({ saveModal }) => {
 
   const handleOnSubmitForm = async () => {
     const formData = {
-      formId,
-      fwNumber,
+      formId: data.formId,
+      fwNumber: fwId,
       pNumber: null,
       fName,
       mName,
@@ -308,14 +308,14 @@ export default FWForm = ({ saveModal }) => {
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}>Field Worker Number:</Text>
+            <Text style={{ fontWeight: 'bold' }}>Field Worker Number:</Text> {fwId}
           </Text>
-          <TextInput
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter Field Worker Number"
             value={fwNumber}
             onChangeText={(text) => setFWNumber(text)}
-          />
+          /> */}
         </View>
         <View style={styles.section}>
       <Text style={styles.sectionTitle}>Patient Details</Text>

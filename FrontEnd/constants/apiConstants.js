@@ -37,4 +37,5 @@ export const API_PATHS = {
     GET_USER_ALL_DETAILS: `${BASE_URL}/${HEALTH_BASE_PATH}/fieldworkers/:fieldworkerNumber/followups`,
     GET_DOCTOR_RECOMMENDATION: `${BASE_URL}/${HEALTH_BASE_PATH}/doctors/specialisations/:specialisationId/talukas/:talukaId`,
     GET_FORMS_FOR_PATIENTS: `${BASE_URL}/${FORM_BASE_PATH}/forms/form-definitions`,
+    POST_SYNC_FW_SCREEN: `${BASE_URL}/${FORM_BASE_PATH}/form-responses`
 };

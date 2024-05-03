@@ -84,7 +84,7 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   );
 };
 
-export default FWForm = ({ saveModal, patientData }) => {
+export default FWForm = ({ saveModal, patientData, fwId }) => {
   const [data, setData] = useState([]);
   const [formDefinition, setFormDefinition] = useState({});
   const [formId, setFormId] = useState('');
@@ -105,8 +105,8 @@ export default FWForm = ({ saveModal, patientData }) => {
       try {
         db.transaction((tx) => {
           tx.executeSql(
-            'SELECT * FROM forms WHERE selected = 1',
-            [],
+            'SELECT * FROM forms WHERE title = ?', 
+            [patientData.formTitle],
             (_, result) => { // Corrected to include the transaction object "_"
               console.log("inside results"); // Now this should correctly log
               const fetchedData = result.rows._array;
@@ -149,8 +149,8 @@ else
   const handleOnSubmitForm = async () => {
     // Collect all state values into an object, converting consent to 0 or 1
     const formData = {
-      formId,
-      fwNumber,
+      formId: data.formId,
+      fwNumber: fwId,
       pNumber: patientData.patientNumber,
       fName: patientData.firstName,
       mName: patientData.middleName,
@@ -247,14 +247,14 @@ else
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}>Field Worker Number:</Text>
+            <Text style={{ fontWeight: 'bold' }}>Field Worker Number:</Text> {fwId}
           </Text>
-          <TextInput
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter Field Worker Number"
             value={fwNumber}
             onChangeText={(text) => setFWNumber(text)}
-          />
+          /> */}
         </View>
         <View style={styles.section}>
       <Text style={styles.sectionTitle}>Patient Details</Text>

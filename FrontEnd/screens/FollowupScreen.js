@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal } from 'react-native';
+import axios from 'axios';
+import { FlatList, View, Text, StyleSheet, Pressable, TouchableOpacity, Modal, Alert } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 // import PatientCardFW from '../AddFollowup/PatientDetailsFW';
 import AddPatientDefaultForm from '../AddFollowup/AddPatientDefaultForm';
-// import { API_PATHS } from '../constants/apiConstants';
-// import { useAuth } from '../Context/AuthContext';
+import { API_PATHS } from '../constants/apiConstants';
+import { useAuth } from '../Context/AuthContext';
 import { db } from '../Database/database';
 import PatientDetailsFW from '../AddFollowup/PatientDetailsFW';
+import FieldWorkerContainer from '../FieldWorkerContainer';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
@@ -17,8 +18,8 @@ const TableHeader = () => (
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>FollowUp</Text>
   </View>
 );
-export default FollowupScreen = () => {
-  // const { authToken } = useAuth();
+export default FollowupScreen = ({ user }) => {
+  const { authToken } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,6 +28,7 @@ export default FollowupScreen = () => {
   const [navigate, setNavigate] = useState(false);
   const [apiData, setApiData] = useState(null);
   const [formType, setFormType] = useState('');
+  const [sync , setSync] = useState(false);
 
   useEffect(() => {
     const fetchDataDemographic = async () => {
@@ -61,44 +63,91 @@ export default FollowupScreen = () => {
   }, []);
   
 
-  // // Function to fetch data from the demographics table
-  // const fetchData = () => {
-  //   db.transaction((tx) => {
-  //     tx.executeSql(
-  //       'SELECT * FROM demographics',
-  //       [],
-  //       (_, result) => {
-  //         // Extract rows from the result
-  //         console.log('_______________________________________________');    
-  //         console.log('_______________________________________________');  
-  //         console.log('_______________________________________________');    
-  //         console.log('_______________________________________________');    
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    const filteredSearchData = data.filter((item) => 
+      item.firstName.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredData(filteredSearchData);
+  };
+
+  const fetchDataFromDatabase = async () => {
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'SELECT * FROM formResponseforPatient;',
+          [],
+          (_, { rows }) => resolve(rows._array),
+          (_, error) => reject(error)
+        );
+      });
+    });
+  };
+
+  const transformData = (data) => {
+    return data.map(item => ({
+      formId: item.formId,
+      fieldWorkerId: item.fwNumber,
+      patientIdNumber: item.pNumber,
+      fields: {
+        firstName: item.fName,
+        lastName: item.lName,
+        address: item.address,
+        phoneNumber: item.phoneNumber,
+        taluka: item.talukaName,
+        age: item.age,
+        unhealthy: item.unhealthy === 1,
+        gender: item.gender,
+        bloodGroup: item.bloodGroup
+      },
+      questions: JSON.parse(item.responseList),
+      formType: item.formType
+    }));
+  };
+
+  const sendFormData = async (formattedData) => {
+    console.log("sendFormData called!");
+    const url = API_PATHS.POST_SYNC_FW_SCREEN;
+    try {
+      const response = await axios.post(url, formattedData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Replace authToken with your actual token variable
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log("____________________Jai mata di_______________________");
+      console.log('POST response:', response.data);
+      Alert.alert('Success', 'Data sent successfully!');
+      setSync(true)
+    } catch (error) {
+      console.error('Error sending form data:', error);
+      if (error.response) {
+        Alert.alert('Error', error.response.data.message);
+      } else {
+        Alert.alert('Error', 'Failed to send data. Please try again later.');
+      }
+    }
+  };
   
-  //         console.log('Forms fetched from SQLite:', result.rows._array);    
 
-  //         const fetchedData = result.rows._array;
-  //         setData(fetchedData);
-  //         setFilteredData(fetchedData); // Initialize filtered data with fetched data
-  //       },
-  //       (_, err) => {
-  //         console.log('Failed to fetch data from demographics table:', err);
-  //       }
-  //     );
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   fetchData(); // Fetch data from the demographics table on component mount
-  // }, []);
-
-  // const handleSearch = (text) => {
-  //   setSearchQuery(text);
-  //   const filteredSearchData = data.filter((item) => 
-  //     item.firstName.toLowerCase().includes(text.toLowerCase())
-  //   );
-  //   setFilteredData(filteredSearchData);
-  // };
-
+  const handleSync = async () => {
+    try {
+      const rawData = await fetchDataFromDatabase();
+      console.log("____________________Jai mata di_______________________");
+      console.log("RAW DATA",rawData);
+      const formattedData = transformData(rawData);
+      await sendFormData(formattedData);
+    } catch (error) {
+      console.error('Sync error:', error);
+      Alert.alert('Error', 'Failed to sync data.');
+    }
+  };
+  
+  if (sync) {
+    return (
+      <FieldWorkerContainer authToken={authToken} user={user} />
+    );
+  }
 
   const showModal = () => {
     console.log("Show Modal");
@@ -157,12 +206,14 @@ export default FollowupScreen = () => {
     fetchData();
   }, [selectedUser]);
   
+  
 
   if (navigate && apiData) {
     // Navigate to PatientDetailsFW component
     return (
       <PatientDetailsFW 
         patientData={apiData} 
+        fwId = {user.empId}
         onBack={() => {
           setFormType('new');
           setNavigate(false);  // Go back to list
@@ -205,7 +256,7 @@ export default FollowupScreen = () => {
 
             }}
           >
-            {/* <SearchBar
+            <SearchBar
               placeholder="Search"
               onChangeText={handleSearch}
               value={searchQuery}
@@ -224,7 +275,12 @@ export default FollowupScreen = () => {
               inputContainerStyle={{ backgroundColor: 'white', borderRadius: 10, height: 30 }} // Style for the input container
               searchIcon={{ size: 24 }} // Style for the search icon
               clearIcon={{ size: 24 }} // Style for the clear icon
-            /> */}
+            />
+            <TouchableOpacity onPress={handleSync}>
+            <View style={styles.addButton}>
+              <Text>Sync</Text>
+            </View>
+          </TouchableOpacity>
             <TouchableOpacity onPress={showModal}>
               <View style={styles.circle}>
                 <Icon name="plus" type="font-awesome" color="black" />
@@ -247,7 +303,7 @@ export default FollowupScreen = () => {
       </View> */}
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType}/>
+        <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType} fwId = {user.empId}/>
       </Modal>
     </View>
     </View>
@@ -298,5 +354,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flex : 0.1,
+  },
+  addButton: {
+    flex: 1, // Make buttons occupy equal width
+    paddingHorizontal: 15, // Add horizontal space between buttons and text
+    backgroundColor: "#B8D4D8",
+    borderRadius: 5, // Maintain button corner rounding
+    borderWidth: 1,
+    alignItems: "center",
+    // marginHorizontal: 20, // Add space between buttons (margin on each side)
+    height: 40,
   },
 });

@@ -32,7 +32,7 @@ const TableHeader = () => (
   </View>
 );
 
-const PatientDetailsFW = ({ onBack, patientData }) => {
+const PatientDetailsFW = ({ onBack, patientData, fwId }) => {
   console.log("Inside patient details");
   const [data, setData] = useState([]);
   const { authToken } = useAuth();
@@ -158,6 +158,7 @@ useEffect(() => {
           <AddPatientForm
             saveModal={saveModal}
             patientData={patientData[0]}
+            fwId = {fwId}
           />
         </Modal>
       </View>
