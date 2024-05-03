@@ -26,19 +26,19 @@ const AdminCard = ({ user }) => {
           <Text style={{fontWeight: 'bold'}}>Language known: </Text>{knownLanguages}
           </Text>
         </View>
-        <View style={styles.rightColumn}>
+        {/* <View style={styles.rightColumn}>
           <Image
           source={require('../assets/adminpic.png')}
           style={styles.userPic}
           />
-        </View>
+        </View> */}
       </View>
-      <View>
+      {/* <View>
         <Image
           source={require('../assets/FW_ID.png')}
           style={styles.adharCardImage}
         />
-      </View>
+      </View> */}
     </View>
   );
     

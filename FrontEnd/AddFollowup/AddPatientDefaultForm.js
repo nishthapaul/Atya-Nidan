@@ -87,16 +87,12 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
 export default FWForm = ({ saveModal, fwId }) => {
   const [data, setData] = useState([]);
   const [formDefinition, setFormDefinition] = useState({});
-//  const [formId, setFormId] = useState('');
-  const [fwNumber, setFWNumber] = useState('');
-  const [pNumber, setpNumber] = useState('');
   const [aabhaNumber, setAabhaNumber] = useState('');
   const [fName, setFName] = useState('');
   const [mName, setMName] = useState('');
   const [lName, setLName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
-  const [selectedFormType, setSelectedFormType] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [address, setAddress] = useState('');
   const [responseList , setResponseList] = useState({}); 
@@ -196,15 +192,16 @@ export default FWForm = ({ saveModal, fwId }) => {
   //   recdoctors();
   // }, []);
 
-  const handleRadioSelection = (labelValue) => {
-    setSelectedFormType(labelValue);
-  };
   const handleHealthStatus = (labelValue) => {
     setHealthStatus(labelValue);
     if(labelValue === "Healthy")
         setUnhealthy(false);
     else
         setUnhealthy(true);
+  };
+
+  const handleGender = (labelValue) => {
+    setGender(labelValue);
   };
 
 
@@ -376,12 +373,24 @@ export default FWForm = ({ saveModal, fwId }) => {
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold'}}>Gender:</Text>
           </Text>
-          <TextInput
+          <CustomRadioButton
+            labelValue="Male"
+            key={1}
+            isSelected={gender === 'Male'} // Set based on state
+            onPress={() => handleGender('Male')}
+          />
+          <CustomRadioButton
+            labelValue="Female"
+            key={2}
+            isSelected={gender === 'Female'} // Set based on state
+            onPress={() => handleGender('Female')}
+          />
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter Gender"
             value={gender}
             onChangeText={(text) => setGender(text)}
-          />
+          /> */}
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Blood Group:</Text>
           </Text>
