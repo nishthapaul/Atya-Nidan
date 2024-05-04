@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button, Modal} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button, Modal, TouchableOpacity} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { init, db } from '../Database/database';  
 import DoctorsRecommendation from './DoctorRecommendation';
@@ -103,6 +103,7 @@ export default FWForm = ({ saveModal, fwId }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibledoc, setIsModalVisibledoc] = useState(false);
+  const [errors, setErrors] = useState({});
 
   console.log("responselist" , responseList);
 
@@ -160,39 +161,43 @@ export default FWForm = ({ saveModal, fwId }) => {
     fetchFormDetails();
   }, []);
 
-  // useEffect(() => {
-  //   const recdoctors = async () => {
-  //     console.log("in");
-  //     try {
-  //       db.transaction((tx) => {
-  //         tx.executeSql(
-  //           'SELECT * FROM recommendations',
-  //           [],
-  //           (_, result) => { // Corrected to include the transaction object "_"
-  //             console.log("inside results"); // Now this should correctly log
-  //             const fetchedRec = result.rows._array;
-  //             console.log('_______________________________________________');    
-  //             console.log("Recommendations Data: ", fetchedRec);
-  //             if (fetchedRec) {
-  //               setData(fetchedRec[0]); // Assuming you want the first match or there's only one match
-  //             } else {
-  //               console.log('No data recommendations');
-  //             }
-  //             // const formObject = JSON.parse(fetchedRec[0].formDefinition);
-  //             // setFormDefinition(formObject);
-  //           },
-  //           (_, err) => {
-  //             console.log('Failed to fetch selected user data from Form table:', err);
-  //           }
-  //         );
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching Form details:", error);
-  //       alert('Failed to fetch Form details.');
-  //     }
-  //   };
-  //   recdoctors();
-  // }, []);
+
+  const validateField = (fieldName, value) => {
+    let hasError = false;
+    if (fieldName === 'aabha') {
+      // Regex to check if the contact number contains exactly 10 digits
+      const aadharNumberRegex = /^\d{12}$/;
+      if (!aadharNumberRegex.test(value)) {
+          hasError = true;
+      }
+  }
+    else{
+    // Checking for non-empty values for all fields
+    if (!value.trim()) {
+        hasError = true;
+    } 
+    else if (fieldName === 'contactNumber') {
+        // Regex to check if the contact number contains exactly 10 digits
+        const phoneNumberRegex = /^\d{10}$/;
+        if (!phoneNumberRegex.test(value)) {
+            hasError = true;
+        }
+    }
+}
+    setErrors(prevErrors => {
+        const newErrors = { ...prevErrors };
+        if (hasError) {
+            // Set error
+            newErrors[fieldName] = true;
+        } else {
+            // Clear error for this field
+            // newErrors[fieldName] = false;
+            delete newErrors[fieldName];
+        }
+        return newErrors;
+    });
+    return hasError
+};
 
   const handleHealthStatus = (labelValue) => {
     setHealthStatus(labelValue);
@@ -208,6 +213,24 @@ export default FWForm = ({ saveModal, fwId }) => {
 
 
   const handleOnSubmitForm = async () => {
+
+    const fieldsToValidate = {firstName, lastName, officeaddress, aabha, contactNumber}; // Extend this with more fields as needed
+      let isValid = true;
+
+      // Validate each field in the list
+      Object.keys(fieldsToValidate).forEach(fieldName => {
+          isValid = !validateField(fieldName, fieldsToValidate[fieldName]) && isValid;
+      });
+
+      if (!isValid) {
+        console.log("form is not valid")
+          return; // Stop the submission if any field is invalid
+      }
+      console.log("correct called"); // Add this line
+
+      // Reset the errors if all validations pass
+      setErrors({});
+
     const formData = {
       formId: data.formId,
       fwNumber: fwId,
@@ -272,9 +295,11 @@ export default FWForm = ({ saveModal, fwId }) => {
   return (
     <View style={styles.container}>
       <View style={styles.quesCard}>
-        <View style = {{flexDirection : 'row'}}>
+        <View style = {styles.row}>
         <Text style={styles.title}>Title: {data.title}</Text>
-        <Button title = "Close" onPress = {saveModal}/>
+        <TouchableOpacity onPress={saveModal}>
+            <Text style={styles.backbutton}>Back</Text>
+          </TouchableOpacity>
           </View>
         <Text style={styles.description}>
           <Text style={{ fontWeight: 'bold' }}>Description:</Text> {formDefinition.description}
@@ -325,25 +350,37 @@ export default FWForm = ({ saveModal, fwId }) => {
     </View>
     <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}>Aabha Number:</Text>
+            <Text style={{ fontWeight: 'bold' }}>Aabha Number*:</Text>
           </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Aabha Number"
-            value={aabhaNumber}
-            onChangeText={(text) => setAabhaNumber(text)}
-          />
+            <TextInput
+              style={[styles.textInput, errors.aabha ? styles.inputError : null]}
+              value={aabhaNumber}
+              onChangeText={(addhno) =>{ setAabhaNumber(addhno);
+                validateField('aabha', addhno);}}
+              keyboardType="phone-pad"
+            />
+            {errors.aabha && <Text style={styles.errorText}>Aabha number must be an integer and should be 12 digits long.</Text>} 
         </View>
         <View style = {[styles.formId, {gap:20}]}>
         <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>First Name:</Text>
           </Text>
-        <TextInput
+        {/* <TextInput
             style={styles.textInput}
             placeholder="Enter First Name"
             value={fName}
             onChangeText={(text) => setFName(text)}
-          />
+          /> */}
+          <TextInput
+                style={[styles.textInput, errors.firstName ? styles.inputError : null]}
+                value={fName}
+                onChangeText={(value) => {
+                    setFName(value);
+                    validateField('firstName', value);
+                }}
+                placeholder="First Name"
+            />
+                {errors.firstName }
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Middle Name:</Text>
           </Text>
@@ -356,12 +393,20 @@ export default FWForm = ({ saveModal, fwId }) => {
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}>Last Name:</Text>
           </Text>
-          <TextInput
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter Last Name"
             value={lName}
             onChangeText={(text) => setLName(text)}
-          />
+          /> */}
+          <TextInput
+                style={[styles.textInput, errors.lastName ? styles.inputError : null]}
+                value={lName}
+                onChangeText={(lname) => {setLName(lname); validateField('lastName', lname);}}
+                placeholder="Last Name"
+                // editable={false}
+                />
+                {errors.lastName}
         </View>
         <View style={[styles.formId, {gap:90}]}>
           <Text style={styles.text}>  
@@ -408,32 +453,51 @@ export default FWForm = ({ saveModal, fwId }) => {
           <Text style={styles.text}>
             <Text style={{ fontWeight: 'bold' }}> Address:</Text>
           </Text>
-          <TextInput
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter Address"
             value={address}
             onChangeText={(text) => setAddress(text)}
-          />
+          /> */}
+          <TextInput
+                    style={[styles.textInput, errors.officeaddress ? styles.inputError : null]}
+                    value={address}
+                    onChangeText={(offadd) => { setAddress(offadd);
+                        validateField('officeaddress', offadd);
+                       }}
+                />
+                {errors.officeaddress} 
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}> Taluka:</Text>
+            <Text style={{ fontWeight: 'bold' }}> Taluka:</Text> {data.talukaName}
           </Text>
-          <TextInput
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter Taluka"
             value={taluka}
             onChangeText={(text) => setTaluka(text)}
-          />
+          /> */}
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}> PhoneNumber:</Text>
+            <Text style={{ fontWeight: 'bold' }}> PhoneNumber*:</Text>
           </Text>
-          <TextInput
+          {/* <TextInput
             style={styles.textInput}
             placeholder="Enter PhoneNumber"
             value={phoneNumber}
             onChangeText={(text) => setPhoneNumber(text)}
-          />
+          /> */}
+          <TextInput
+                style={[styles.textInput, errors.contactNumber ? styles.inputError : null]}
+                value={phoneNumber}
+                onChangeText={(number) => {
+                    setPhoneNumber(number);
+                    validateField('contactNumber', number);
+                }}
+                keyboardType="phone-pad" // Ensures numerical input
+                placeholder="Enter PhoneNumber"
+            />
+            {errors.contactNumber && <Text style={styles.errorText}>Contact number must be an integer and should be 10 digits long.</Text>}
         </View>
         <View style={[styles.section, {marginTop:10}]}>
       <Text style={[styles.sectionTitle]}> Questions </Text>
@@ -484,10 +548,14 @@ export default FWForm = ({ saveModal, fwId }) => {
               setConsent={setConsent}/>
           </View>
                 <View>
-                  <Button title = "submit" onPress = {handleOnSubmitForm}/>
+                <TouchableOpacity onPress={handleOnSubmitForm} style={styles.saveButton}>
+                <Text style={styles.saveButtonText}>Submit</Text>
+                </TouchableOpacity>
                 </View>
                 <View>
-                  <Button title = "Recommend Doctors" onPress = {showModaldoc}/>
+                <TouchableOpacity onPress={showModaldoc} style={styles.saveButton}>
+                    <Text style={styles.saveButtonText}>Recommend Doctors</Text>
+                    </TouchableOpacity>
                 </View>
                 <Modal visible={isModalVisibledoc} transparent animationType="slide">
                   <DoctorsRecommendation saveModaldoc={saveModaldoc}/>
@@ -588,5 +656,45 @@ checkbox: {
 label: {
   marginLeft: 10,
   fontSize: 16,
-}
+},
+inputError: {
+  borderColor: 'red', // Highlight inputs with errors
+},
+errorText: {
+  color: 'red', // Error message color
+  marginBottom: 10, // Space before the next input
+  marginTop: 5,
+},
+saveButton: {
+  backgroundColor: 'black', 
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 10, 
+  marginLeft: 0,
+  marginRight: 20,
+},
+saveButtonText: {
+  color: 'white', 
+  fontWeight: 'bold',
+},
+backbutton: {
+  backgroundColor: '#ddd',
+  fontSize: 15,
+  fontWeight: 'bold',
+  borderWidth: 2,
+  borderColor: 'black',
+  paddingVertical: 8,
+  paddingHorizontal: 20,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 15,
+  marginRight: 20,
+},
+row: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 20,
+},
 });

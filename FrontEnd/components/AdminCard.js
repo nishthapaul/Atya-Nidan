@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       padding: 20,
       shadowColor: '#000',
-      height: 500,
+      height: 250,
       shadowOffset: {
         width: 0,
         height: 2,

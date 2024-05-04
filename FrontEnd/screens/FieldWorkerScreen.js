@@ -16,7 +16,7 @@ const TableHeader = () => (
     <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>ID</Text>
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Name</Text>
     <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Taluka</Text>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Assigned</Text>
+    {/* <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>Assigned</Text> */}
   </View>
 );
 const FieldWorkerScreen = ({ navigation, districtId }) => {
@@ -69,8 +69,8 @@ const FieldWorkerScreen = ({ navigation, districtId }) => {
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.empId}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{`${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`}</Text>
           <Text style={[styles.tableCell, { flex: 1 }]}>{item.taluka.name}</Text>
-          <Text style={[styles.tableCell, { flex: 1 }]}>
-            <CustomSwitch newdata = {newDataObject} data = {data} onRefresh={refreshListofFW}/></Text>
+          {/* <Text style={[styles.tableCell, { flex: 1 }]}>
+            <CustomSwitch newdata = {newDataObject} data = {data} onRefresh={refreshListofFW}/></Text> */}
         </View>
       </Pressable>
     )
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     marginEnd: 30,
   },
   tableCell: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 18,
     fontStyle: 'bold',
   },
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     flex: 2,
     backgroundColor: 'white',
+    marginLeft: 30
   },
   list: {
     flex: 0.55,

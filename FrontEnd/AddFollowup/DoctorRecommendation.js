@@ -92,7 +92,8 @@ const DoctorsRecommendation = ({ saveModaldoc }) => {
   
     return (
       <View style={styles.page}>
-        <View style={styles.searchBarContainer}>
+        <View style = {styles.row}>
+          <View style={styles.searchBarContainer}>
           <TextInput
             style={styles.searchBar}
             placeholder="🔍 Search by specialisation..."
@@ -101,8 +102,13 @@ const DoctorsRecommendation = ({ saveModaldoc }) => {
           />
         </View>
         <TouchableOpacity onPress={saveModaldoc}>
+            <Text style={styles.backbutton}>Back</Text>
+          </TouchableOpacity>
+        </View>
+        
+        {/* <TouchableOpacity onPress={saveModaldoc}>
             <Text style={styles.backbutton}>Close</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <FlatList
           data={data}
           renderItem={DoctorCard}
@@ -170,7 +176,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderRadius: 20, // Add this line to make the search bar rounded
     backgroundColor: '#F0F0F0', // Add this line to change the background color of the search bar
-    width: '80%', // Add this line to change the width of the search ba
+    width: '150%', // Add this line to change the width of the search ba
+    marginLeft: 250,
   },
   backbutton: {
     backgroundColor: '#ddd',
@@ -184,6 +191,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 15,
     marginRight: 20,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
 });
 

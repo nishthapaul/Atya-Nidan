@@ -299,7 +299,7 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
             />
             {errors.aadhar && <Text style={styles.errorText}>Aadhar number must be an integer and should be 12 digits long.</Text>} 
 
-            <Text style={styles.contacttitle}>Add / Change Image</Text>
+            {/* <Text style={styles.contacttitle}>Add / Change Image</Text>
             <View style={styles.imageUploadContainer}>
             <View style={styles.filePlaceholder}>
                 <Text>No file selected</Text>
@@ -307,7 +307,7 @@ const FieldWorkerInformation = ({ firstName, middleName, lastName, address, cont
             <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
                 <Text style={styles.uploadButtonText}>Upload Image</Text>
             </TouchableOpacity>
-            </View>
+            </View> */}
             <TouchableOpacity onPress={handleSubmit} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>

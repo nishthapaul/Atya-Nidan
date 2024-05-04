@@ -7,7 +7,7 @@ const Sidebar = ({ handleMenuItemClick, selectedMenuItem }) => {
   return (
     <View style={styles.sidebar}>
       <Image 
-        source={require('../assets/person1.jpeg')} // image from api
+        source={require('../assets/fwpic.png')} // image from api
         style={styles.profileImage}
       />
       <MenuItem
@@ -20,11 +20,11 @@ const Sidebar = ({ handleMenuItemClick, selectedMenuItem }) => {
         onPress={() => handleMenuItemClick('Profile Photo')}
         isSelected={selectedMenuItem === 'Profile Photo'}
       />
-      <MenuItem
+      {/* <MenuItem
         title="Logout"
         onPress={() => handleMenuItemClick('Logout')}
         isSelected={selectedMenuItem === 'Logout'}
-      />
+      /> */}
     </View>
   );
 };

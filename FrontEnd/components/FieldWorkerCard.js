@@ -9,6 +9,7 @@ export default FieldWorkerCard = ({ user }) => {
         <View style={styles.card}>
         <View style={styles.container}>
           <View style={styles.leftColumn}>
+            <Text style={styles.userName}> My Profile</Text>
             <Text style={styles.userName}>{name}</Text>
             <View style={styles.userDetailRow}>
             <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>DOB: </Text>{user.dob}</Text></View>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       padding: 20,
       shadowColor: '#000',
-      height: 250,
+      height: 290,
       shadowOffset: {
         width: 0,
         height: 2,

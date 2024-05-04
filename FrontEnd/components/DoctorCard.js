@@ -29,19 +29,19 @@ export default DoctorCard = ({ user }) => {
             <Text style={{fontWeight: 'bold'}}>Language known: </Text>{knownLanguages}
             </Text>
           </View>
-          <View style={styles.rightColumn}>
+          {/* <View style={styles.rightColumn}>
             <Image
           source={require('../assets/doctorpic.png')}
           style={styles.userPic}
             />
-          </View>
+          </View> */}
         </View>
-        <View>
+        {/* <View>
           <Image
           source={require('../assets/doctor_ID.png')}
           style={styles.adharCardImage}
           />
-        </View>
+        </View> */}
       </View>
     )
 }
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       padding: 20,
       shadowColor: '#000',
-      height: 530,
+      height: 290,
       shadowOffset: {
         width: 0,
         height: 2,

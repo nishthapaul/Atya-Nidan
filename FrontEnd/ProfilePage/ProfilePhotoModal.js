@@ -12,7 +12,7 @@ const ProfilePhotoModal = ({ isVisible, onClose }) => {
       <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Image 
-              source={require('../assets/person1.jpeg')} 
+              source={require('../assets/fwpic.png')} 
               style={styles.profileImageModal} />
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}

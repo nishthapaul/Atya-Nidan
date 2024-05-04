@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Button, TouchableOpacity} from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { init, db } from '../Database/database';  
 
@@ -94,7 +94,7 @@ export default FWForm = ({ saveModal, patientData, fwId }) => {
   const [healthStatus, setHealthStatus] = useState('');
   const [unhealthy , setUnhealthy] = useState(false);
   const [consent , setConsent] = useState(false);
- 
+
 
   console.log("responselist" , responseList);
 
@@ -146,8 +146,11 @@ else
 
   };
 
+
   const handleOnSubmitForm = async () => {
     // Collect all state values into an object, converting consent to 0 or 1
+    
+
     const formData = {
       formId: data.formId,
       fwNumber: fwId,
@@ -211,9 +214,11 @@ else
   return (
     <View style={styles.container}>
       <View style={styles.quesCard}>
-      <View style = {{flexDirection : 'row'}}>
+      <View style = {styles.row}>
         <Text style={styles.title}>Title: {data.title}</Text>
-        <Button title = "Close" onPress = {saveModal}/>
+        <TouchableOpacity onPress={saveModal}>
+            <Text style={styles.backbutton}>Back</Text>
+          </TouchableOpacity>
           </View>
         <Text style={styles.description}>
           <Text style={{ fontWeight: 'bold' }}>Description:</Text> {formDefinition.description}
@@ -376,7 +381,9 @@ else
               setConsent={setConsent}/>
           </View>
                 <View>
-                  <Button title = "submit" onPress = {handleOnSubmitForm}/>
+                <TouchableOpacity onPress={handleOnSubmitForm} style={styles.saveButton}>
+                <Text style={styles.saveButtonText}>Submit</Text>
+                </TouchableOpacity>                
                 </View>
             </View>
             </ScrollView>
@@ -429,6 +436,11 @@ const styles = StyleSheet.create({
   radioText: {
     fontSize:16,
 },
+row: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 20,
+},
 radio: {
     height:14,
     width:14,
@@ -473,5 +485,32 @@ checkbox: {
 label: {
   marginLeft: 10,
   fontSize: 16,
-}
+},
+saveButton: {
+  backgroundColor: 'black', 
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 10, 
+  marginLeft: 0,
+  marginRight: 20,
+},
+saveButtonText: {
+  color: 'white', 
+  fontWeight: 'bold',
+},
+backbutton: {
+  backgroundColor: '#ddd',
+  fontSize: 15,
+  fontWeight: 'bold',
+  borderWidth: 2,
+  borderColor: 'black',
+  paddingVertical: 8,
+  paddingHorizontal: 20,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 15,
+  marginRight: 20,
+},
 });
