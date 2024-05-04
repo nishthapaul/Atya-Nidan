@@ -3,16 +3,16 @@ import { FlatList, View, Text, StyleSheet,Image, TouchableOpacity } from 'react-
 
 export default PatientCardFW = ({ user }) => {
     console.log("Patient user", user);
-    const name = `${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
+    const name = `${user.patientNumber}: ${user.firstName}${user.middleName ? ' ' + user.middleName : ''} ${user.lastName}`;
     return(
     <View style = {styles.card}>
         <View style={styles.container}>
         <View style={styles.leftColumn}>
           <Text style={styles.userName}>{name}</Text>
           <View style={styles.userDetailRow}>
-            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>D.O.B: </Text>{user.dob}</Text>
+            <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>D.O.B: </Text>{user.dob}</Text></View>
             <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Sex: </Text>{user.gender}</Text>
-          </View>
+          
           <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Contact No.: </Text>{user.phoneNumber} </Text>
           {/* <Text style={styles.userDetail}> */}
           {/* <Text style={{fontWeight: 'bold'}}>Email Id.: </Text>{user.EmailId}
@@ -20,28 +20,29 @@ export default PatientCardFW = ({ user }) => {
           <Text style={styles.userDetail}>
           <Text style={{fontWeight: 'bold'}}>Address: </Text>{user.address}
           </Text>
-          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka: </Text>{user.talukaId}</Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka Name: </Text>{user.talukaName}</Text>
+          <Text style={styles.userDetail}><Text style={{fontWeight: 'bold'}}>Taluka Id: </Text>{user.talukaId}</Text>
           <Text style={styles.userDetail}>
           <Text style={{fontWeight: 'bold'}}>Blood Group: </Text>{user.bloodGroup}
           </Text>
         </View>
         <View style={styles.rightColumn}>
-        <Image
+        {/* <Image
             source={require("../assets/adminpic.png")}
             style={styles.userPic}
-          />
-          <TouchableOpacity style={styles.expandButton}>
+          /> */}
+          {/* <TouchableOpacity style={styles.expandButton}>
             <View>
             <Text style={styles.expandText}>Expand</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         </View>
         <View>
-        <Image
+        {/* <Image
           source={require("../assets/FW_ID.png")}
           style={styles.adharCardImage}
-        />
+        /> */}
       </View>
     </View>
     );

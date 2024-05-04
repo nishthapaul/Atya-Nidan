@@ -9,10 +9,11 @@ import { useAuth } from '../Context/AuthContext';
 import { db } from '../Database/database';
 import PatientDetailsFW from '../AddFollowup/PatientDetailsFW';
 import FieldWorkerContainer from '../FieldWorkerContainer';
+import FieldWorkerCard from '../components/FieldWorkerCard';
 
 const TableHeader = () => (
   <View style={styles.tableRow}>
-    <Text style={[styles.tableCell, { flex: 1 }, { fontWeight: 'bold' }]}>ID</Text>
+    <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>ID</Text>
     <Text style={[styles.tableCell, { flex: 3 }, { fontWeight: 'bold' }]}>Name</Text>
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>Disease</Text>
     <Text style={[styles.tableCell, { flex: 2 }, { fontWeight: 'bold' }]}>FollowUp</Text>
@@ -241,7 +242,7 @@ export default FollowupScreen = ({ user }) => {
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
-          <Text style={[styles.tableCell, { flex: 1 }]}>{item.patientNumber}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }]}>{item.patientNumber}</Text>
           <Text style={[styles.tableCell, { flex: 3 }]}>{name}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.formTitle}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.currentFollowUpDate}</Text>
@@ -288,16 +289,17 @@ export default FollowupScreen = ({ user }) => {
               searchIcon={{ size: 24 }} // Style for the search icon
               clearIcon={{ size: 24 }} // Style for the clear icon
             />
-            <TouchableOpacity onPress={handleSync}>
-            <View style={styles.addButton}>
-              <Text>Sync</Text>
-            </View>
-          </TouchableOpacity>
+            
             <TouchableOpacity onPress={showModal}>
               <View style={styles.circle}>
                 <Icon name="plus" type="font-awesome" color="black" />
               </View>
             </TouchableOpacity>
+            {/* <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.syncbutton} onPress={handleSync}>
+              <Text style={styles.backbuttonText}>Sync</Text>
+            </TouchableOpacity>
+          </View> */}
           </View>
         </View>
         <View style={styles.flatlist}>
@@ -310,9 +312,14 @@ export default FollowupScreen = ({ user }) => {
           />
         </View>
       </View>
-      {/* <View style={styles.card}>
-        {selectedUser && <PatientCardFW user={selectedUser} />}
-      </View> */}
+      <View style={styles.card}>
+          <FieldWorkerCard user={user} />
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.syncbutton} onPress={handleSync}>
+              <Text style={styles.backbuttonText}>Sync</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
         <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType} fwId = {user.empId}/>
@@ -339,13 +346,17 @@ const styles = StyleSheet.create({
     marginEnd: 30,
   },
   tableCell: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 18,
     fontStyle: 'bold',
+    justifyContent: 'center',
   },
   flatlist: {
     marginTop: 0,
     flex: 2,
+    backgroundColor: 'white',
+    marginRight: 20,
+    marginLeft:20
   },
   list: {
     flex: 0.55,
@@ -367,14 +378,25 @@ const styles = StyleSheet.create({
   header: {
     flex : 0.1,
   },
-  addButton: {
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Distribute buttons horizontally
+    paddingHorizontal: 30, // Add space on both sides of the container
+    marginTop: 20,
+  },
+  syncbutton: {
     flex: 1, // Make buttons occupy equal width
     paddingHorizontal: 15, // Add horizontal space between buttons and text
-    backgroundColor: "#B8D4D8",
+    backgroundColor: "#FFA62B",
     borderRadius: 5, // Maintain button corner rounding
     borderWidth: 1,
     alignItems: "center",
-    // marginHorizontal: 20, // Add space between buttons (margin on each side)
+    marginHorizontal: 20, // Add space between buttons (margin on each side)
     height: 40,
+  },
+  backbuttonText: {
+    color: "black",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
