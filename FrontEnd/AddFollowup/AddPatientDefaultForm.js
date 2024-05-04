@@ -139,11 +139,13 @@ export default FWForm = ({ saveModal, fwId }) => {
               console.log("Form Data: ", fetchedData);
               if (fetchedData) {
                 setData(fetchedData[0]); // Assuming you want the first match or there's only one match
+
               } else {
                 console.log('No data Form');
               }
               const formObject = JSON.parse(fetchedData[0].formDefinition);
               setFormDefinition(formObject);
+              console.log("title1:", data.title);
             },
             (_, err) => {
               console.log('Failed to fetch selected user data from Form table:', err);
@@ -264,6 +266,7 @@ export default FWForm = ({ saveModal, fwId }) => {
     }
     saveModal();
   };
+  console.log("title2: ", data.title);
 
   const questions =  formDefinition.questions;
   return (

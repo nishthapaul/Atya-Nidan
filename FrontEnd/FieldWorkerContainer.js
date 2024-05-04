@@ -75,19 +75,42 @@ const FieldWorkerContainer = (props) => {
       });
 
       // Fetch form data
+
       const formsResponse = await axios.get(API_PATHS.GET_FORMS_FOR_PATIENTS, { headers });
       await db.transaction(async (tx) => {
-        for (const form of formsResponse.data) {
+        formsResponse.data.forEach(form => {
           console.log("form added: ", form.title);
           console.log("_____________________________");
 
           if(form.selected){
           console.log("form selected: ", form.title);}
           if (form.selected) setSelectedSpecialisationId(form.specialisation.id);
-          await executeSqlAsync(tx, 'INSERT INTO forms (formId, title, selected, formDefinition, specialisationId, specialisationName) VALUES (?, ?, ?, ?, ?, ?);',
-            [form.formId, form.title, form.selected ? 1 : 0, JSON.stringify(form.formDefinition), form.specialisation.id, form.specialisation.name]);
-        }
-      });
+          tx.executeSql('INSERT INTO forms (formId, title, selected, formDefinition, specialisationId, specialisationName) VALUES (?, ?, ?, ?, ?, ?);',
+            [form.formId, form.title, form.selected ? 1 : 0, JSON.stringify(form.formDefinition), form.specialisation.id, form.specialisation.name], (tx, results) => {
+              console.log("_____________________________");
+              console.log("formss ")
+              console.log('Results', results.rowsAffected);
+              if (results.rowsAffected > 0) {
+                console.log('Forms Inserted Successfully!');
+              } else {
+                console.log('Failed to Insert Forms');
+              }
+            });
+          });
+        });
+      // const formsResponse = await axios.get(API_PATHS.GET_FORMS_FOR_PATIENTS, { headers });
+      // await db.transaction(async (tx) => {
+      //   for (const form of formsResponse.data) {
+      //     console.log("form added: ", form.title);
+      //     console.log("_____________________________");
+
+      //     if(form.selected){
+      //     console.log("form selected: ", form.title);}
+      //     if (form.selected) setSelectedSpecialisationId(form.specialisation.id);
+      //     await executeSqlAsync(tx, 'INSERT INTO forms (formId, title, selected, formDefinition, specialisationId, specialisationName) VALUES (?, ?, ?, ?, ?, ?);',
+      //       [form.formId, form.title, form.selected ? 1 : 0, JSON.stringify(form.formDefinition), form.specialisation.id, form.specialisation.name]);
+      //   }
+      // });
     } catch (error) {
       console.error("Fetching error:", error);
     }
