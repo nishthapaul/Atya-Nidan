@@ -12,9 +12,9 @@ export default function SuperAdminStats({ navigation, user }) {
     const [dates, setDates] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // State to store the total count
     const { authToken } = useAuth();
-
+    console.log(user)
     useEffect(() => {
-        const statsUrl = API_PATHS.GET_STATS_FOR_ADMIN.replace(":districtId", user);
+        const statsUrl = API_PATHS.GET_STATS_FOR_SUPERADMIN.replace(":stateId", user);
         axios.get(statsUrl, {
             headers: {
                 Authorization: `Bearer ${authToken}`,
@@ -35,7 +35,7 @@ export default function SuperAdminStats({ navigation, user }) {
                 console.error('Backend error message:', error.response.data.message);
             }
         });
-    }, [authToken, user.empId]);
+    }, [authToken, user]);
 
     const chartConfig = {
         backgroundColor: '#ffffff',

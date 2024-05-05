@@ -240,13 +240,18 @@ export default FollowupScreen = ({ user }) => {
 
   const TableRow = ({ item }) => {
     const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
+    const followUpStyle = item.formType === 'Today' 
+                        ? styles.followUpToday 
+                        : item.formType === 'Pending' 
+                        ? styles.followUpPending 
+                        : {}; // Default style if needed
     return (
       <Pressable onPress={() => onSelectUser(item)}>
         <View style={styles.tableRow}>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.patientNumber}</Text>
           <Text style={[styles.tableCell, { flex: 3 }]}>{name}</Text>
           <Text style={[styles.tableCell, { flex: 2 }]}>{item.formTitle}</Text>
-          <Text style={[styles.tableCell, { flex: 2 }]}>{item.currentFollowUpDate}</Text>
+          <Text style={[styles.tableCell, { flex: 2 }, followUpStyle]}>{item.currentFollowUpDate}</Text>
         </View>
       </Pressable>
     )
@@ -400,5 +405,11 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  followUpToday: {
+    color: 'green',
+  },
+  followUpPending: {
+    color: 'red',
   },
 });

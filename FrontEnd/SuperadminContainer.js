@@ -59,7 +59,7 @@ function SuperadminContainer(props) {
         }}>
         <Tab.Screen
           name="Admins" 
-          component={() => <AdminScreen stateId={superadmin.state.id} />} 
+          component={() => <AdminScreen stateId={props.user.state.id} />} 
         />
         <Tab.Screen
             name="Forms"
@@ -70,8 +70,8 @@ function SuperadminContainer(props) {
           <Tab.Screen
             name="Stats" 
             // component={ StatsScreen }
-            // component={() => <StatsScreen user={superadmin.state.id} />} 
-            component={() => <SuperAdminStats user={2} />} 
+            component={() => <SuperAdminStats user={superadmin.state.id} />} 
+            // component={() => <SuperAdminStats user={2} />} 
           />
           {/* {console.log("maincontainer admin: ", admin)} */}
           <Tab.Screen

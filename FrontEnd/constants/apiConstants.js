@@ -17,13 +17,14 @@ export const API_PATHS = {
     POST_AUTH_TOKEN_IN_LOGIN: `${BASE_URL}/${AUTH_BASE_PATH}/authenticate`,
     PUT_FIELDWORKER_ASSIGN: `${BASE_URL}/${HEALTH_BASE_PATH}/fieldworkers/:fieldworkerId`,
     GET_ADMINS_BY_STATES: `${BASE_URL}/${HEALTH_BASE_PATH}/states/:stateId/admins`,
-    GET_STATS_FOR_ADMIN: `${BASE_URL}/${HEALTH_BASE_PATH}/stats/admin/:districtId`,
+    GET_STATS_FOR_ADMIN: `${BASE_URL}/${HEALTH_BASE_PATH}/stats/districts/:districtId`,
 
     //Super admin
     GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
     GET_FORM_CARD_DETAILS: `${BASE_URL}/${FORM_BASE_PATH}/form-definitions/:form-definition-id`,
     PUT_FORM_DEFAULT: `${BASE_URL}/${FORM_BASE_PATH}/forms/default/:formId`,
     POST_FORM_SKELETON: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
+    GET_STATS_FOR_SUPERADMIN: `${BASE_URL}/${HEALTH_BASE_PATH}/stats/states/:stateId`,
 
     //Doctor
     GET_PATIENTID_OF_PATIENT: `${BASE_URL}/${HEALTH_BASE_PATH}/patients/:patientNumber/demographics`,

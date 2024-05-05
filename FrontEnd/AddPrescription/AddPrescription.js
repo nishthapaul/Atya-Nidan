@@ -235,7 +235,7 @@ const AddPrescription = ({ saveModal, user, doctorId, onRefresh }) => {
       .then((response) => {
         // Handle success response
         console.log("Response:", response.data);
-        Alert.alert("Success", "Prescription submitted successfully!");
+        Alert.alert("Success", "Prescription submitted successfully, and sent via sms!");
         // Close the modal or perform any other actions
         saveModal();
         onRefresh();
