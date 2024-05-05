@@ -1,14 +1,17 @@
 package com.atyanidan.controller;
 
 import com.atyanidan.entity.elasticsearch.OlapForm;
+import com.atyanidan.entity.mysql.FormResponse;
 import com.atyanidan.request.OlapFormRequest;
 import com.atyanidan.response.FormNameTimestampResponse;
 import com.atyanidan.service.FormResponseService;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +26,14 @@ public class FormResponseController {
     }
 
     @PostMapping
-    public ResponseEntity<OlapForm> addForm(@RequestBody OlapFormRequest olapFormRequest) {
-        OlapForm savedFormResponse = formResponseService.createFormResponse(olapFormRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedFormResponse);
+    public ResponseEntity<List<OlapForm>> addForm(@RequestBody List<OlapFormRequest> olapFormRequests) throws DocumentException {
+        System.out.println(olapFormRequests);
+        List<OlapForm> olapForms = new ArrayList<>();
+        for (OlapFormRequest olapFormRequest : olapFormRequests) {
+            OlapForm savedFormResponse = formResponseService.createFormResponse(olapFormRequest);
+            olapForms.add(savedFormResponse);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(olapForms);
     }
 
     @GetMapping("/patient/{patientNumber}")
