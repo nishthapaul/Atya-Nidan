@@ -33,6 +33,11 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, DOCTORS_BY_DISTRICTS_API).hasAuthority("Admin")
                     .requestMatchers(HttpMethod.GET, FIELDWORKERS_BY_DISTRICTS_API).hasAuthority("Admin")
                     .requestMatchers(HttpMethod.GET, ADMINS_BY_STATES_API).hasAuthority("SuperAdmin")
+                    .requestMatchers(HttpMethod.POST, CREATE_FORM_API).hasAuthority("FieldWorker")
+                    .requestMatchers(HttpMethod.GET, FOLLOW_UPS_OF_FIELDWORKER_API).hasAuthority("FieldWorker")
+                    .requestMatchers(HttpMethod.POST, CREATE_PRESCRIPTION_API).hasAuthority("Doctor")
+                    .requestMatchers(HttpMethod.GET, ADMIN_STATS_API).hasAuthority("Admin")
+
                         .anyRequest() // all the other requests must be authenticated
                         .authenticated()
             )
