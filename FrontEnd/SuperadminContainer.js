@@ -69,7 +69,8 @@ function SuperadminContainer(props) {
           
           <Tab.Screen
             name="Stats" 
-            component={ StatsScreen } 
+            // component={ StatsScreen }
+            component={() => <StatsScreen user={props.user.empId} />} 
           />
           {/* {console.log("maincontainer admin: ", admin)} */}
           <Tab.Screen

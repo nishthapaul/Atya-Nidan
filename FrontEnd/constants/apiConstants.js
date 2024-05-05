@@ -17,6 +17,7 @@ export const API_PATHS = {
     POST_AUTH_TOKEN_IN_LOGIN: `${BASE_URL}/${AUTH_BASE_PATH}/authenticate`,
     PUT_FIELDWORKER_ASSIGN: `${BASE_URL}/${HEALTH_BASE_PATH}/fieldworkers/:fieldworkerId`,
     GET_ADMINS_BY_STATES: `${BASE_URL}/${HEALTH_BASE_PATH}/states/:stateId/admins`,
+    GET_STATS_FOR_ADMIN: `${BASE_URL}/${HEALTH_BASE_PATH}/stats/admin/2`,
 
     //Super admin
     GET_FORMS_LIST: `${BASE_URL}/${FORM_BASE_PATH}/forms`,
