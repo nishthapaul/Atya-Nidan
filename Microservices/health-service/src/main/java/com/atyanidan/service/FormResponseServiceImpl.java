@@ -3,6 +3,7 @@ package com.atyanidan.service;
 import com.atyanidan.dao.FormResponseRepository;
 import com.atyanidan.entity.FormResponse;
 import com.atyanidan.entity.Patient;
+import com.atyanidan.entity.Taluka;
 import com.atyanidan.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,4 +33,15 @@ public class FormResponseServiceImpl implements FormResponseService {
     public List<FormResponse> findByPatient(Patient patient) {
         return formResponseRepository.findByPatient(patient);
     }
+
+    @Override
+    public FormResponse findTopByPatientOrderBySubmittedOnDesc(Patient patient) {
+        return formResponseRepository.findTopByPatientOrderBySubmittedOnDesc(patient);
+    }
+
+    @Override
+    public List<FormResponse> findAllByFieldWorkerTaluka(Taluka taluka) {
+        return formResponseRepository.findAllByFieldWorkerTaluka(taluka);
+    }
+
 }

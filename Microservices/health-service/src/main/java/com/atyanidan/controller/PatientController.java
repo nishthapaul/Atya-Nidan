@@ -3,12 +3,10 @@ package com.atyanidan.controller;
 import com.atyanidan.entity.HealthRecord;
 import com.atyanidan.entity.Patient;
 import com.atyanidan.model.PatientDataResponse;
+import com.atyanidan.model.PatientDemographicDetailsResponse;
 import com.atyanidan.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,4 +29,12 @@ public class PatientController {
     public List<PatientDataResponse> getPatientsByDoctorId(@PathVariable String doctorNumber){
         return patientService.getPatientsByDoctorId(doctorNumber);
     }
+
+    @GetMapping("/patients/{patientNumber}/demographics")
+    public PatientDemographicDetailsResponse getPersonDemographics(@PathVariable String patientNumber) {
+        System.out.println("hi there");
+        return patientService.getPatientDemographicDetails(patientNumber);
+    }
+
+
 }
