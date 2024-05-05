@@ -15,5 +15,4 @@ public interface PrescriptionResponseRepository extends JpaRepository<Prescripti
     List<PrescriptionResponse> findByPatient(Patient patient);
     List<PrescriptionResponse> findByDoctor(Doctor doctor, Sort sort);
     List<PrescriptionResponse> findByFieldWorkerAndFollowUpCompleteIsFalse(FieldWorker fieldWorker);
-    List<PrescriptionResponse> findByFieldWorkerAndFollowUpCompleteIsTrue(FieldWorker fieldWorker);
 }

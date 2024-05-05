@@ -35,9 +35,8 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
     private final PdfStorageRepository pdfStorageRepository;
     private final FieldWorkerService fieldWorkerService;
     private final FollowUpService followUpService;
-    private final FormDefinitionRepository formDefinitionRepository;
     @Autowired
-    public PrescriptionResponseServiceImpl(PrescriptionResponseRepository prescriptionResponseRepository, OlapPrescriptionRepository olapPrescriptionRepository, PatientService patientService, UserService userService, FormService formService, FormResponseService formResponseService, ICD10CodeService icd10CodeService, PdfGenerator pdfGenerator, PdfStorageRepository pdfStorageRepository, FieldWorkerService fieldWorkerService, FollowUpService followUpService, FormDefinitionRepository formDefinitionRepository) {
+    public PrescriptionResponseServiceImpl(PrescriptionResponseRepository prescriptionResponseRepository, OlapPrescriptionRepository olapPrescriptionRepository, PatientService patientService, UserService userService, FormService formService, FormResponseService formResponseService, ICD10CodeService icd10CodeService, PdfGenerator pdfGenerator, PdfStorageRepository pdfStorageRepository, FieldWorkerService fieldWorkerService, FollowUpService followUpService) {
         this.prescriptionResponseRepository = prescriptionResponseRepository;
         this.olapPrescriptionRepository = olapPrescriptionRepository;
         this.patientService = patientService;
@@ -49,7 +48,6 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
         this.pdfStorageRepository = pdfStorageRepository;
         this.fieldWorkerService = fieldWorkerService;
         this.followUpService = followUpService;
-        this.formDefinitionRepository = formDefinitionRepository;
     }
 
     @Override
@@ -103,12 +101,12 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
     public List<FieldWorkerFollowUp> getFollowUpsOfFieldWorker(String fieldworkerEmpId) {
         FieldWorker fieldWorker = fieldWorkerService.getFieldWorkerByEmpId(fieldworkerEmpId);
         List<PrescriptionResponse> prescriptions = prescriptionResponseRepository.findByFieldWorkerAndFollowUpCompleteIsFalse(fieldWorker);
-        // remove findByFieldWorkerAndFollowUpCompleteIsTrue from repository
 
         System.out.println(prescriptions.size());
 
         List<FieldWorkerFollowUp> fieldWorkerFollowUps = new ArrayList<>();
         for (PrescriptionResponse prescriptionResponse : prescriptions) {
+            System.out.println("................. New prescription ");
             FollowUp followUp = prescriptionResponse.getFollowUp();
 
             LocalDate today = LocalDate.now();
@@ -135,14 +133,21 @@ public class PrescriptionResponseServiceImpl implements PrescriptionResponseServ
                 }
 
                 String formTitle = prescriptionResponse.getForm().getTitle();
-                FormDefinition formDefinition = formDefinitionRepository.findById(prescriptionResponse.getForm().getFormDefinitionId()).get();
 
-                // send pdf also
-                FieldWorkerFollowUp fieldWorkerFollowUp = new FieldWorkerFollowUp(patient.getPatientNumber(), demographic, currentFollowUpDate, fieldworkerFollowUpType, formTitle, formDefinition, prescriptionResponse.getSubmittedOn());
+                System.out.println(patient.getPatientNumber());
+                List<FormResponse> formResponses = formResponseService.findByPatient(patient);
+                for (FormResponse formResponse : formResponses) {
+                    System.out.println(formResponse.getFormResponseId() + " " + formResponse.getSubmittedOn() + " " + formResponse.getPatient().getPatientNumber());
+                }
+                FormResponse formResponse = formResponseService.findTopByPatientOrderBySubmittedOnDesc(patient);
+                System.out.println("from id " + formResponse.getFormResponseId());
+                FieldWorkerFollowUp fieldWorkerFollowUp = new FieldWorkerFollowUp(patient.getPatientNumber(), demographic,
+                        currentFollowUpDate, fieldworkerFollowUpType, formTitle, formResponse.getSubmittedOn(), formResponse.getPdfStorage());
                 fieldWorkerFollowUps.add(fieldWorkerFollowUp);
             }
 
         }
+
         fieldWorkerFollowUps = fieldWorkerFollowUps.stream()
                 .sorted(Comparator.comparing(FieldWorkerFollowUp::getSubmittedOn).reversed())
                 .collect(Collectors.toList());
