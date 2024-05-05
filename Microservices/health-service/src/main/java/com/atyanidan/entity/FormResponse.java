@@ -44,10 +44,21 @@ public class FormResponse {
     @NotEmpty
     private String olapFormId;
 
-    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, String olapFormId) {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "form_type")
+    @NotNull
+    private FormType formType;
+
+    @JoinColumn(name = "pdf_storage_id")
+    @OneToOne
+    private PdfStorage pdfStorage;
+
+    public FormResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, String olapFormId, FormType formType, PdfStorage pdfStorage) {
         this.form = form;
         this.fieldWorker = fieldWorker;
         this.patient = patient;
         this.olapFormId = olapFormId;
+        this.formType = formType;
+        this.pdfStorage = pdfStorage;
     }
 }

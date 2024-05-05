@@ -4,11 +4,9 @@ import com.atyanidan.entity.Patient;
 import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.entity.elasticsearch.OlapPrescription;
 import com.atyanidan.entity.elasticsearch.OlapPrescription.PrescriptionDetails.Dosage;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.DocumentException;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

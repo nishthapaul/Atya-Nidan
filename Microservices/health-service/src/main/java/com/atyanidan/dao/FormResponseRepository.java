@@ -2,6 +2,7 @@ package com.atyanidan.dao;
 
 import com.atyanidan.entity.FormResponse;
 import com.atyanidan.entity.Patient;
+import com.atyanidan.entity.Taluka;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,8 @@ public interface FormResponseRepository extends JpaRepository<FormResponse, Inte
     Optional<FormResponse> findTopByFormFormIdAndPatientIdOrderBySubmittedOn(int formId, int patientId);
 
     List<FormResponse> findByPatient(Patient patient);
+
+    FormResponse findTopByPatientOrderBySubmittedOnDesc(Patient patient);
+
+    List<FormResponse> findAllByFieldWorkerTaluka(Taluka taluka);
 }
