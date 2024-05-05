@@ -7,7 +7,7 @@ import { useAuth } from '../Context/AuthContext';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function StatsScreen({ navigation, user }) {
+export default function SuperAdminStats({ navigation, user }) {
     const [counts, setCounts] = useState([]);
     const [dates, setDates] = useState([]);
     const [totalCount, setTotalCount] = useState(0); // State to store the total count

@@ -6,7 +6,7 @@ import axios from 'axios';
 import { API_PATHS } from './constants/apiConstants';
 
 // Screens
-import StatsScreen from './screens/StatsScreen';
+import SuperAdminStats from './screens/SuperAdminStats';
 import ProfileScreen from './screens/ProfileScreen';
 import FormScreen from './screens/FormScreen';
 import AdminScreen from './screens/AdminScreen';
@@ -70,7 +70,8 @@ function SuperadminContainer(props) {
           <Tab.Screen
             name="Stats" 
             // component={ StatsScreen }
-            component={() => <StatsScreen user={props.user.empId} />} 
+            // component={() => <StatsScreen user={superadmin.state.id} />} 
+            component={() => <SuperAdminStats user={2} />} 
           />
           {/* {console.log("maincontainer admin: ", admin)} */}
           <Tab.Screen

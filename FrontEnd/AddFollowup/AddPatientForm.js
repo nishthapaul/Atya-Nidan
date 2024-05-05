@@ -94,6 +94,7 @@ export default FWForm = ({ saveModal, patientData, fwId }) => {
   const [healthStatus, setHealthStatus] = useState('');
   const [unhealthy , setUnhealthy] = useState(false);
   const [consent , setConsent] = useState(false);
+  const [consentError, setConsentError] = useState(''); // State to store consent error message
 
 
   console.log("responselist" , responseList);
@@ -149,7 +150,12 @@ else
 
   const handleOnSubmitForm = async () => {
     // Collect all state values into an object, converting consent to 0 or 1
-    
+    if (!consent) {
+      setConsentError('Please ask for consent before submitting.');
+      return; // Stop submission if consent is not given
+    } else {
+      setConsentError(''); // Clear any existing error messages if consent is given
+    }
 
     const formData = {
       formId: data.formId,
@@ -379,6 +385,9 @@ else
                key={1}
                consent={consent}
               setConsent={setConsent}/>
+              {consentError !== '' && (
+                <Text style={styles.errorText}>{consentError}</Text>
+              )}
           </View>
                 <View>
                 <TouchableOpacity onPress={handleOnSubmitForm} style={styles.saveButton}>
@@ -512,5 +521,10 @@ backbutton: {
   alignItems: 'center',
   marginTop: 15,
   marginRight: 20,
+},
+errorText: {
+  color: 'red', // Error message color
+  marginBottom: 10, // Space before the next input
+  marginTop: 5,
 },
 });

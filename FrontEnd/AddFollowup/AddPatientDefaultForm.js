@@ -84,7 +84,7 @@ const CustomRadioButton = ({ labelValue, index, isSelected, onPress }) => {
   );
 };
 
-export default FWForm = ({ saveModal, fwId }) => {
+export default FWForm = ({ saveModal, fwId, talukaName }) => {
   const [data, setData] = useState([]);
   const [formDefinition, setFormDefinition] = useState({});
   const [aabhaNumber, setAabhaNumber] = useState('');
@@ -104,6 +104,8 @@ export default FWForm = ({ saveModal, fwId }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibledoc, setIsModalVisibledoc] = useState(false);
   const [errors, setErrors] = useState({});
+  const [consentError, setConsentError] = useState(''); // State to store consent error message
+
 
   console.log("responselist" , responseList);
 
@@ -214,6 +216,13 @@ export default FWForm = ({ saveModal, fwId }) => {
 
   const handleOnSubmitForm = async () => {
 
+    if (!consent) {
+      setConsentError('Please ask for consent before submitting.');
+      return; // Stop submission if consent is not given
+    } else {
+      setConsentError(''); // Clear any existing error messages if consent is given
+    }
+
     const fieldsToValidate = {firstName, lastName, officeaddress, aabha, contactNumber}; // Extend this with more fields as needed
       let isValid = true;
 
@@ -231,6 +240,8 @@ export default FWForm = ({ saveModal, fwId }) => {
       // Reset the errors if all validations pass
       setErrors({});
 
+      
+
     const formData = {
       formId: data.formId,
       fwNumber: fwId,
@@ -245,7 +256,7 @@ export default FWForm = ({ saveModal, fwId }) => {
       address,
       responseList: JSON.stringify(responseList),
       consent: consent ? 1 : 0, // Convert boolean to integer
-      taluka,
+      taluka: talukaName,
       phoneNumber,
       formType: "Regular",
       aabhaNumber
@@ -354,6 +365,7 @@ export default FWForm = ({ saveModal, fwId }) => {
           </Text>
             <TextInput
               style={[styles.textInput, errors.aabha ? styles.inputError : null]}
+              placeholder="Enter Aabha Number"
               value={aabhaNumber}
               onChangeText={(addhno) =>{ setAabhaNumber(addhno);
                 validateField('aabha', addhno);}}
@@ -461,6 +473,7 @@ export default FWForm = ({ saveModal, fwId }) => {
           /> */}
           <TextInput
                     style={[styles.textInput, errors.officeaddress ? styles.inputError : null]}
+                    placeholder="Enter Address"
                     value={address}
                     onChangeText={(offadd) => { setAddress(offadd);
                         validateField('officeaddress', offadd);
@@ -470,7 +483,7 @@ export default FWForm = ({ saveModal, fwId }) => {
         </View>
         <View style={styles.formId}>
           <Text style={styles.text}>
-            <Text style={{ fontWeight: 'bold' }}> Taluka:</Text> {data.talukaName}
+            <Text style={{ fontWeight: 'bold' }}> Taluka:</Text> {talukaName}
           </Text>
           {/* <TextInput
             style={styles.textInput}
@@ -546,6 +559,9 @@ export default FWForm = ({ saveModal, fwId }) => {
                key={1}
                consent={consent}
               setConsent={setConsent}/>
+              {consentError !== '' && (
+                <Text style={styles.errorText}>{consentError}</Text>
+              )}
           </View>
                 <View>
                 <TouchableOpacity onPress={handleOnSubmitForm} style={styles.saveButton}>

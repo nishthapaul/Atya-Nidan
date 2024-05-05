@@ -227,6 +227,7 @@ export default FollowupScreen = ({ user }) => {
       <PatientDetailsFW 
         patientData={apiData} 
         fwId = {user.empId}
+        talukaName = {user.taluka.name}
         onBack={() => {
           setFormType('new');
           setNavigate(false);  // Go back to list
@@ -322,7 +323,8 @@ export default FollowupScreen = ({ user }) => {
         </View>
       {/* Modal */}
       <Modal visible={isModalVisible} transparent animationType="slide">
-        <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType} fwId = {user.empId}/>
+      <AddPatientDefaultForm saveModal={saveModal} formType={formType} setFormType={setFormType} fwId = {user.empId} talukaName = {user.taluka.name}
+/>
       </Modal>
     </View>
     </View>
