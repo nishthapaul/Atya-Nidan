@@ -9,7 +9,7 @@ public class PatientDataResponse {
     String patientNumber;
     String patientName;
     String taluka;
-    String formName;
+    String phoneNumber;
     Timestamp visitDate;
     String fieldWorkerName;
 }

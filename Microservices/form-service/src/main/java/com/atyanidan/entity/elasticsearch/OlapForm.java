@@ -21,16 +21,19 @@ public class OlapForm {
 
     private int formId;
 
-    private int fieldWorkerId;
+    private String fieldWorkerId;
 
     private Map<String, Object> fields;
 
+    private Map<String, Object> questions;
+
     private FormType formType;
 
-    public OlapForm(int formId, int fieldWorkerId, FormType formType, Map<String, Object> fields) {
+    public OlapForm(int formId, String fieldWorkerId, FormType formType, Map<String, Object> fields, Map<String, Object> questions) {
         this.formId = formId;
         this.fieldWorkerId = fieldWorkerId;
         this.formType = formType;
         this.fields = fields;
+        this.questions = questions;
     }
 }

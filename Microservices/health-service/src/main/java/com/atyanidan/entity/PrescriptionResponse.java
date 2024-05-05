@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 @Entity
 @Table(name = "Prescription_Response")
@@ -50,11 +51,30 @@ public class PrescriptionResponse {
     @NotEmpty
     private String olapPrescriptionId;
 
-    public PrescriptionResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, @NotNull Doctor doctor, String olapPrescriptionId) {
+    @JoinColumn(name = "code_id")
+    @ManyToOne
+    private ICDCode icdCode;
+
+    @JoinColumn(name = "pdf_storage_id")
+    @OneToOne
+    private PdfStorage pdfStorage;
+
+    @JoinColumn(name = "follow_up_id")
+    @OneToOne
+    private FollowUp followUp;
+
+    @Column(name = "follow_up_complete")
+    private Boolean followUpComplete;
+
+    public PrescriptionResponse(@NotNull Form form, @NotNull FieldWorker fieldWorker, @NotNull Patient patient, @NotNull Doctor doctor, String olapPrescriptionId, ICDCode icdCode, PdfStorage pdfStorage, FollowUp followUp, Boolean followUpComplete) {
         this.form = form;
         this.fieldWorker = fieldWorker;
         this.patient = patient;
         this.doctor = doctor;
         this.olapPrescriptionId = olapPrescriptionId;
+        this.icdCode = icdCode;
+        this.pdfStorage = pdfStorage;
+        this.followUp = followUp;
+        this.followUpComplete = followUpComplete;
     }
 }

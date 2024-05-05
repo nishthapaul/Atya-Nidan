@@ -22,16 +22,16 @@ import java.util.Optional;
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
-    private final TalukaRepository talukaRepository;
+    private final TalukaService talukaService;
     private final SpecialisationRepository specialisationRepository;
 
     private final EmployeeIdGenerator employeeIdGenerator;
 
 
     @Autowired
-    public DoctorServiceImpl(DoctorRepository doctorRepository, TalukaRepository talukaRepository, SpecialisationRepository specialisationRepository, EmployeeIdGenerator employeeIdGenerator) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, TalukaService talukaService, SpecialisationRepository specialisationRepository, EmployeeIdGenerator employeeIdGenerator) {
         this.doctorRepository = doctorRepository;
-        this.talukaRepository = talukaRepository;
+        this.talukaService = talukaService;
         this.specialisationRepository = specialisationRepository;
         this.employeeIdGenerator = employeeIdGenerator;
     }
@@ -50,12 +50,7 @@ public class DoctorServiceImpl implements DoctorService {
             throw new BadRequestException("Taluka Id in API and Response Body don't match");
         }
 
-        Optional<Taluka> optionalTaluka = talukaRepository.findById(talukaId);
-        if ( optionalTaluka.isEmpty() ) {
-            throw new NotFoundException("Taluka id not found: " + talukaId);
-        }
-
-        Taluka taluka = optionalTaluka.get();
+        Taluka taluka = talukaService.findByTalukaId(talukaId);
         doctor.setTaluka(taluka);
 
         Optional<Specialisation> optionalSpecialisation = specialisationRepository.findById(doctor.getSpecialisation().getId());
@@ -89,5 +84,12 @@ public class DoctorServiceImpl implements DoctorService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Doctor> findBySpecialisation(int specialisationId, int talukaId) {
+        Taluka taluka = talukaService.findByTalukaId(talukaId);
+        int districtId = taluka.getDistrict().getId();
+        return doctorRepository.findBySpecialisationIdAndTalukaDistrictId(specialisationId, districtId);
     }
 }

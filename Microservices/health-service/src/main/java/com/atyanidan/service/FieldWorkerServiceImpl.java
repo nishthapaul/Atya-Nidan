@@ -104,13 +104,13 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
     }
 
     @Override
-    public FieldWorker updateAvailability(int fieldWorkerId, FieldWorkerAvailabilityRequest requestBody) {
-        FieldWorker fieldWorker = getFieldWorkerById(fieldWorkerId);
+    public FieldWorker updateAvailability(String fieldWorkerEmpId, FieldWorkerAvailabilityRequest requestBody) {
+        FieldWorker fieldWorker = getFieldWorkerByEmpId(fieldWorkerEmpId);
         fieldWorker.setAvailable(requestBody.getAvailable());
         if ( requestBody.getAvailable() ) {
             fieldWorker.setSubstitute(null);
         } else {
-            FieldWorker substituteFieldWorker = getFieldWorkerById(requestBody.getSubstituteFieldWorkerId());
+            FieldWorker substituteFieldWorker = getFieldWorkerByEmpId(requestBody.getSubstituteFieldWorkerEmpId());
             substituteFieldWorker.setAvailable(true);
             fieldWorker.setSubstitute(substituteFieldWorker);
         }
@@ -121,6 +121,14 @@ public class FieldWorkerServiceImpl implements FieldWorkerService {
         Optional<FieldWorker> optionalFieldWorkerId = fieldWorkerRepository.findById(fieldWorkerId);
         if ( optionalFieldWorkerId.isEmpty() ) {
             throw new NotFoundException("Field Worker id not found: " + fieldWorkerId);
+        }
+        return optionalFieldWorkerId.get();
+    }
+
+    public FieldWorker getFieldWorkerByEmpId(String fieldWorkerEmpId) throws NotFoundException {
+        Optional<FieldWorker> optionalFieldWorkerId = fieldWorkerRepository.findByEmpId(fieldWorkerEmpId);
+        if ( optionalFieldWorkerId.isEmpty() ) {
+            throw new NotFoundException("Field Worker id not found: " + fieldWorkerEmpId);
         }
         return optionalFieldWorkerId.get();
     }

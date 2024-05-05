@@ -67,7 +67,7 @@ function MainContainer(props) {
           />
           <Tab.Screen
             name="Stats" 
-            component={ StatsScreen } 
+            component={() => <StatsScreen user={admin.district.id} />}
           />
           {/* {console.log("maincontainer admin: ", admin)} */}
           <Tab.Screen

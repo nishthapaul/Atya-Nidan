@@ -1,14 +1,15 @@
 package com.atyanidan.service;
 
-import com.atyanidan.entity.mysql.FormResponse;
+import com.atyanidan.entity.elasticsearch.OlapForm;
 import com.atyanidan.request.OlapFormRequest;
 import com.atyanidan.response.FormNameTimestampResponse;
+import com.itextpdf.text.DocumentException;
 
 import java.util.List;
 
 public interface FormResponseService {
 
-    FormResponse createFormResponse(OlapFormRequest olapFormRequest);
+    OlapForm createFormResponse(OlapFormRequest olapFormRequest) throws DocumentException;
 
     List<FormNameTimestampResponse> getFormsNameAndTimestampByPatientNumber(String patientNumber);
 }

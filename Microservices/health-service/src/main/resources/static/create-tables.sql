@@ -148,19 +148,18 @@ ADD FOREIGN KEY (taluka_id) REFERENCES Taluka(taluka_id);
 ALTER TABLE Doctor
 ADD FOREIGN KEY (specialisation_id) REFERENCES Specialisation(specialisation_id);
 
-CREATE TABLE IF NOT EXISTS ICD10_Code (
+CREATE TABLE IF NOT EXISTS ICD_Code (
     code_id int AUTO_INCREMENT,
-    code varchar(100) NOT NULL,
+    code varchar(10) NOT NULL,
     description varchar(100),
     primary key (code_id)
 );
 
-CREATE TABLE IF NOT EXISTS Follow_Up ( -- is a part of diagnosis
+CREATE TABLE IF NOT EXISTS Follow_Up (
     follow_up_id int AUTO_INCREMENT,
-    repeat_freq int DEFAULT 1,
-    days varchar(100), -- datatype
-    duration ENUM('Daily', 'Alternatievly', 'Weekly', 'Biweekly', 'Monthly'),
-    most_recent_follow_up_date date,
+    repeat_frequency int,
+    interval_in_days int,
+    most_recent_follow_up_date datetime,
     no_of_follow_ups_completed int default 0,
     primary key (follow_up_id)
 );
@@ -173,8 +172,14 @@ CREATE TABLE Prescription_Response (
     doctor_id int NOT NULL,
     submitted_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     olap_prescription_id varchar(100) NOT NULL UNIQUE,
+    code_id int NOT NULL,
+    follow_up_id int,
+    pdf_storage_id int;
     primary key(prescription_response_id)
 );
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (code_id) REFERENCES ICD_Code(code_id);
 
 ALTER TABLE Prescription_Response
 ADD FOREIGN KEY (form_id) REFERENCES Form(form_id);
@@ -187,3 +192,14 @@ ADD FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id);
 
 ALTER TABLE Prescription_Response
 ADD FOREIGN KEY (patient_id) REFERENCES Patient(patient_id);
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (follow_up_id) REFERENCES Follow_Up(follow_up_id);
+
+ALTER TABLE Prescription_Response
+ADD FOREIGN KEY (pdf_storage_id) REFERENCES Pdf_Storage(pdf_storage_id);
+
+CREATE TABLE Pdf_Storage (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  content BLOB NOT NULL
+);

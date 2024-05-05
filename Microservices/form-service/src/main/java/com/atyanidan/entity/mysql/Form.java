@@ -31,9 +31,14 @@ public class Form {
     @Column(name = "form_definition_id")
     private String formDefinitionId;
 
-    public Form(String title, String formDefinitionId) {
+    @ManyToOne
+    @JoinColumn(name = "specialisation_id")
+    private Specialisation specialisation;
+
+    public Form(String title, String formDefinitionId, Specialisation specialisation) {
         this.title = title;
         this.formDefinitionId = formDefinitionId;
+        this.specialisation = specialisation;
     }
 
 }

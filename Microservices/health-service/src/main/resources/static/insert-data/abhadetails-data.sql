@@ -44,6 +44,30 @@ VALUES ('12345678901308', 'Priyanka', 'Kumari', 'Verma', '3219876543', '1997-02-
 INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
 VALUES ('12345678901313', 'Mohan', 'Lal', 'Jha', '2198765432', '1982-07-10', 'Male', 'Bypass Road, Etmadpur', 'O-', 'Etmadpur', 'Agra', 'Uttar Pradesh');
 
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901331', 'Swati', 'Kumari', 'Mittal', '9876543290', '1994-01-28', 'Female', 'NH 2 Bypass, Kiraoli', 'A+', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901332', 'Rajesh', '', 'Kapoor', '8765432987', '1983-10-05', 'Male', 'Main Road, Kiraoli', 'B+', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901333', 'Ankita', '', 'Singh', '7654329876', '1999-06-11', 'Female', 'St. John\'s School Area, Kiraoli', 'AB-', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901334', 'Vivek', '', 'Verma', '6543298765', '1988-04-23', 'Male', 'Hospital Road, Kiraoli', 'O+', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901335', 'Neha', 'Kumari', 'Gupta', '5432987654', '2000-12-17', 'Female', 'Police Station Area, Kiraoli', 'A-', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901336', 'Suresh', 'Kumar', 'Yadav', '4329876543', '1980-09-09', 'Male', 'Railway Station Road, Kiraoli', 'B-', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901337', 'Sunita', '', 'Jha', '3298765432', '1992-03-14', 'Female', 'Agra-Mathura Road, Kiraoli', 'AB+', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
+INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
+VALUES ('12345678901338', 'Amit', 'Singh', 'Chauhan', '2987654321', '1985-11-21', 'Male', 'Bus Stand Area, Kiraoli', 'O-', 'Kiraoli', 'Agra', 'Uttar Pradesh');
+
 -- 10 records for Ghaziabad district
 INSERT INTO Abha (abha_number, first_name, middle_name, last_name, phone_number, dob, gender, address, blood_group, taluka, district, state)
 VALUES ('12345678901245', 'Aisha', 'Khan', 'Mittal', '6543210879', '2000-05-18', 'Female', 'Main Road, Hapur', 'A-', 'Hapur', 'Ghaziabad', 'Uttar Pradesh');

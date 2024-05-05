@@ -15,11 +15,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,20 +36,23 @@ public class FormResponseController {
         this.formResponseService = formResponseService;
     }
 
-    @Operation(summary = "Add a form Definition", description = "Add a form definition")
+    @Operation(summary = "Add a form", description = "Add a form")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = FormResponse.class)) }),
-            @ApiResponse(responseCode = "500", description = "Could not add form definition",
+                    array = @ArraySchema(schema = @Schema(implementation = OlapForm.class))) }),
+            @ApiResponse(responseCode = "500", description = "Could not add form",
                     content = @Content)
     })
-    @PostMapping(produces = "application/json", consumes = "application/json")
-    public ResponseEntity<FormResponse> addForm(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Fieldworker to add", required = true, content = @Content(schema=@Schema(implementation = OlapFormRequest.class)))
-            @Valid @RequestBody OlapFormRequest olapFormRequest) {
-        FormResponse savedFormResponse = formResponseService.createFormResponse(olapFormRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedFormResponse);
+    @PostMapping
+    public ResponseEntity<List<OlapForm>> addForm(@RequestBody List<OlapFormRequest> olapFormRequests) throws DocumentException {
+        System.out.println(olapFormRequests);
+        List<OlapForm> olapForms = new ArrayList<>();
+        for (OlapFormRequest olapFormRequest : olapFormRequests) {
+            OlapForm savedFormResponse = formResponseService.createFormResponse(olapFormRequest);
+            olapForms.add(savedFormResponse);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(olapForms);
+
     }
 
     @Operation(summary = "Retrieve list of Form Responses", description = "Retrieve the list of all the form responses of a patient")

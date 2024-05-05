@@ -9,6 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,8 +28,6 @@ public class OlapPrescription {
 
     private FollowUpDetails followUpDetails;
 
-    private PrescriptionDetails prescriptionDetails;
-
     private String notes;
 
     private String icdCode;
@@ -36,30 +35,32 @@ public class OlapPrescription {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    private static class FollowUpDetails {
-        private Date from;
-        private Date to;
+    public static class FollowUpDetails {
+        private int interval;
         private int repeatFrequency;
     }
+
+    private PrescriptionDetails prescriptionDetails;
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    private static class PrescriptionDetails {
-        private int age;
-        private double height;
-        private double weight;
+    public static class PrescriptionDetails {
+        private String age;
+        private String height;
+        private String weight;
         private List<Dosage> dosages;
 
         @AllArgsConstructor
         @NoArgsConstructor
         @Data
-        private static class Dosage {
-            private int days;
+        public static class Dosage {
+            private String days;
             private String name;
-            private int morningDose;
-            private int afternoonDose;
-            private int eveningDose;
+            private String morningDose;
+            private String afternoonDose;
+            private String eveningDose;
         }
     }
+
 }

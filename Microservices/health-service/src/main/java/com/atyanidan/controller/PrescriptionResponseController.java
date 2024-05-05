@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class PrescriptionResponseController {
     public ResponseEntity<PrescriptionResponse> addPrescription(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Prescription to add", required = true, content = @Content(schema=@Schema(implementation = OlapPrescription.class)))
-            @RequestBody OlapPrescription olapPrescription) {
+            @RequestBody OlapPrescription olapPrescription) throws DocumentException {
         PrescriptionResponse savedPrescriptionResponse = prescriptionResponseService.createPrescriptionResponse(olapPrescription);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPrescriptionResponse);
     }

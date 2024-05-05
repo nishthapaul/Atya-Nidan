@@ -8,14 +8,12 @@ import com.atyanidan.entity.actor.Doctor;
 import com.atyanidan.entity.elasticsearch.OlapForm;
 import com.atyanidan.exception.NotFoundException;
 import com.atyanidan.model.PatientDataResponse;
+import com.atyanidan.model.PatientDemographicDetailsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,11 +56,11 @@ public class PatientServiceImpl implements PatientService {
             if ( olapForm.getFormType() == FormType.FollowUp ) {
                 suffix = " Follow Up";
             }
-            records.add(new HealthRecord(formResponse.getFormResponseId(), formResponse.getForm().getTitle() + suffix, formResponse.getSubmittedOn(), "Form"));
+            records.add(new HealthRecord(formResponse.getFormResponseId(), formResponse.getForm().getTitle() + suffix, formResponse.getSubmittedOn(), 1,"Form"));
         }
 
         for (PrescriptionResponse prescriptionResponse : prescriptionResponses) {
-            records.add(new HealthRecord(prescriptionResponse.getPrescriptionResponseId(), prescriptionResponse.getForm().getTitle(), prescriptionResponse.getSubmittedOn(), "Prescription"));
+            records.add(new HealthRecord(prescriptionResponse.getPrescriptionResponseId(), prescriptionResponse.getForm().getTitle(), prescriptionResponse.getSubmittedOn(), prescriptionResponse.getPdfStorage().getId(), "Prescription"));
         }
 
         records = records.stream()
@@ -82,14 +80,17 @@ public class PatientServiceImpl implements PatientService {
             throw new NotFoundException("Doctor doesn't exist");
         }
         List<PrescriptionResponse> prescriptionResponses = prescriptionResponseRepository.findByDoctor(doctor, Sort.by(Sort.Direction.DESC, "submittedOn"));
+
+        prescriptionResponses = getDistinctPatientData(prescriptionResponses);
+
         for (PrescriptionResponse prescriptionResponse : prescriptionResponses) {
             PatientDataResponse response = new PatientDataResponse();
             response.setPatientNumber(prescriptionResponse.getPatient().getPatientNumber());
             String name = prescriptionResponse.getPatient().getDemographic().getFirstName() + " " + prescriptionResponse.getPatient().getDemographic().getLastName();
             response.setPatientName(name);
+            response.setPhoneNumber(prescriptionResponse.getPatient().getDemographic().getPhoneNumber());
             response.setTaluka(prescriptionResponse.getPatient().getDemographic().getTaluka().getName());
             response.setVisitDate(prescriptionResponse.getSubmittedOn());
-            response.setFormName(prescriptionResponse.getForm().getTitle());
             String fieldworkerName = prescriptionResponse.getFieldWorker().getFirstName() + " " + prescriptionResponse.getFieldWorker().getLastName();
             response.setFieldWorkerName(fieldworkerName);
 
@@ -97,6 +98,31 @@ public class PatientServiceImpl implements PatientService {
         }
 
         return patientDataResponses;
+    }
+
+    @Override
+    public PatientDemographicDetailsResponse getPatientDemographicDetails(String patientNumber) {
+        Patient patient = findByPatientNumber(patientNumber);
+        return new PatientDemographicDetailsResponse(patientNumber, patient.getDemographic());
+    }
+
+    private List<PrescriptionResponse> getDistinctPatientData(List<PrescriptionResponse> prescriptionResponses) {
+        Map<Patient, PrescriptionResponse> map = new HashMap<>();
+        for (PrescriptionResponse response : prescriptionResponses) {
+            Patient patient = response.getPatient();
+            if ( !map.containsKey(patient) ) {
+                map.put(patient, response);
+            }
+        }
+        List<PrescriptionResponse> responsesListWithoutDuplicates = new ArrayList<>();
+        for (Patient patient : map.keySet()) {
+            responsesListWithoutDuplicates.add(map.get(patient));
+        }
+        responsesListWithoutDuplicates = responsesListWithoutDuplicates.stream()
+                .sorted(Comparator.comparing(PrescriptionResponse::getSubmittedOn).reversed())
+                .collect(Collectors.toList());
+        return responsesListWithoutDuplicates;
+
     }
 
 }

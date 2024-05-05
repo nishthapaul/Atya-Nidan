@@ -143,7 +143,7 @@ export default function LoginScreen({ onLoginSuccess }) {
               </Text> */}
 
               <View style={styles.dashedLine}></View>
-              <Text style={styles.Ortext}>OR</Text>
+              {/* <Text style={styles.Ortext}>OR</Text>
 
               <TouchableOpacity
                 style={styles.button}
@@ -152,7 +152,7 @@ export default function LoginScreen({ onLoginSuccess }) {
                 <Text style={styles.buttonText}>
                   Login with Google
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               </ScrollView>
             </View>
           </ScrollView>

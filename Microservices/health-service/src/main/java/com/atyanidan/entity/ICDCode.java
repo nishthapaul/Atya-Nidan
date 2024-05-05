@@ -2,16 +2,20 @@ package com.atyanidan.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ICD10_Code")
+@Table(name = "ICD_Code")
 @Data
-public class ICD10Code {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ICDCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_id")
-    private int codeId;
+    private int id;
 
     @Column(name = "code")
     @NotNull

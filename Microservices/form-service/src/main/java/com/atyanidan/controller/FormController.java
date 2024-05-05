@@ -2,6 +2,7 @@ package com.atyanidan.controller;
 
 import com.atyanidan.entity.elasticsearch.FormDefinition;
 import com.atyanidan.entity.mysql.Form;
+import com.atyanidan.response.FormsWithFormDefinitionsResponse;
 import com.atyanidan.service.FormService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,7 +66,7 @@ public class FormController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = Form.class))) }),
-            @ApiResponse(responseCode = "404", description = "No fieldworkers found",
+            @ApiResponse(responseCode = "404", description = "No forms found",
                     content = @Content)
     })
     @GetMapping
@@ -73,7 +74,20 @@ public class FormController {
         return formService.getForms();
     }
 
-    @Operation(summary = "Get Default Form", description = "Retrieve the current default form")
+
+    @Operation(summary = "Get Form with Form definition", description = "Retrieve the forms with from definition")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FormsWithFormDefinitionsResponse.class)) }),
+            @ApiResponse(responseCode = "500", description = "Could not retrieve form",
+                    content = @Content)
+    })
+    @GetMapping("/form-definitions")
+    public List<FormsWithFormDefinitionsResponse> getFormsWithFormDefinition() {
+        return formService.getFormsWithFormDefinitions();
+    }
+
+    @Operation(summary = "Get Default form definition", description = "Retrieve the default form definition")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FormDefinition.class)) }),

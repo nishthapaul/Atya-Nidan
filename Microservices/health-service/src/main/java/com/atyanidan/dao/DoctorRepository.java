@@ -11,4 +11,6 @@ import java.util.List;
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     @Query("SELECT fw FROM Doctor fw JOIN fw.taluka t JOIN t.district d WHERE d.id = :districtId")
     List<Doctor> getDoctorsFromDistrictId(int districtId);
+
+    List<Doctor> findBySpecialisationIdAndTalukaDistrictId(int specialisationId, int talukaId);
 }

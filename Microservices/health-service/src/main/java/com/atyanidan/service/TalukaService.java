@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TalukaService {
     List<Taluka> getTalukasFromDistrictId(int districtId);
+    Taluka findByTalukaId(int talukaId);
 }
