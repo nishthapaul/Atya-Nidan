@@ -7,15 +7,17 @@ import com.atyanidan.exception.NotFoundException;
 import com.atyanidan.request.OlapFormRequest;
 import com.atyanidan.response.FormNameTimestampResponse;
 import com.atyanidan.utils.IdGenerator;
+import com.atyanidan.utils.PdfGenerator;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class FormResponseServiceImpl implements FormResponseService {
@@ -31,9 +33,12 @@ public class FormResponseServiceImpl implements FormResponseService {
     private final IdGenerator idGenerator;
     private final PrescriptionResponseService prescriptionResponseService;
     private final FollowUpService followUpService;
+    private final PdfGenerator pdfGenerator;
+    private final PdfStorageRepository pdfStorageRepository;
+    private final UserService userService;
 
     @Autowired
-    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldworkerService fieldworkerService, FormService formService, AbhaService abhaService, TalukaRepository talukaRepository, DemographicRepository demographicRepository, PatientRepository patientRepository, IdGenerator idGenerator, PrescriptionResponseService prescriptionResponseService, FollowUpService followUpService) {
+    public FormResponseServiceImpl(FormResponseRepository formResponseRepository, OlapFormRepository olapFormRepository, FieldworkerService fieldworkerService, FormService formService, AbhaService abhaService, TalukaRepository talukaRepository, DemographicRepository demographicRepository, PatientRepository patientRepository, IdGenerator idGenerator, PrescriptionResponseService prescriptionResponseService, FollowUpService followUpService, PdfGenerator pdfGenerator, PdfStorageRepository pdfStorageRepository, UserService userService) {
         this.formResponseRepository = formResponseRepository;
         this.olapFormRepository = olapFormRepository;
         this.fieldworkerService = fieldworkerService;
@@ -45,15 +50,18 @@ public class FormResponseServiceImpl implements FormResponseService {
         this.idGenerator = idGenerator;
         this.prescriptionResponseService = prescriptionResponseService;
         this.followUpService = followUpService;
+        this.pdfGenerator = pdfGenerator;
+        this.pdfStorageRepository = pdfStorageRepository;
+        this.userService = userService;
     }
 
-    public OlapForm createFormResponse(OlapFormRequest olapFormRequest) {
+    public OlapForm createFormResponse(OlapFormRequest olapFormRequest) throws DocumentException {
         System.out.println(olapFormRequest);
-        FieldWorker fieldWorker = fieldworkerService.getFieldWorkerById(olapFormRequest.getFieldWorkerId());
+        FieldWorker fieldWorker = (FieldWorker) userService.getUserFromEmployeeId(olapFormRequest.getFieldWorkerId());
 
         Form form = formService.getFormById(olapFormRequest.getFormId());
 
-        OlapForm olapForm = new OlapForm(olapFormRequest.getFormId(), olapFormRequest.getFieldWorkerId(), olapFormRequest.getFormType(), olapFormRequest.getFields());
+        OlapForm olapForm = new OlapForm(olapFormRequest.getFormId(), olapFormRequest.getFieldWorkerId(), olapFormRequest.getFormType(), olapFormRequest.getFields(), olapFormRequest.getQuestions());
 
         OlapForm savedOlapForm = olapFormRepository.save(olapForm);
         System.out.println(savedOlapForm.getId());
@@ -65,7 +73,7 @@ public class FormResponseServiceImpl implements FormResponseService {
         Patient patient = null;
 
         if ( isUnhealthy ) {
-            if (formType == FormType.Regular) {
+            if ( formType == FormType.Regular ) {
                 patient = patientRepository.findByAbhaNumber(olapFormRequest.getPatientIdNumber());
                 if ( patient == null ) {
                     Abha abha = abhaService.getAbhaByAbhaNumber(olapFormRequest.getPatientIdNumber());
@@ -89,10 +97,33 @@ public class FormResponseServiceImpl implements FormResponseService {
             } else {
                 // FormType: Follow Up
                 patient = patientRepository.findByPatientNumber(olapFormRequest.getPatientIdNumber());
+
+                PrescriptionResponse latestPrescription = prescriptionResponseService.findLatestByFormIdAndPatientId(form.getFormId(), patient.getId(), form.getTitle());
+                FollowUp followUp = latestPrescription.getFollowUp();
+                followUp.setNoOfFollowUpsCompleted(followUp.getNoOfFollowUpsCompleted() + 1);
+
+                Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String formattedDate = formatter.format(date);
+                Timestamp timestamp = Timestamp.valueOf(formattedDate);
+                followUp.setMostRecentFollowUpDate(timestamp);
+                FollowUp savedFollowUp = followUpService.saveFollowUp(followUp);
+                if ( savedFollowUp.getNoOfFollowUpsCompleted() == latestPrescription.getFollowUp().getRepeatFrequency() ) {
+                    latestPrescription.setFollowUpComplete(true);
+                    prescriptionResponseService.save(latestPrescription);
+                }
             }
 
+            Map<String, Object> questions = olapForm.getQuestions();
+
+            String pdfContent = pdfGenerator.generateFormPdf(form, fieldWorker, patient, isUnhealthy, questions, olapFormRequest.getFormType());
+            PdfStorage pdfStorage = new PdfStorage();
+            pdfStorage.setContent(pdfContent);
+            PdfStorage savedPDF = pdfStorageRepository.save(pdfStorage);
+            System.out.println("saved pdf id: " + savedPDF.getId());
+
             String olapFormId = savedOlapForm.getId();
-            FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType());
+            FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType(), pdfStorage);
             formResponseRepository.save(formResponse);
         } else {
             System.out.println("healthy");
@@ -117,8 +148,16 @@ public class FormResponseServiceImpl implements FormResponseService {
                     prescriptionResponseService.save(latestPrescription);
                 }
 
+                Map<String, Object> questions = olapForm.getQuestions();
+
+                String pdfContent = pdfGenerator.generateFormPdf(form, fieldWorker, patient, isUnhealthy, questions, olapFormRequest.getFormType());
+                PdfStorage pdfStorage = new PdfStorage();
+                pdfStorage.setContent(pdfContent);
+                PdfStorage savedPDF = pdfStorageRepository.save(pdfStorage);
+                System.out.println("saved pdf id: " + savedPDF.getId());
+
                 String olapFormId = savedOlapForm.getId();
-                FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType());
+                FormResponse formResponse = new FormResponse(form, fieldWorker, patient, olapFormId, olapForm.getFormType(), pdfStorage);
                 formResponseRepository.save(formResponse);
             }
             // If form type is Regular then do nothing - it will only save to elasticsearch

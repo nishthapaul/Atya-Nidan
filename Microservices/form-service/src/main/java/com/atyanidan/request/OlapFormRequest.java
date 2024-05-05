@@ -18,10 +18,13 @@ public class OlapFormRequest {
 
     private String patientIdNumber;
 
-    private int fieldWorkerId;
+    private String fieldWorkerId;
 
     @Field(type = FieldType.Object)
     private Map<String, Object> fields;
+
+    @Field(type = FieldType.Object)
+    private Map<String, Object> questions;
 
     private FormType formType;
 

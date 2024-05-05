@@ -16,7 +16,6 @@ public class PdfStorage {
     @Column(name = "pdf_storage_id")
     private int id;
 
-    @Column(name = "content")
-    @Lob
-    private byte[] content;
+    @Column(name = "content", columnDefinition = "MEDIUMTEXT")
+    private String content;
 }
