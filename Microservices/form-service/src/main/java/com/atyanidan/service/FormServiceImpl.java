@@ -7,9 +7,11 @@ import com.atyanidan.entity.mysql.Form;
 import com.atyanidan.entity.mysql.Specialisation;
 import com.atyanidan.exception.ConflictException;
 import com.atyanidan.exception.NotFoundException;
+import com.atyanidan.response.FormsWithFormDefinitionsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +65,17 @@ public class FormServiceImpl implements FormService {
     public FormDefinition getSelectedForm() {
         Form selectedForm = formRepository.getSelectedForm();
         return formDefinitionService.getFormDefinition(selectedForm.getFormDefinitionId());
+    }
+
+    @Override
+    public List<FormsWithFormDefinitionsResponse> getFormsWithFormDefinitions() {
+        List<Form> forms = formRepository.findAll();
+        List<FormsWithFormDefinitionsResponse> formsWithFormDefinitionsResponses = new ArrayList<>();
+        for (Form form : forms) {
+            FormsWithFormDefinitionsResponse formsWithFormDefinitionsResponse = new FormsWithFormDefinitionsResponse(form.getFormId(), form.getTitle(), form.getSelected(), formDefinitionService.getFormDefinition(form.getFormDefinitionId()), form.getSpecialisation());
+            formsWithFormDefinitionsResponses.add(formsWithFormDefinitionsResponse);
+        }
+        return formsWithFormDefinitionsResponses;
     }
 
     @Override

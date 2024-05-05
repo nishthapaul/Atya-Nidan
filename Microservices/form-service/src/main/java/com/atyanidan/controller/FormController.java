@@ -2,6 +2,7 @@ package com.atyanidan.controller;
 
 import com.atyanidan.entity.elasticsearch.FormDefinition;
 import com.atyanidan.entity.mysql.Form;
+import com.atyanidan.response.FormsWithFormDefinitionsResponse;
 import com.atyanidan.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,11 @@ public class FormController {
     @GetMapping
     public List<Form> getForms() {
         return formService.getForms();
+    }
+
+    @GetMapping("/form-definitions")
+    public List<FormsWithFormDefinitionsResponse> getFormsWithFormDefinition() {
+        return formService.getFormsWithFormDefinitions();
     }
 
     @GetMapping("/default")
