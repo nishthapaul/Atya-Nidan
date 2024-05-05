@@ -58,6 +58,7 @@ const FieldWorkerContainer = (props) => {
       //   }
       // });
       await db.transaction(async(tx) => {
+        console.log(demographicsResponse);
         demographicsResponse.data.forEach(worker => {
           console.log("Adding patient: ", worker.demographic.firstName);
           tx.executeSql('INSERT INTO demographics (patientNumber, firstName, middleName, lastName, address, dob, gender, bloodGroup, talukaId, talukaName, phoneNumber, currentFollowUpDate, fieldworkerFollowUpType, formTitle, pdfStorageContent, submittedOn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
