@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Tag(name = "Admin", description = "APIs for implementing functionalities of Admin")
+@Tag(name = "Health Service", description = "APIs part of the Health service")
 @RequiredArgsConstructor
 public class AdminController {
 

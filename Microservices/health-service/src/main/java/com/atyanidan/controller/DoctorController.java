@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Tag(name = "Doctor", description = "APIs for implementing functionalities of Doctor")
+@Tag(name = "Health Service", description = "APIs part of the Health service")
 public class DoctorController {
     private final DoctorService doctorService;
 

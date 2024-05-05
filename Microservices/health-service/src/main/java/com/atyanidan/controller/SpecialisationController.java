@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Tag(name = "Specialization", description = "API for handling functionalities of doctor specialization")
+@Tag(name = "Health Service", description = "APIs part of the Health service")
 public class SpecialisationController {
     private final SpecialisationRepository specialisationRepository;
 

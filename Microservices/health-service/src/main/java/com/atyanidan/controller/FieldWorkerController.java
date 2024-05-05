@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Tag(name = "Field Worker", description = "APIs for implementing functionalities of Field workers")
+@Tag(name = "Health Service", description = "APIs part of the Health service")
 public class FieldWorkerController {
     private final FieldWorkerService fieldWorkerService;
 
