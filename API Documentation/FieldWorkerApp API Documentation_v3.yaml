@@ -1,0 +1,1365 @@
+openapi: 3.0.1
+info:
+  title: Atya Nidan
+  description: Documentation providing list of APIs created for the application
+  version: "1.0"
+servers:
+- url: http://localhost:9003
+  description: Development
+tags:
+- name: Authorization
+  description: Authentication API
+- name: ICD10Code
+  description: API for fetching ICD10Codes
+- name: Admin
+  description: APIs for implementing functionalities of Admin
+- name: Specialization
+  description: API for handling functionalities of doctor specialization
+- name: Doctor
+  description: APIs for implementing functionalities of Doctor
+- name: Field Worker
+  description: APIs for implementing functionalities of Field workers
+- name: Taluka
+  description: API for handling functionalities of talukas
+- name: User
+  description: API for handling functionalities of all types of users
+- name: Form Service
+  description: APIs part of the Form service
+
+paths:
+  /atyanidan/auth/api/authenticate:
+    post:
+      tags:
+         - Authorization
+      summary: Authenticate User
+      description: Logs in a for a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        "400":
+          description: Invalid username or OTP
+  /api/fieldworkers/{fieldWorkerEmpId}:
+    put:
+      tags:
+      - Field Worker
+      summary: Update Availability of Fieldworker
+      description: Update the availability status of a fieldworker and assign a substitute
+      operationId: updateFieldWorkerAvailability
+      parameters:
+      - name: fieldWorkerEmpId
+        in: path
+        description: Fieldworker Emp ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Fieldworker availability status and substitute
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldWorkerAvailabilityRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldWorker'
+        "500":
+          description: Could not update field worker availability
+  /api/talukas/{talukaId}/fieldworkers:
+    get:
+      tags:
+      - Field Worker
+      summary: Retrieve list of fieldworkers
+      description: Retrieve the list of all the fieldworkers of a given taluka
+      operationId: getFieldWorkersFromTalukaId
+      parameters:
+      - name: talukaId
+        in: path
+        description: Taluka ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: available
+        in: query
+        description: Availability status of fieldworker
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWorker'
+        "404":
+          description: No fieldworkers found
+    post:
+      tags:
+      - Field Worker
+      summary: Add a fieldworker
+      description: Add a fieldworker in a given taluka
+      operationId: addFieldWorker
+      parameters:
+      - name: talukaId
+        in: path
+        description: Taluka ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Fieldworker to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldWorker'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldWorker'
+        "500":
+          description: Could not add field worker
+  /api/talukas/{talukaId}/doctors:
+    post:
+      tags:
+      - Doctor
+      summary: Add a doctor
+      description: Add a new doctor
+      operationId: addDoctor
+      parameters:
+      - name: talukaId
+        in: path
+        description: Taluka ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Doctor to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+        required: true
+      responses:
+        "500":
+          description: Could not add doctor
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+  /api/prescription-responses:
+    post:
+      tags:
+      - prescription-response-controller
+      operationId: addPrescription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OlapPrescription'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PrescriptionResponse'
+  /api/pdfwriter:
+    post:
+      tags:
+      - pdf-storage-controller
+      operationId: generatePdf
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PdfStorage'
+  /api/users/{employeeId}:
+    get:
+      tags:
+      - User
+      summary: Retrieve user
+      description: Retrieve a user given the user's employee ID
+      operationId: getUserFromEmployeeId
+      parameters:
+      - name: employeeId
+        in: path
+        description: Employee ID of user to be retrieved
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: User not found
+  /api/stats/states/{stateId}:
+    get:
+      tags:
+      - stats-controller
+      operationId: getHealthCountByState
+      parameters:
+      - name: stateId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UnHealthyCountByDate'
+  /api/stats/districts/{districtId}:
+    get:
+      tags:
+      - stats-controller
+      operationId: getHealthCountByDistrict
+      parameters:
+      - name: districtId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UnHealthyCountByDate'
+  /api/states/{stateId}/admins:
+    get:
+      tags:
+      - Admin
+      summary: Retrieve list of admins
+      description: Retrieve the list of all the admins of a given state
+      operationId: getAdminsFromStateId
+      parameters:
+      - name: stateId
+        in: path
+        description: State ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "404":
+          description: No fieldworkers found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Admin'
+  /api/specialisations:
+    get:
+      tags:
+      - Specialization
+      summary: Retrieve Specialisations
+      description: Retrieve all the specialisations
+      operationId: getAllSpecialisations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Specialisation'
+        "404":
+          description: No specializations found
+  /api/pdfwriter/{pdfId}:
+    get:
+      tags:
+      - pdf-storage-controller
+      operationId: getPdf
+      parameters:
+      - name: pdfId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PdfStorage'
+  /api/patients/{patientNumber}/health-records:
+    get:
+      tags:
+      - patient-controller
+      operationId: getFormsAndPrescriptionsByPatientNumber
+      parameters:
+      - name: patientNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthRecord'
+  /api/patients/{patientNumber}/demographics:
+    get:
+      tags:
+      - patient-controller
+      operationId: getPersonDemographics
+      parameters:
+      - name: patientNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PatientDemographicDetailsResponse'
+  /api/icd10Codes:
+    get:
+      tags:
+      - ICD10Code
+      operationId: getAllICD10Codes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ICDCode'
+  /api/icd10Codes/{code}:
+    get:
+      tags:
+      - ICD10Code
+      operationId: getAllICD10Codes_1
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ICDCode'
+  /api/fieldworkers/{fieldworkerId}/followups:
+    get:
+      tags:
+      - field-worker-follow-up-controller
+      operationId: getFollowUpsByFieldWorker
+      parameters:
+      - name: fieldworkerId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWorkerFollowUp'
+  /api/doctors/{doctorNumber}/patients:
+    get:
+      tags:
+      - patient-controller
+      operationId: getPatientsByDoctorId
+      parameters:
+      - name: doctorNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatientDataResponse'
+  /api/doctors/specialisations/{specialisationId}/talukas/{talukaId}:
+    get:
+      tags:
+      - Doctor
+      operationId: getDoctorsBySpecialisation
+      parameters:
+      - name: specialisationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: talukaId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+  /api/districts/{districtId}/talukas:
+    get:
+      tags:
+      - Taluka
+      summary: Get talukas
+      description: Retrieve all the talukas of a given district
+      operationId: getTalukasFromDistrictId
+      parameters:
+      - name: districtId
+        in: path
+        description: District ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taluka'
+        "404":
+          description: Taluka not found
+  /api/districts/{districtId}/fieldworkers:
+    get:
+      tags:
+      - Field Worker
+      summary: Retrieve list of fieldworkers
+      description: Retrieve the list of all the fieldworkers of a given district
+      operationId: getFieldWorkersFromDistrictId
+      parameters:
+      - name: districtId
+        in: path
+        description: District ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWorker'
+        "404":
+          description: No fieldworkers found
+  /api/districts/{districtId}/doctors:
+    get:
+      tags:
+      - Doctor
+      summary: Retrieve doctors
+      description: Retrieve the list of doctors given the district ID
+      operationId: getDoctorsFromDistrictId
+      parameters:
+      - name: districtId
+        in: path
+        description: District ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+        "404":
+          description: No doctors found
+  /api/forms/default/{formId}:
+    put:
+      tags:
+      - Form Service
+      summary: Set Default form
+      description: Set a form as default
+      operationId: setDefaultForm
+      parameters:
+      - name: formId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Form'
+        "500":
+          description: Could not update form
+  /api/forms:
+    get:
+      tags:
+      - Form Service
+      operationId: getForms
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Form'
+    post:
+      tags:
+      - Form Service
+      summary: Add a form
+      description: Add a new form
+      operationId: addForm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormDefinition'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Form'
+        "500":
+          description: Could not add form
+  /api/form-responses:
+    post:
+      tags:
+      - form-response-controller
+      operationId: addForm_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/OlapFormRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OlapForm'
+  /api/form-definitions:
+    get:
+      tags:
+      - form-definition-controller
+      operationId: getFormDefinitions
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - form-definition-controller
+      operationId: addFormDefinition
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormDefinition'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FormDefinition'
+  /api/abha/demographics:
+    post:
+      tags:
+      - abha-controller
+      operationId: retrievePersonDemographics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PatientDemographicDetailsResponse'
+  /api/forms/form-definitions:
+    get:
+      tags:
+      - Form Service
+      operationId: getFormsWithFormDefinition
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormsWithFormDefinitionsResponse'
+  /api/forms/default:
+    get:
+      tags:
+      - Form Service
+      operationId: getDefaultForm
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FormDefinition'
+  /api/form-responses/patient/{patientNumber}:
+    get:
+      tags:
+      - form-response-controller
+      operationId: getFormResponsesByPatientNumber
+      parameters:
+      - name: patientNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormNameTimestampResponse'
+  /api/form-definitions/{formDefinitionId}:
+    get:
+      tags:
+      - form-definition-controller
+      operationId: getFormDefinition
+      parameters:
+      - name: formDefinitionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FormDefinition'
+  /api/demo:
+    get:
+      tags:
+      - demo-controller
+      operationId: demoMethod
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    AuthenticationRequest:
+      type: object
+      properties:
+        userCredential:
+          type: string
+        otp:
+          type: string
+        authenticationType:
+          type: string
+          enum:
+          - Phone_Number
+          - Email
+    AuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    FieldWorkerAvailabilityRequest:
+      type: object
+      properties:
+        substituteFieldWorkerEmpId:
+          type: string
+        available:
+          type: boolean
+    District:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    FieldWorker:
+      required:
+      - aadharNumber
+      - email
+      - firstName
+      - gender
+      - homeAddress
+      - languageKnown1
+      - lastName
+      - officeAddress
+      - phoneNumber
+      - role
+      - taluka
+      type: object
+      properties:
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - FieldWorker
+          - Doctor
+          - Admin
+          - SuperAdmin
+        empId:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        homeAddress:
+          type: string
+        officeAddress:
+          type: string
+        nearestRailwayStation:
+          type: string
+        gender:
+          type: string
+          enum:
+          - Male
+          - Female
+          - Other
+        taluka:
+          $ref: '#/components/schemas/Taluka'
+        dob:
+          type: string
+          format: date-time
+        bloodGroup:
+          type: string
+        aadharNumber:
+          maxLength: 12
+          minLength: 12
+          type: string
+        available:
+          type: boolean
+        substitute:
+          type: integer
+          format: int32
+        languageKnown1:
+          type: string
+        languageKnown2:
+          type: string
+        languageKnown3:
+          type: string
+    Taluka:
+      required:
+      - district
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        district:
+          $ref: '#/components/schemas/District'
+    Doctor:
+      required:
+      - aadharNumber
+      - email
+      - firstName
+      - homeAddress
+      - hospitalAddress
+      - languageKnown1
+      - lastName
+      - phoneNumber
+      - role
+      - specialisation
+      - taluka
+      type: object
+      properties:
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - FieldWorker
+          - Doctor
+          - Admin
+          - SuperAdmin
+        empId:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        homeAddress:
+          type: string
+        hospitalAddress:
+          type: string
+        nearestRailwayStation:
+          type: string
+        gender:
+          type: string
+          enum:
+          - Male
+          - Female
+          - Other
+        specialisation:
+          $ref: '#/components/schemas/Specialisation'
+        taluka:
+          $ref: '#/components/schemas/Taluka'
+        dob:
+          type: string
+          format: date-time
+        bloodGroup:
+          type: string
+        aadharNumber:
+          maxLength: 12
+          minLength: 12
+          type: string
+        languageKnown1:
+          type: string
+        languageKnown2:
+          type: string
+        languageKnown3:
+          type: string
+    Specialisation:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+    Dosage:
+      type: object
+      properties:
+        days:
+          type: string
+        name:
+          type: string
+        morningDose:
+          type: string
+        afternoonDose:
+          type: string
+        eveningDose:
+          type: string
+    FollowUpDetails:
+      type: object
+      properties:
+        interval:
+          type: integer
+          format: int32
+        repeatFrequency:
+          type: integer
+          format: int32
+    OlapPrescription:
+      type: object
+      properties:
+        formTitle:
+          type: string
+        patientNumber:
+          type: string
+        doctorId:
+          type: string
+        followUpDetails:
+          $ref: '#/components/schemas/FollowUpDetails'
+        notes:
+          type: string
+        icdCode:
+          type: string
+        prescriptionDetails:
+          $ref: '#/components/schemas/PrescriptionDetails'
+    PrescriptionDetails:
+      type: object
+      properties:
+        age:
+          type: string
+        height:
+          type: string
+        weight:
+          type: string
+        dosages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dosage'
+    Demographic:
+      required:
+      - address
+      - bloodGroup
+      - dob
+      - firstName
+      - gender
+      - lastName
+      - phoneNumber
+      - taluka
+      type: object
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        address:
+          type: string
+        dob:
+          type: string
+          format: date-time
+        gender:
+          type: string
+          enum:
+          - Male
+          - Female
+          - Other
+        bloodGroup:
+          type: string
+        taluka:
+          $ref: '#/components/schemas/Taluka'
+        phoneNumber:
+          type: string
+    FollowUp:
+      type: object
+      properties:
+        followUpId:
+          type: integer
+          format: int32
+        repeatFrequency:
+          type: integer
+          format: int32
+        intervalInDays:
+          type: integer
+          format: int32
+        mostRecentFollowUpDate:
+          type: string
+          format: date-time
+        noOfFollowUpsCompleted:
+          type: integer
+          format: int32
+    Form:
+      type: object
+      properties:
+        formId:
+          type: integer
+          format: int32
+        title:
+          type: string
+        selected:
+          type: boolean
+        createdOn:
+          type: string
+          format: date-time
+        formDefinitionId:
+          type: string
+        specialisation:
+          $ref: '#/components/schemas/Specialisation'
+    ICDCode:
+      required:
+      - code
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        code:
+          type: string
+        description:
+          type: string
+    Patient:
+      required:
+      - abhaNumber
+      - demographic
+      - patientNumber
+      type: object
+      properties:
+        abhaNumber:
+          type: string
+        patientNumber:
+          type: string
+        demographic:
+          $ref: '#/components/schemas/Demographic'
+    PdfStorage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        content:
+          type: string
+    PrescriptionResponse:
+      required:
+      - doctor
+      - fieldWorker
+      - form
+      - olapPrescriptionId
+      - patient
+      type: object
+      properties:
+        prescriptionResponseId:
+          type: integer
+          format: int32
+        form:
+          $ref: '#/components/schemas/Form'
+        fieldWorker:
+          $ref: '#/components/schemas/FieldWorker'
+        patient:
+          $ref: '#/components/schemas/Patient'
+        doctor:
+          $ref: '#/components/schemas/Doctor'
+        submittedOn:
+          type: string
+          format: date-time
+        olapPrescriptionId:
+          type: string
+        icdCode:
+          $ref: '#/components/schemas/ICDCode'
+        pdfStorage:
+          $ref: '#/components/schemas/PdfStorage'
+        followUp:
+          $ref: '#/components/schemas/FollowUp'
+        followUpComplete:
+          type: boolean
+    User:
+      required:
+      - email
+      - phoneNumber
+      - role
+      type: object
+      properties:
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - FieldWorker
+          - Doctor
+          - Admin
+          - SuperAdmin
+        empId:
+          type: string
+    UnHealthyCountByDate:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        count:
+          type: integer
+          format: int32
+    Admin:
+      required:
+      - aadharNumber
+      - district
+      - email
+      - firstName
+      - homeAddress
+      - languageKnown
+      - lastName
+      - officeAddress
+      - phoneNumber
+      - role
+      type: object
+      properties:
+        phoneNumber:
+          maxLength: 10
+          minLength: 10
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - FieldWorker
+          - Doctor
+          - Admin
+          - SuperAdmin
+        empId:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        homeAddress:
+          type: string
+        officeAddress:
+          type: string
+        gender:
+          type: string
+          enum:
+          - Male
+          - Female
+          - Other
+        district:
+          $ref: '#/components/schemas/District'
+        languageKnown:
+          type: string
+        aadharNumber:
+          maxLength: 12
+          minLength: 12
+          type: string
+        dob:
+          type: string
+          format: date-time
+    HealthRecord:
+      type: object
+      properties:
+        responseId:
+          type: integer
+          format: int32
+        title:
+          type: string
+        submittedOn:
+          type: string
+          format: date-time
+        pdfStorageId:
+          type: integer
+          format: int32
+        type:
+          type: string
+    PatientDemographicDetailsResponse:
+      type: object
+      properties:
+        patientNumber:
+          type: string
+        demographic:
+          $ref: '#/components/schemas/Demographic'
+    FieldWorkerFollowUp:
+      type: object
+      properties:
+        patientNumber:
+          type: string
+        demographic:
+          $ref: '#/components/schemas/Demographic'
+        currentFollowUpDate:
+          type: string
+        fieldworkerFollowUpType:
+          type: string
+        formTitle:
+          type: string
+        submittedOn:
+          type: string
+          format: date-time
+        pdfStorage:
+          $ref: '#/components/schemas/PdfStorage'
+    PatientDataResponse:
+      type: object
+      properties:
+        patientNumber:
+          type: string
+        patientName:
+          type: string
+        taluka:
+          type: string
+        phoneNumber:
+          type: string
+        visitDate:
+          type: string
+          format: date-time
+        fieldWorkerName:
+          type: string
+    FormDefinition:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        specialisation:
+          type: string
+        questions:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: object
+    OlapFormRequest:
+      type: object
+      properties:
+        formId:
+          type: integer
+          format: int32
+        patientIdNumber:
+          type: string
+        fieldWorkerId:
+          type: string
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+        questions:
+          type: object
+          additionalProperties:
+            type: object
+        formType:
+          type: string
+          enum:
+          - Regular
+          - FollowUp
+    OlapForm:
+      type: object
+      properties:
+        formId:
+          type: integer
+          format: int32
+        fieldWorkerId:
+          type: string
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+        questions:
+          type: object
+          additionalProperties:
+            type: object
+        formType:
+          type: string
+          enum:
+          - Regular
+          - FollowUp
+    FormsWithFormDefinitionsResponse:
+      type: object
+      properties:
+        formId:
+          type: integer
+          format: int32
+        title:
+          type: string
+        selected:
+          type: boolean
+        formDefinition:
+          $ref: '#/components/schemas/FormDefinition'
+        specialisation:
+          $ref: '#/components/schemas/Specialisation'
+    FormNameTimestampResponse:
+      type: object
+      properties:
+        formResponseId:
+          type: integer
+          format: int32
+        title:
+          type: string
+        submittedOn:
+          type: string
+          format: date-time
