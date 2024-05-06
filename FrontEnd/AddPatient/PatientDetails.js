@@ -69,23 +69,93 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
 //     console.log('PDF saved to:', filePath);
 // };
 
-  useEffect(() => {
-    const getPDF = async () => {
-        try {
-            const response = await axios.get(API_PATHS.GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS, {
-                headers: { Authorization: `Bearer ${authToken}` }
-            });
-            const base64 = response.data.content; // assuming the base64 string is directly sent
-            console.log("----------------------");
-            console.log("PDf reponse: ", base64);
-            setPdfBase64(base64);
-        } catch (error) {
-            console.error('Error fetching PDF data:', error);
-        }
-    };
-
-    getPDF();
+useEffect(() => {
+  console.log("Inside medical forms get");
+  const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+    ":patientNumber",
+    patientData.patientNumber
+  );
+  axios
+    .get(getmedicalhistorylist, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+      },
+    })
+    .then((response) => {
+      setData(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
 }, [authToken]);
+
+
+const refreshmedicalhistory = () => {
+  console.log("Refreshing medical history");
+  const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+    ":patientNumber",
+    patientData.patientNumber
+  );
+  axios
+    .get(getmedicalhistorylist, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+      },
+    })
+    .then((response) => {
+      setData(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+
+useEffect(() => {
+  refreshmedicalhistory();
+}, [authToken]);}
+
+//   useEffect(() => {
+//     const getPDF = async () => {
+//         try {
+//             const response = await axios.get(API_PATHS.GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS, {
+//                 headers: { Authorization: `Bearer ${authToken}` }
+//             });
+//             const base64 = response.data.content; // assuming the base64 string is directly sent
+//             console.log("----------------------");
+//             console.log("PDf reponse: ", base64);
+//             setPdfBase64(base64);
+//         } catch (error) {
+//             console.error('Error fetching PDF data:', error);
+//         }
+//     };
+
+//     getPDF();
+// }, [authToken]);
+useEffect(() => {
+  if (!data || data.length === 0) {
+    console.log("No data available to fetch PDF");
+    return;
+  }
+
+  const getPDF = async () => {
+    // Assume that we take the first element for demonstration; adjust accordingly.
+    const pdfStorageId = data[0].pdfStorageId;
+    const pdfUrl = API_PATHS.GET_PDFS_OF_FORMS_AND_PRESCRIPTIONS.replace(":pdfStorageId", pdfStorageId);
+
+    try {
+      const response = await axios.get(pdfUrl, {
+        headers: { Authorization: `Bearer ${authToken}` }
+      });
+      const base64 = response.data.content; // assuming the base64 string is directly sent
+      console.log("PDF response:", base64);
+      setPdfBase64(base64);
+    } catch (error) {
+      console.error('Error fetching PDF data:', error);
+    }
+  };
+
+  getPDF();
+}, [data, authToken]); // Dependency on `data` to ensure `pdfStorageId` is available
+
 
 // const testBase64PDF = "<html><head><title>Hello</title></head><body><h1>Hello World</h1></body></html>";
 // useEffect(() => {
@@ -139,51 +209,51 @@ const PatientDetails = ({ onBack, patientData, doctorId }) => {
   };
 
   //api calls
+//pdfStorageId
+
+  // useEffect(() => {
+  //   console.log("Inside medical forms get");
+  //   const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+  //     ":patientNumber",
+  //     patientData.patientNumber
+  //   );
+  //   axios
+  //     .get(getmedicalhistorylist, {
+  //       headers: {
+  //         Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }, [authToken]);
 
 
-  useEffect(() => {
-    console.log("Inside medical forms get");
-    const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
-      ":patientNumber",
-      patientData.patientNumber
-    );
-    axios
-      .get(getmedicalhistorylist, {
-        headers: {
-          Authorization: `Bearer ${authToken}`, // Include the authToken in the request
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [authToken]);
+  // const refreshmedicalhistory = () => {
+  //   console.log("Refreshing medical history");
+  //   const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
+  //     ":patientNumber",
+  //     patientData.patientNumber
+  //   );
+  //   axios
+  //     .get(getmedicalhistorylist, {
+  //       headers: {
+  //         Authorization: `Bearer ${authToken}`, // Include the authToken in the request
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
 
-
-  const refreshmedicalhistory = () => {
-    console.log("Refreshing medical history");
-    const getmedicalhistorylist = API_PATHS.GET_MEDICAL_HISTORY.replace(
-      ":patientNumber",
-      patientData.patientNumber
-    );
-    axios
-      .get(getmedicalhistorylist, {
-        headers: {
-          Authorization: `Bearer ${authToken}`, // Include the authToken in the request
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-  useEffect(() => {
-    refreshmedicalhistory();
-  }, [authToken]);}
+  // useEffect(() => {
+  //   refreshmedicalhistory();
+  // }, [authToken]);}
 
   return (
     <SafeAreaView style={styles.safeArea}>

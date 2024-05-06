@@ -240,9 +240,9 @@ export default FollowupScreen = ({ user }) => {
 
   const TableRow = ({ item }) => {
     const name = `${item.firstName}${item.middleName ? ' ' + item.middleName : ''} ${item.lastName}`;
-    const followUpStyle = item.formType === 'Today' 
+    const followUpStyle = item.fieldworkerFollowUpType === 'Today' 
                         ? styles.followUpToday 
-                        : item.formType === 'Pending' 
+                        : item.fieldworkerFollowUpType === 'Pending' 
                         ? styles.followUpPending 
                         : {}; // Default style if needed
     return (

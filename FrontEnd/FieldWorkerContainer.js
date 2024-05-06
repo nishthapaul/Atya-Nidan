@@ -57,6 +57,7 @@ const FieldWorkerContainer = (props) => {
       //       [worker.patientNumber, worker.demographic.firstName, worker.demographic.middleName, worker.demographic.lastName, worker.demographic.address, worker.demographic.dob, worker.demographic.gender, worker.demographic.bloodGroup, worker.demographic.taluka.id, worker.demographic.phoneNumber, worker.currentFollowUpDate, worker.fieldworkerFollowUpType, worker.formTitle]);
       //   }
       // });
+      console.log("Received demographic data", demographicsResponse.data);
       await db.transaction(async(tx) => {
         console.log(demographicsResponse);
         demographicsResponse.data.forEach(worker => {

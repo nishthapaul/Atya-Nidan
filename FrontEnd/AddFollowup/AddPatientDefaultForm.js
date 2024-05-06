@@ -166,40 +166,22 @@ export default FWForm = ({ saveModal, fwId, talukaName }) => {
 
   const validateField = (fieldName, value) => {
     let hasError = false;
-    if (fieldName === 'aabha') {
-      // Regex to check if the contact number contains exactly 10 digits
-      const aadharNumberRegex = /^\d{12}$/;
-      if (!aadharNumberRegex.test(value)) {
-          hasError = true;
-      }
-  }
-    else{
-    // Checking for non-empty values for all fields
-    if (!value.trim()) {
-        hasError = true;
-    } 
-    else if (fieldName === 'contactNumber') {
-        // Regex to check if the contact number contains exactly 10 digits
-        const phoneNumberRegex = /^\d{10}$/;
-        if (!phoneNumberRegex.test(value)) {
-            hasError = true;
-        }
+    if (fieldName === 'aabha' && !/^\d{14}$/.test(value)) {
+      hasError = true;
+    } else if (fieldName === 'contactNumber' && !/^\d{10}$/.test(value)) {
+      hasError = true;
+    } else if (!value.trim()) {
+      hasError = true;
     }
-}
-    setErrors(prevErrors => {
-        const newErrors = { ...prevErrors };
-        if (hasError) {
-            // Set error
-            newErrors[fieldName] = true;
-        } else {
-            // Clear error for this field
-            // newErrors[fieldName] = false;
-            delete newErrors[fieldName];
-        }
-        return newErrors;
-    });
-    return hasError
-};
+    
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [fieldName]: hasError
+    }));
+  
+    return hasError;
+  };
+  
 
   const handleHealthStatus = (labelValue) => {
     setHealthStatus(labelValue);
@@ -215,27 +197,34 @@ export default FWForm = ({ saveModal, fwId, talukaName }) => {
 
 
   const handleOnSubmitForm = async () => {
-
+    console.log("On submit is called");
     if (!consent) {
+      console.log("consent not given");
       setConsentError('Please ask for consent before submitting.');
       return; // Stop submission if consent is not given
     } else {
+      console.log("consent was given");
       setConsentError(''); // Clear any existing error messages if consent is given
     }
 
-    const fieldsToValidate = {firstName, lastName, officeaddress, aabha, contactNumber}; // Extend this with more fields as needed
+    const fieldsToValidate = {
+      aabhaNumber, fName, lName, address, phoneNumber
+    };
       let isValid = true;
-
+      console.log("Before checking valid");
       // Validate each field in the list
       Object.keys(fieldsToValidate).forEach(fieldName => {
-          isValid = !validateField(fieldName, fieldsToValidate[fieldName]) && isValid;
+        const isFieldValid = !validateField(fieldName, fieldsToValidate[fieldName]);
+        console.log(`Validation for ${fieldName}: ${isFieldValid}`);
+        isValid = isFieldValid && isValid;
       });
-
       if (!isValid) {
-        console.log("form is not valid")
-          return; // Stop the submission if any field is invalid
+        console.log("Form contains errors.");
+        return; // Stop the submission if any field is invalid
       }
-      console.log("correct called"); // Add this line
+    
+      // Assuming no errors, proceed with form submission logic here
+      console.log("Form is valid, processing submission...");
 
       // Reset the errors if all validations pass
       setErrors({});
@@ -371,7 +360,7 @@ export default FWForm = ({ saveModal, fwId, talukaName }) => {
                 validateField('aabha', addhno);}}
               keyboardType="phone-pad"
             />
-            {errors.aabha && <Text style={styles.errorText}>Aabha number must be an integer and should be 12 digits long.</Text>} 
+            {errors.aabha && <Text style={styles.errorText}>Aabha number must be an integer and should be 14 digits long.</Text>} 
         </View>
         <View style = {[styles.formId, {gap:20}]}>
         <Text style={styles.text}>
